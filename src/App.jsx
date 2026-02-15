@@ -1,9 +1,13 @@
-export default function App() {
+import Hero from "./components/home/Hero.jsx"
+import Navbar from "./components/Navbar"
+
+function App() {
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-white">
-        Tailwind Working
-      </h1>
+    <div style={{ width: "100%", minHeight: "100vh", position: "relative" }}>
+      <Navbar />
+      <Hero />
     </div>
   )
 }
+
+export default App

@@ -1,1 +1,38 @@
 @import "tailwindcss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+canvas {
+  display: block;
+  vertical-align: middle;
+}
+
+/* Form inputs focus state */
+input:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(249, 115, 22, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Section layout helper */
+.section-padding {
+  padding: clamp(4rem, 10vw, 6rem) clamp(1.5rem, 5vw, 3rem);
+}
