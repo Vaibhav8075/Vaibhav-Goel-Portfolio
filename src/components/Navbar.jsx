@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { HiMenu, HiX } from "react-icons/hi"
-import { theme, scrollToSection } from "../theme"
+import { theme } from "../theme"
 
 const NAV_LINKS = [
   { href: "#home", label: "HOME" },
@@ -19,7 +19,8 @@ function NavLink({ href, label, isActive, onClick }) {
       className="relative py-2 px-1 text-sm font-semibold transition-colors tracking-wide"
       style={{ 
         color: isActive ? theme.colors.primary : theme.colors.text,
-        letterSpacing: '0.05em'
+        letterSpacing: '0.05em',
+        cursor: 'pointer'
       }}
       whileHover={{ 
         color: theme.colors.primary,
@@ -43,7 +44,6 @@ function NavLink({ href, label, isActive, onClick }) {
   )
 }
 
-// Logo Component
 function Logo() {
   return (
     <motion.div
@@ -108,33 +108,71 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("#home")
   const [scrolled, setScrolled] = useState(false)
 
-  useEffect(() => {
-    const sections = NAV_LINKS.map((l) => document.querySelector(l.href)).filter(Boolean)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(`#${entry.target.id}`)
-        })
-      },
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
-    )
-    sections.forEach((el) => observer.observe(el))
-    return () => sections.forEach((el) => observer.unobserve(el))
-  }, [])
-
+  // Detect active section while scrolling
   useEffect(() => {
     const handleScroll = () => {
+      // Update scrolled state
       setScrolled(window.scrollY > 50)
+
+      // Get all sections
+      const sections = NAV_LINKS.map((link) => {
+        const id = link.href.replace('#', '')
+        return document.getElementById(id)
+      }).filter(Boolean)
+
+      if (sections.length === 0) return
+
+      // Find which section is currently in view
+      const scrollPosition = window.scrollY + 100 // Offset for navbar
+
+      let currentSection = "#home"
+
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop
+        const sectionHeight = section.offsetHeight
+
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          currentSection = `#${section.id}`
+        }
+      })
+
+      setActiveSection(currentSection)
     }
-    window.addEventListener('scroll', handleScroll)
+
+    handleScroll() // Initial check
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleNavClick = (e, href) => {
+  // Handle navigation clicks
+  const handleNavClick = useCallback((e, href) => {
     e.preventDefault()
-    scrollToSection(href)
+    
+    // Close mobile menu
     setIsOpen(false)
-  }
+    
+    // Immediately update active section for instant visual feedback
+    setActiveSection(href)
+    
+    // Get target element
+    const targetId = href.replace('#', '')
+    const targetElement = document.getElementById(targetId)
+    
+    if (targetElement) {
+      // Calculate position with navbar offset
+      const navbarHeight = 80
+      const elementPosition = targetElement.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight
+
+      // Smooth scroll
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
+    } else {
+      console.warn(`Section ${href} not found`)
+    }
+  }, [])
 
   return (
     <>
@@ -148,8 +186,8 @@ export default function Navbar() {
           }
         }
 
-        .nav-glow {
-          animation: glow 3s infinite;
+        nav a {
+          transition: color 0.3s ease;
         }
 
         @media (max-width: 768px) {
@@ -183,6 +221,7 @@ export default function Navbar() {
             onClick={(e) => handleNavClick(e, "#home")}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            style={{ cursor: 'pointer' }}
           >
             <Logo />
           </motion.a>
@@ -219,7 +258,9 @@ export default function Navbar() {
               color: "white",
               boxShadow: "0 4px 20px rgba(249, 115, 22, 0.4)",
               border: '1px solid rgba(249, 115, 22, 0.5)',
-              letterSpacing: '0.05em'
+              letterSpacing: '0.05em',
+              cursor: 'pointer',
+              textDecoration: 'none'
             }}
             whileHover={{ 
               scale: 1.05,
@@ -290,7 +331,9 @@ export default function Navbar() {
                       border: `1px solid ${activeSection === link.href 
                         ? 'rgba(249, 115, 22, 0.3)' 
                         : 'transparent'}`,
-                      letterSpacing: '0.1em'
+                      letterSpacing: '0.1em',
+                      cursor: 'pointer',
+                      textDecoration: 'none'
                     }}
                     whileTap={{ 
                       scale: 0.95,
@@ -314,7 +357,9 @@ export default function Navbar() {
                     color: "white",
                     boxShadow: "0 4px 20px rgba(249, 115, 22, 0.4)",
                     border: '1px solid rgba(249, 115, 22, 0.5)',
-                    letterSpacing: '0.05em'
+                    letterSpacing: '0.05em',
+                    cursor: 'pointer',
+                    textDecoration: 'none'
                   }}
                   whileTap={{ scale: 0.95 }}
                 >

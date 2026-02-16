@@ -5,8 +5,8 @@ import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa"
 import { theme } from "../../theme"
 
 const SOCIAL_LINKS = [
-  { icon: FaGithub, href: "https://github.com/yourusername", label: "GitHub", color: "#fff" },
-  { icon: FaLinkedin, href: "https://linkedin.com/in/yourusername", label: "LinkedIn", color: "#0077b5" },
+  { icon: FaGithub, href: "https://github.com/Vaibhav8075", label: "GitHub", color: "#fff" },
+  { icon: FaLinkedin, href: "https://www.linkedin.com/in/vaibhav-goel-23983b344", label: "LinkedIn", color: "#0077b5" },
   { icon: FaTwitter, href: "https://twitter.com/yourusername", label: "Twitter", color: "#1da1f2" },
   { icon: FaInstagram, href: "https://instagram.com/yourusername", label: "Instagram", color: "#e4405f" },
 ]
@@ -201,7 +201,7 @@ export default function Reachout() {
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap"
                 }}>
-                  vaibhav@example.com
+                  vaibhav.goel0531@gmail.com
                 </p>
               </div>
             </motion.a>
@@ -535,7 +535,7 @@ export default function Reachout() {
             fontSize: "0.9rem"
           }}
         >
-          <p>© 2024 Vaibhav. Built with React Three Fiber & ❤️</p>
+          <p>© 2026 Vaibhav Goel</p>
         </motion.div>
       </div>
     </section>
