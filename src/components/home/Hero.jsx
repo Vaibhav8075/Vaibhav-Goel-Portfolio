@@ -59,7 +59,7 @@ function ACMLoadingScreen() {
             WebkitTextFillColor: 'transparent',
           }}
         >
-          TECHNOLOGY
+          PORTFOLIO
         </motion.span>
       </motion.div>
 

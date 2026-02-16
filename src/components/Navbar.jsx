@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect, useCallback } from "react"
 import { HiMenu, HiX } from "react-icons/hi"
-import { theme } from "../theme"
+import { theme, scrollToSection } from "../theme"
 
 const NAV_LINKS = [
   { href: "#home", label: "HOME" },
@@ -19,8 +19,7 @@ function NavLink({ href, label, isActive, onClick }) {
       className="relative py-2 px-1 text-sm font-semibold transition-colors tracking-wide"
       style={{ 
         color: isActive ? theme.colors.primary : theme.colors.text,
-        letterSpacing: '0.05em',
-        cursor: 'pointer'
+        letterSpacing: '0.05em'
       }}
       whileHover={{ 
         color: theme.colors.primary,
@@ -44,6 +43,7 @@ function NavLink({ href, label, isActive, onClick }) {
   )
 }
 
+// Logo Component
 function Logo() {
   return (
     <motion.div
@@ -108,69 +108,84 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("#home")
   const [scrolled, setScrolled] = useState(false)
 
-  // Detect active section while scrolling
+  // IMPROVED: Better section detection with proper cleanup
   useEffect(() => {
-    const handleScroll = () => {
-      // Update scrolled state
-      setScrolled(window.scrollY > 50)
+    const sections = NAV_LINKS.map((link) => {
+      const id = link.href.replace('#', '')
+      return document.getElementById(id)
+    }).filter(Boolean)
 
-      // Get all sections
-      const sections = NAV_LINKS.map((link) => {
-        const id = link.href.replace('#', '')
-        return document.getElementById(id)
-      }).filter(Boolean)
+    if (sections.length === 0) return
 
-      if (sections.length === 0) return
+    // Create observer with better threshold settings
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px', // Better detection range
+      threshold: [0, 0.25, 0.5, 0.75, 1] // Multiple thresholds for accuracy
+    }
 
-      // Find which section is currently in view
-      const scrollPosition = window.scrollY + 100 // Offset for navbar
+    const observer = new IntersectionObserver((entries) => {
+      // Find the most visible section
+      let mostVisible = null
+      let maxRatio = 0
 
-      let currentSection = "#home"
-
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop
-        const sectionHeight = section.offsetHeight
-
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-          currentSection = `#${section.id}`
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio
+          mostVisible = entry.target
         }
       })
 
-      setActiveSection(currentSection)
-    }
+      // Update active section if we found one
+      if (mostVisible) {
+        setActiveSection(`#${mostVisible.id}`)
+      }
+    }, observerOptions)
 
-    handleScroll() // Initial check
+    // Observe all sections
+    sections.forEach((section) => observer.observe(section))
+
+    // Cleanup
+    return () => {
+      sections.forEach((section) => observer.unobserve(section))
+    }
+  }, [])
+
+  // Handle scroll for navbar background
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50)
+    }
+    
+    handleScroll() // Check initial state
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Handle navigation clicks
+  // IMPROVED: Better navigation handler with immediate feedback
   const handleNavClick = useCallback((e, href) => {
     e.preventDefault()
+    
+    // Immediately update active section for instant feedback
+    setActiveSection(href)
     
     // Close mobile menu
     setIsOpen(false)
     
-    // Immediately update active section for instant visual feedback
-    setActiveSection(href)
-    
-    // Get target element
+    // Smooth scroll to section
     const targetId = href.replace('#', '')
     const targetElement = document.getElementById(targetId)
     
     if (targetElement) {
-      // Calculate position with navbar offset
-      const navbarHeight = 80
+      // Get navbar height for offset
+      const navbarHeight = 80 // Approximate navbar height
       const elementPosition = targetElement.getBoundingClientRect().top
       const offsetPosition = elementPosition + window.pageYOffset - navbarHeight
 
-      // Smooth scroll
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
       })
-    } else {
-      console.warn(`Section ${href} not found`)
     }
   }, [])
 
@@ -186,14 +201,20 @@ export default function Navbar() {
           }
         }
 
-        nav a {
-          transition: color 0.3s ease;
+        .nav-glow {
+          animation: glow 3s infinite;
         }
 
+        /* Prevent layout shift on mobile */
         @media (max-width: 768px) {
           .nav-logo-text {
             display: none;
           }
+        }
+
+        /* Smooth color transitions on nav links */
+        nav a {
+          transition: color 0.3s ease;
         }
       `}</style>
 
@@ -221,7 +242,6 @@ export default function Navbar() {
             onClick={(e) => handleNavClick(e, "#home")}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            style={{ cursor: 'pointer' }}
           >
             <Logo />
           </motion.a>
@@ -258,9 +278,7 @@ export default function Navbar() {
               color: "white",
               boxShadow: "0 4px 20px rgba(249, 115, 22, 0.4)",
               border: '1px solid rgba(249, 115, 22, 0.5)',
-              letterSpacing: '0.05em',
-              cursor: 'pointer',
-              textDecoration: 'none'
+              letterSpacing: '0.05em'
             }}
             whileHover={{ 
               scale: 1.05,
@@ -331,9 +349,7 @@ export default function Navbar() {
                       border: `1px solid ${activeSection === link.href 
                         ? 'rgba(249, 115, 22, 0.3)' 
                         : 'transparent'}`,
-                      letterSpacing: '0.1em',
-                      cursor: 'pointer',
-                      textDecoration: 'none'
+                      letterSpacing: '0.1em'
                     }}
                     whileTap={{ 
                       scale: 0.95,
@@ -357,9 +373,7 @@ export default function Navbar() {
                     color: "white",
                     boxShadow: "0 4px 20px rgba(249, 115, 22, 0.4)",
                     border: '1px solid rgba(249, 115, 22, 0.5)',
-                    letterSpacing: '0.05em',
-                    cursor: 'pointer',
-                    textDecoration: 'none'
+                    letterSpacing: '0.05em'
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
