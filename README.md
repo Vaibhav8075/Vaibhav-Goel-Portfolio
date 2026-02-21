@@ -2,16 +2,6 @@
 
 ---
 
-## Live Demo Preview
-
-<p align="center">
-  <img src="./public/demo.gif" alt="Portfolio Demo" width="900" />
-</p>
-
-Replace `./public/demo.gif` with your actual demo GIF path.
-
----
-
 ## To run the app follow the steps:
 
 ```bash
@@ -29,18 +19,6 @@ Final production build command:
 ```bash
 npm run build
 ```
-
----
-
-## Contact Form Setup
-
-Create/update `.env` in project root:
-
-```bash
-VITE_FORMSPREE_ENDPOINT=https://formspree.io/f/your_form_id
-```
-
-Then restart the dev server.
 
 ---
 
