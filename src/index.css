@@ -21,7 +21,6 @@ canvas {
   vertical-align: middle;
 }
 
-/* Form inputs focus state */
 input:focus, textarea:focus {
   outline: none;
   border-color: rgba(249, 115, 22, 0.5) !important;
@@ -32,7 +31,6 @@ input::placeholder, textarea::placeholder {
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* Section layout helper */
 .section-padding {
   padding: clamp(4rem, 10vw, 6rem) clamp(1.5rem, 5vw, 3rem);
 }

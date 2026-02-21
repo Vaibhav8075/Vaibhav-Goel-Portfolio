@@ -1,4 +1,3 @@
-// Design tokens for consistent, professional styling
 export const theme = {
   colors: {
     primary: "#f97316",

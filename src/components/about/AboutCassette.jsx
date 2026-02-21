@@ -1,156 +1,74 @@
-import { Canvas, useFrame, useLoader } from "@react-three/fiber"
-import { useRef, Suspense } from "react"
+import { useRef } from "react"
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
-import * as THREE from "three"
-
-function CassetteImagePlane({ imageUrl }) {
-  const texture = useLoader(THREE.TextureLoader, imageUrl)
-  const meshRef = useRef()
-
-  // Create rounded corners using a canvas
-  const roundedTexture = useRef()
-  
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime()
-    
-    if (meshRef.current) {
-      // Very subtle floating
-      meshRef.current.position.y = Math.sin(t * 0.4) * 0.05
-    }
-  })
-
-  // Apply texture with rounded effect
-  if (texture && !roundedTexture.current) {
-    // Create canvas for rounded corners
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    canvas.width = texture.image.width
-    canvas.height = texture.image.height
-    
-    const radius = 40 // Corner radius
-    
-    // Draw rounded rectangle
-    ctx.beginPath()
-    ctx.moveTo(radius, 0)
-    ctx.lineTo(canvas.width - radius, 0)
-    ctx.quadraticCurveTo(canvas.width, 0, canvas.width, radius)
-    ctx.lineTo(canvas.width, canvas.height - radius)
-    ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - radius, canvas.height)
-    ctx.lineTo(radius, canvas.height)
-    ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - radius)
-    ctx.lineTo(0, radius)
-    ctx.quadraticCurveTo(0, 0, radius, 0)
-    ctx.closePath()
-    ctx.clip()
-    
-    // Draw image
-    ctx.drawImage(texture.image, 0, 0)
-    
-    roundedTexture.current = new THREE.CanvasTexture(canvas)
-  }
-
-  return (
-    <mesh ref={meshRef}>
-      {/* Smaller cassette - more reasonable size */}
-      <planeGeometry args={[4.5, 2.9]} />
-      <meshBasicMaterial 
-        map={roundedTexture.current || texture} 
-        transparent 
-        side={THREE.DoubleSide}
-      />
-    </mesh>
-  )
-}
 
 export default function AboutCassette() {
   const sectionRef = useRef()
-  
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "center center"]
+    offset: ["start end", "center center"],
   })
-  
-  // SMOOTH SPRING PHYSICS
+
   const springScroll = useSpring(scrollYProgress, {
     stiffness: 80,
     damping: 25,
-    restDelta: 0.001
+    restDelta: 0.001,
   })
 
-  // CASSETTE ANIMATION - Slides from LEFT and hangs on left
-  const cassetteX = useTransform(springScroll, [0, 1], [-600, 0])
-  const cassetteOpacity = useTransform(springScroll, [0, 0.4], [0, 1])
-  const cassetteRotate = useTransform(springScroll, [0, 1], [-20, 0])
-  const cassetteScale = useTransform(springScroll, [0, 1], [0.7, 1])
+  const cassetteX = useTransform(springScroll, [0, 1], [-500, 0])
+  const cassetteOp = useTransform(springScroll, [0, 0.4], [0, 1])
+  const cassetteRot = useTransform(springScroll, [0, 1], [-18, 0])
+  const cassetteScale = useTransform(springScroll, [0, 1], [0.75, 1])
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      id="about-cassette"
-      className="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black text-white flex flex-col md:flex-row items-center justify-between px-6 md:px-16 gap-12 md:gap-20 relative overflow-hidden py-20"
+      id="about"
+      className="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black text-white flex flex-col md:flex-row items-center justify-between px-6 md:px-20 gap-12 relative overflow-hidden py-24"
     >
-      {/* Background Grid */}
-      <div 
+      <div
         className="absolute inset-0 opacity-[0.02] z-0"
         style={{
           backgroundImage: `linear-gradient(#f97316 1px, transparent 1px), linear-gradient(90deg, #f97316 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
+          backgroundSize: "50px 50px",
         }}
       />
 
-      {/* Animated orange glow - on left side */}
-      <motion.div 
-        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+      <motion.div
+        animate={{ scale: [1, 1.3, 1], opacity: [0.15, 0.3, 0.15] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-[600px] h-[600px] bg-orange-500/15 blur-[140px] rounded-full top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 z-0" 
+        className="absolute w-[500px] h-[500px] bg-orange-500/20 blur-[130px] rounded-full top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 z-0"
       />
 
-      {/* CASSETTE - LEFT SIDE - Slides from left */}
-      <motion.div 
-        style={{ 
-          x: cassetteX,
-          opacity: cassetteOpacity,
-          scale: cassetteScale,
-          rotateZ: cassetteRotate 
-        }}
-        className="w-full md:w-5/12 h-[350px] md:h-[450px] relative z-20 flex items-center justify-center order-1"
+      <motion.div
+        style={{ x: cassetteX, opacity: cassetteOp, scale: cassetteScale, rotate: cassetteRot }}
+        className="relative z-10 order-1 flex-shrink-0"
       >
-        <Suspense fallback={
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
-          </div>
-        }>
-          <Canvas 
-            camera={{ position: [0, 0, 5], fov: 45 }}
-            dpr={[1, 2]}
-          >
-            <ambientLight intensity={1.2} />
-            <pointLight position={[5, 5, 5]} intensity={0.5} />
-            <pointLight position={[-3, -3, 3]} intensity={0.3} color="#f97316" />
-            
-            <CassetteImagePlane imageUrl="/cassette.png" />
-          </Canvas>
-        </Suspense>
+        <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+          <img
+            src="/cassette.png"
+            alt="cassette"
+            style={{
+              width: "clamp(260px, 32vw, 420px)",
+              borderRadius: "24px",
+              opacity: 0.82,
+              filter: "drop-shadow(0 20px 60px rgba(249,115,22,0.35))",
+              display: "block",
+            }}
+          />
+        </motion.div>
 
-        {/* Decorative accent */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="absolute -bottom-6 -left-6 w-28 h-28 border-l-2 border-b-2 border-orange-500/30 rounded-bl-[2rem] pointer-events-none"
-        />
+        <div className="absolute -bottom-5 -left-5 w-24 h-24 border-l-2 border-b-2 border-orange-500/30 rounded-bl-[1.5rem] pointer-events-none" />
       </motion.div>
 
-      {/* TEXT - RIGHT SIDE - Your existing animation */}
       <motion.div
         initial={{ opacity: 0, x: -80 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="max-w-xl z-10 md:w-6/12 order-2"
+        className="max-w-xl z-10 md:w-1/2 order-2"
       >
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -160,42 +78,43 @@ export default function AboutCassette() {
           About <span className="text-orange-500">Me</span>
         </motion.h1>
 
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-gray-300 leading-relaxed mb-6 text-lg"
         >
-          I'm a <strong className="text-white font-semibold">Full Stack Developer</strong> focused on creating 
-          <strong className="text-orange-400 font-semibold"> immersive digital experiences</strong>.
-          I combine React, Three.js and AI systems to build cinematic,
-          high-performance web interfaces.
+          I am a <strong className="text-white font-semibold">Computer Science undergraduate at VIT Vellore</strong> and a
+          <strong className="text-orange-400 font-semibold"> full-stack developer</strong> with strong frontend specialization.
+          I build production-grade applications using React 18, Tailwind CSS, Three.js, GSAP, and Framer Motion, with backend
+          support through FastAPI services.
         </motion.p>
 
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-gray-400 leading-relaxed text-base mb-4"
         >
-          My work blends <strong className="text-gray-300 font-medium">design, motion and engineering</strong> — creating
-          interactive stories instead of static websites.
+          Alongside UI engineering, I work on AI-integrated systems including Whisper-based workflows, Backboard AI
+          verification, authentication flows, and rate-limited APIs. My focus is maintainability, performance, and clean user
+          experience.
         </motion.p>
 
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-gray-500 leading-relaxed text-sm"
         >
-          Every project is a chance to push the boundaries of what's possible on the web,
-          combining cutting-edge technology with thoughtful user experience.
+          I have worked across startup and engineering teams including MossX, Aarvasa, and Team Sammard (VIT Rocket Team),
+          contributing to real-time dashboards and production-ready frontend systems.
         </motion.p>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scaleX: 0 }}
           whileInView={{ opacity: 1, scaleX: 1 }}
           viewport={{ once: true }}

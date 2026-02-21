@@ -1,12 +1,13 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect, useCallback } from "react"
 import { HiMenu, HiX } from "react-icons/hi"
-import { theme, scrollToSection } from "../theme"
+import { theme, scrollToSection } from "../../theme"
 
 const NAV_LINKS = [
   { href: "#home", label: "HOME" },
   { href: "#about", label: "ABOUT" },
   { href: "#skills", label: "SKILLS" },
+  { href: "#experience", label: "EXPERIENCE" },
   { href: "#projects", label: "PROJECTS" },
   { href: "#contact", label: "CONTACT" },
 ]
@@ -43,7 +44,6 @@ function NavLink({ href, label, isActive, onClick }) {
   )
 }
 
-// Logo Component
 function Logo() {
   return (
     <motion.div
@@ -108,7 +108,6 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("#home")
   const [scrolled, setScrolled] = useState(false)
 
-  // IMPROVED: Better section detection with proper cleanup
   useEffect(() => {
     const sections = NAV_LINKS.map((link) => {
       const id = link.href.replace('#', '')
@@ -117,7 +116,6 @@ export default function Navbar() {
 
     if (sections.length === 0) return
 
-    // Create observer with better threshold settings
     const observerOptions = {
       root: null,
       rootMargin: '-20% 0px -70% 0px', // Better detection range
@@ -125,7 +123,6 @@ export default function Navbar() {
     }
 
     const observer = new IntersectionObserver((entries) => {
-      // Find the most visible section
       let mostVisible = null
       let maxRatio = 0
 
@@ -136,22 +133,18 @@ export default function Navbar() {
         }
       })
 
-      // Update active section if we found one
       if (mostVisible) {
         setActiveSection(`#${mostVisible.id}`)
       }
     }, observerOptions)
 
-    // Observe all sections
     sections.forEach((section) => observer.observe(section))
 
-    // Cleanup
     return () => {
       sections.forEach((section) => observer.unobserve(section))
     }
   }, [])
 
-  // Handle scroll for navbar background
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
@@ -162,22 +155,17 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // IMPROVED: Better navigation handler with immediate feedback
   const handleNavClick = useCallback((e, href) => {
     e.preventDefault()
     
-    // Immediately update active section for instant feedback
     setActiveSection(href)
     
-    // Close mobile menu
     setIsOpen(false)
     
-    // Smooth scroll to section
     const targetId = href.replace('#', '')
     const targetElement = document.getElementById(targetId)
     
     if (targetElement) {
-      // Get navbar height for offset
       const navbarHeight = 80 // Approximate navbar height
       const elementPosition = targetElement.getBoundingClientRect().top
       const offsetPosition = elementPosition + window.pageYOffset - navbarHeight
@@ -205,14 +193,14 @@ export default function Navbar() {
           animation: glow 3s infinite;
         }
 
-        /* Prevent layout shift on mobile */
+        
         @media (max-width: 768px) {
           .nav-logo-text {
             display: none;
           }
         }
 
-        /* Smooth color transitions on nav links */
+        
         nav a {
           transition: color 0.3s ease;
         }
@@ -246,7 +234,6 @@ export default function Navbar() {
             <Logo />
           </motion.a>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8 lg:gap-12">
             {NAV_LINKS.map((link, index) => (
               <motion.div
@@ -265,7 +252,6 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button */}
           <motion.a
             href="#contact"
             onClick={(e) => handleNavClick(e, "#contact")}
@@ -290,7 +276,6 @@ export default function Navbar() {
             HIRE ME
           </motion.a>
 
-          {/* Mobile Menu Button */}
           <motion.button
             className="md:hidden p-2.5 rounded-lg"
             style={{ 
@@ -315,7 +300,6 @@ export default function Navbar() {
           </motion.button>
         </div>
 
-        {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
