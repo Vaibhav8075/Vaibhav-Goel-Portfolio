@@ -4,8 +4,8 @@
 The contact form is connected through Formspree.
 
 1. Create a Formspree form and copy your endpoint URL (`https://formspree.io/f/...`).
-2. Create a `.env` file in the project root.
-3. Add:
+2. In the project root, create or update `.env`.
+3. Add this line in `.env`:
 
 ```bash
 VITE_FORMSPREE_ENDPOINT=https://formspree.io/f/your_form_id
