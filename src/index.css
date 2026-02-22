@@ -13,7 +13,21 @@ html, body, #root {
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  background: #090909;
+}
+
+body {
+  background:
+    radial-gradient(1200px 800px at 85% -10%, rgba(249, 115, 22, 0.12), transparent 60%),
+    radial-gradient(1000px 700px at 0% 20%, rgba(251, 146, 60, 0.08), transparent 52%),
+    #080808;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+::selection {
+  background: rgba(249, 115, 22, 0.35);
+  color: #fff;
 }
 
 canvas {
@@ -33,4 +47,19 @@ input::placeholder, textarea::placeholder {
 
 .section-padding {
   padding: clamp(4rem, 10vw, 6rem) clamp(1.5rem, 5vw, 3rem);
+}
+
+.story-label {
+  opacity: 0.03;
+}
+
+.story-line {
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .story-label,
+  .story-line {
+    display: none !important;
+  }
 }

@@ -19,6 +19,8 @@ export default function AboutCassette() {
   const cassetteOp = useTransform(springScroll, [0, 0.4], [0, 1])
   const cassetteRot = useTransform(springScroll, [0, 1], [-18, 0])
   const cassetteScale = useTransform(springScroll, [0, 1], [0.75, 1])
+  const lineScaleY = useTransform(springScroll, [0, 1], [0, 1])
+  const labelY = useTransform(springScroll, [0, 1], ["6%", "-6%"])
 
   return (
     <section
@@ -31,6 +33,39 @@ export default function AboutCassette() {
         style={{
           backgroundImage: `linear-gradient(#f97316 1px, transparent 1px), linear-gradient(90deg, #f97316 1px, transparent 1px)`,
           backgroundSize: "50px 50px",
+        }}
+      />
+      <motion.p
+        aria-hidden="true"
+        className="story-label"
+        style={{
+          position: "absolute",
+          right: "3vw",
+          top: "12%",
+          margin: 0,
+          y: labelY,
+          fontSize: "clamp(2rem, 9vw, 7rem)",
+          fontWeight: 900,
+          letterSpacing: "0.2em",
+          color: "rgba(255,255,255,0.05)",
+          userSelect: "none",
+        }}
+      >
+        ABOUT
+      </motion.p>
+      <motion.div
+        aria-hidden="true"
+        className="story-line"
+        style={{
+          position: "absolute",
+          right: "max(16px, 2vw)",
+          top: "16%",
+          width: "3px",
+          height: "64vh",
+          borderRadius: "999px",
+          background: "rgba(249, 115, 22, 0.2)",
+          transformOrigin: "top",
+          scaleY: lineScaleY,
         }}
       />
 
