@@ -30,5 +30,14 @@ export const theme = {
 }
 
 export const scrollToSection = (id) => {
-  document.querySelector(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+  const target = document.querySelector(id)
+  if (!target) return
+
+  const lenis = window.__lenis
+  if (lenis?.scrollTo) {
+    lenis.scrollTo(target, { offset: -8, duration: 1.1 })
+    return
+  }
+
+  target.scrollIntoView({ behavior: "smooth", block: "start" })
 }

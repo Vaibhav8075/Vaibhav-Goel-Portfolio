@@ -157,24 +157,9 @@ export default function Navbar() {
 
   const handleNavClick = useCallback((e, href) => {
     e.preventDefault()
-    
     setActiveSection(href)
-    
     setIsOpen(false)
-    
-    const targetId = href.replace('#', '')
-    const targetElement = document.getElementById(targetId)
-    
-    if (targetElement) {
-      const navbarHeight = 80 // Approximate navbar height
-      const elementPosition = targetElement.getBoundingClientRect().top
-      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      })
-    }
+    scrollToSection(href)
   }, [])
 
   return (
@@ -255,21 +240,23 @@ export default function Navbar() {
           <motion.a
             href="#contact"
             onClick={(e) => handleNavClick(e, "#contact")}
-            className="hidden md:block px-6 py-2.5 rounded-xl text-sm font-bold tracking-wide"
+            className="hidden md:block px-6 py-2.5 rounded-full text-sm font-bold tracking-wide"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
             style={{
-              background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+              background: "rgba(255, 255, 255, 0.03)",
               color: "white",
-              boxShadow: "0 4px 20px rgba(249, 115, 22, 0.4)",
-              border: '1px solid rgba(249, 115, 22, 0.5)',
-              letterSpacing: '0.05em'
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 6px 24px rgba(0,0,0,0.25)",
+              border: "1px solid rgba(249, 115, 22, 0.6)",
+              letterSpacing: "0.07em",
+              backdropFilter: "blur(8px)",
             }}
             whileHover={{ 
-              scale: 1.05,
-              boxShadow: "0 6px 30px rgba(249, 115, 22, 0.6)",
-              y: -2
+              scale: 1.03,
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 28px rgba(249, 115, 22, 0.3)",
+              y: -1,
+              backgroundColor: "rgba(249, 115, 22, 0.12)",
             }}
             whileTap={{ scale: 0.95 }}
           >
@@ -347,17 +334,22 @@ export default function Navbar() {
                 <motion.a
                   href="#contact"
                   onClick={(e) => handleNavClick(e, "#contact")}
-                  className="mt-4 py-4 px-4 text-center rounded-xl font-bold tracking-wide"
+                  className="mt-4 py-4 px-4 text-center rounded-full font-bold tracking-wide"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.3, delay: 0.3 }}
                   style={{
-                    background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+                    background: "rgba(255, 255, 255, 0.04)",
                     color: "white",
-                    boxShadow: "0 4px 20px rgba(249, 115, 22, 0.4)",
-                    border: '1px solid rgba(249, 115, 22, 0.5)',
-                    letterSpacing: '0.05em'
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.24)",
+                    border: "1px solid rgba(249, 115, 22, 0.58)",
+                    letterSpacing: "0.07em",
+                    backdropFilter: "blur(8px)",
+                  }}
+                  whileHover={{
+                    backgroundColor: "rgba(249, 115, 22, 0.14)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 28px rgba(249, 115, 22, 0.28)",
                   }}
                   whileTap={{ scale: 0.95 }}
                 >

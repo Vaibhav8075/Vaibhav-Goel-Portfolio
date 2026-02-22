@@ -1,11 +1,61 @@
 import { motion } from "framer-motion"
 import { scrollToSection } from "../../../theme"
 import { PROJECTS } from "./data"
+import { useSectionStory } from "./useSectionStory"
 
 export default function ProjectsSection() {
+  const { sectionRef, contentY, contentOpacity, contentScale, backgroundY, lineScaleY } = useSectionStory()
+
   return (
-    <section id="projects" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "10vw", color: "white" }}>
-      <div style={{ maxWidth: "900px", width: "100%" }}>
+    <section
+      ref={sectionRef}
+      id="projects"
+      style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "10vw", color: "white", position: "relative", overflow: "hidden" }}
+    >
+      <motion.div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          y: backgroundY,
+          background:
+            "radial-gradient(circle at 86% 18%, rgba(249, 115, 22, 0.2), transparent 36%), radial-gradient(circle at 14% 82%, rgba(251, 146, 60, 0.13), transparent 32%)",
+        }}
+      />
+      <motion.p
+        aria-hidden="true"
+        className="story-label"
+        style={{
+          position: "absolute",
+          right: "2vw",
+          bottom: "12%",
+          margin: 0,
+          fontSize: "clamp(2.4rem, 10vw, 8rem)",
+          fontWeight: 900,
+          color: "rgba(255,255,255,0.04)",
+          letterSpacing: "0.18em",
+          userSelect: "none",
+        }}
+      >
+        PROJECTS
+      </motion.p>
+      <motion.div
+        aria-hidden="true"
+        className="story-line"
+        style={{
+          position: "absolute",
+          right: "max(16px, 2.2vw)",
+          top: "18%",
+          width: "3px",
+          height: "60vh",
+          borderRadius: "999px",
+          background: "rgba(249, 115, 22, 0.22)",
+          transformOrigin: "top",
+          scaleY: lineScaleY,
+        }}
+      />
+
+      <motion.div style={{ maxWidth: "900px", width: "100%", y: contentY, opacity: contentOpacity, scale: contentScale, zIndex: 2 }}>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -49,7 +99,7 @@ export default function ProjectsSection() {
             </div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

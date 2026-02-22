@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
 import { HiMail, HiLocationMarker, HiPaperAirplane, HiCheckCircle } from "react-icons/hi"
 import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa"
+import { useSectionStory } from "../home/sections/useSectionStory"
 
 const SOCIAL_LINKS = [
   { icon: FaGithub, href: "https://github.com/Vaibhav8075", label: "GitHub", color: "#fff" },
@@ -28,6 +29,7 @@ const item = {
 }
 
 export default function Reachout() {
+  const { sectionRef, contentY, contentOpacity, contentScale, backgroundY, lineScaleY } = useSectionStory()
   const formEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT
   const [formState, setFormState] = useState({ name: "", email: "", message: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -84,6 +86,7 @@ export default function Reachout() {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
       style={{
         minHeight: "auto",
@@ -97,6 +100,53 @@ export default function Reachout() {
         overflow: "hidden"
       }}
     >
+      <motion.div
+        aria-hidden="true"
+        className="story-line"
+        style={{
+          position: "absolute",
+          inset: 0,
+          y: backgroundY,
+          background:
+            "linear-gradient(180deg, rgba(249, 115, 22, 0.08), transparent 34%), radial-gradient(circle at 20% 15%, rgba(251, 146, 60, 0.13), transparent 30%)",
+          pointerEvents: "none",
+        }}
+      />
+      <motion.div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "max(14px, 2vw)",
+          top: "18%",
+          width: "3px",
+          height: "58vh",
+          borderRadius: "999px",
+          background: "rgba(249, 115, 22, 0.2)",
+          transformOrigin: "top",
+          scaleY: lineScaleY,
+          pointerEvents: "none",
+        }}
+      />
+      <motion.p
+        aria-hidden="true"
+        className="story-label"
+        style={{
+          position: "absolute",
+          right: "2vw",
+          top: "14%",
+          margin: 0,
+          fontSize: "clamp(2.1rem, 9vw, 7rem)",
+          fontWeight: 900,
+          letterSpacing: "0.18em",
+          color: "rgba(255,255,255,0.04)",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+      >
+        CONTACT
+      </motion.p>
+
+      <motion.div style={{ width: "100%", y: contentY, opacity: contentOpacity, scale: contentScale, position: "relative", zIndex: 1 }}>
       <motion.div
         animate={{
           scale: [1, 1.2, 1],
@@ -569,9 +619,10 @@ export default function Reachout() {
             fontSize: "0.82rem"
           }}
         >
-          <p>© 2026 Vaibhav Goel</p>
+          <p>&copy; 2026 Vaibhav Goel</p>
         </motion.div>
       </div>
+      </motion.div>
     </section>
   )
 }
@@ -579,3 +630,5 @@ export default function Reachout() {
 function clamp(min, max) {
   return typeof window !== 'undefined' && window.innerWidth < 768 ? min : max
 }
+
+
