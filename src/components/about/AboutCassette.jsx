@@ -1,161 +1,214 @@
-import { useRef } from "react"
-import { motion, useScroll, useTransform, useSpring } from "framer-motion"
+import { useRef, useState } from "react"
+import { motion, useScroll, useSpring, useTransform } from "framer-motion"
+
+const HIGHLIGHTS = [
+  "Computer Science undergraduate at VIT Vellore",
+  "Frontend-first full-stack engineering approach",
+  "Strong focus on performance, maintainability, and UX quality",
+]
 
 export default function AboutCassette() {
-  const sectionRef = useRef()
+  const sectionRef = useRef(null)
+  const [isHovered, setIsHovered] = useState(false)
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "center center"],
+    offset: ["start end", "end start"],
   })
 
-  const springScroll = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 25,
-    restDelta: 0.001,
-  })
-
-  const cassetteX = useTransform(springScroll, [0, 1], [-500, 0])
-  const cassetteOp = useTransform(springScroll, [0, 0.4], [0, 1])
-  const cassetteRot = useTransform(springScroll, [0, 1], [-18, 0])
-  const cassetteScale = useTransform(springScroll, [0, 1], [0.75, 1])
-  const lineScaleY = useTransform(springScroll, [0, 1], [0, 1])
-  const labelY = useTransform(springScroll, [0, 1], ["6%", "-6%"])
+  const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 28, mass: 0.3 })
+  const contentY = useTransform(progress, [0, 1], [68, -68])
+  const imageY = useTransform(progress, [0, 1], [112, -112])
+  const cassetteX = useTransform(progress, [0, 0.7, 1], [-520, -40, 0])
+  const cassetteOpacity = useTransform(progress, [0, 0.35, 1], [0, 0.92, 1])
+  const cassetteRotate = useTransform(progress, [0, 0.35, 1], [-10, 0, 0])
+  const sectionOpacity = useTransform(progress, [0, 0.2, 0.85, 1], [0.15, 1, 1, 0.15])
 
   return (
     <section
       ref={sectionRef}
       id="about"
-      className="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black text-white flex flex-col md:flex-row items-center justify-between px-6 md:px-20 gap-12 relative overflow-hidden py-24"
+      style={{
+        minHeight: "100vh",
+        position: "relative",
+        overflow: "hidden",
+        padding: "clamp(4rem, 10vw, 7rem) 0",
+        color: "#fff",
+      }}
     >
       <div
-        className="absolute inset-0 opacity-[0.02] z-0"
-        style={{
-          backgroundImage: `linear-gradient(#f97316 1px, transparent 1px), linear-gradient(90deg, #f97316 1px, transparent 1px)`,
-          backgroundSize: "50px 50px",
-        }}
-      />
-      <motion.p
         aria-hidden="true"
-        className="story-label"
         style={{
           position: "absolute",
-          right: "3vw",
-          top: "12%",
-          margin: 0,
-          y: labelY,
-          fontSize: "clamp(2rem, 9vw, 7rem)",
-          fontWeight: 900,
-          letterSpacing: "0.2em",
-          color: "rgba(255,255,255,0.05)",
-          userSelect: "none",
-        }}
-      >
-        ABOUT
-      </motion.p>
-      <motion.div
-        aria-hidden="true"
-        className="story-line"
-        style={{
-          position: "absolute",
-          right: "max(16px, 2vw)",
-          top: "16%",
-          width: "3px",
-          height: "64vh",
-          borderRadius: "999px",
-          background: "rgba(249, 115, 22, 0.2)",
-          transformOrigin: "top",
-          scaleY: lineScaleY,
+          inset: 0,
+          background:
+            "radial-gradient(circle at 82% 18%, rgba(249,115,22,0.18), transparent 34%), radial-gradient(circle at 14% 78%, rgba(251,146,60,0.13), transparent 36%)",
+          pointerEvents: "none",
         }}
       />
 
-      <motion.div
-        animate={{ scale: [1, 1.3, 1], opacity: [0.15, 0.3, 0.15] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-[500px] h-[500px] bg-orange-500/20 blur-[130px] rounded-full top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 z-0"
-      />
-
-      <motion.div
-        style={{ x: cassetteX, opacity: cassetteOp, scale: cassetteScale, rotate: cassetteRot }}
-        className="relative z-10 order-1 flex-shrink-0"
-      >
-        <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
-          <img
-            src="/cassette.png"
-            alt="cassette"
-            style={{
-              width: "clamp(260px, 32vw, 420px)",
-              borderRadius: "24px",
-              opacity: 0.82,
-              filter: "drop-shadow(0 20px 60px rgba(249,115,22,0.35))",
-              display: "block",
-            }}
-          />
-        </motion.div>
-
-        <div className="absolute -bottom-5 -left-5 w-24 h-24 border-l-2 border-b-2 border-orange-500/30 rounded-bl-[1.5rem] pointer-events-none" />
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, x: -80 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="max-w-xl z-10 md:w-1/2 order-2"
-      >
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-6xl md:text-7xl font-bold mb-8 leading-tight"
+      <motion.div className="container-shell" style={{ opacity: sectionOpacity }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
+            alignItems: "center",
+            gap: "clamp(1.4rem, 4vw, 3rem)",
+          }}
         >
-          About <span className="text-orange-500">Me</span>
-        </motion.h1>
+          <motion.div style={{ y: imageY, x: cassetteX, opacity: cassetteOpacity, rotate: cassetteRotate, perspective: "1200px" }}>
+            <motion.div
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                position: "relative",
+                maxWidth: "430px",
+                borderRadius: "24px",
+                transformStyle: "preserve-3d",
+                rotateX: isHovered ? -3 : 0,
+                rotateY: isHovered ? 3 : 0,
+              }}
+              onHoverStart={() => setIsHovered(true)}
+              onHoverEnd={() => setIsHovered(false)}
+            >
+              <motion.div
+                aria-hidden="true"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                style={{
+                  position: "absolute",
+                  width: "84%",
+                  aspectRatio: "1/1",
+                  borderRadius: "999px",
+                  border: "1px dashed rgba(249,115,22,0.28)",
+                  left: "8%",
+                  top: "9%",
+                  zIndex: 0,
+                }}
+              />
+              <motion.div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  inset: "-18px",
+                  borderRadius: "26px",
+                  background: "radial-gradient(circle at 40% 40%, rgba(249,115,22,0.26), transparent 62%)",
+                  filter: "blur(24px)",
+                  opacity: isHovered ? 0.92 : 0.7,
+                  pointerEvents: "none",
+                }}
+              />
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-gray-300 leading-relaxed mb-6 text-lg"
-        >
-          I am a <strong className="text-white font-semibold">Computer Science undergraduate at VIT Vellore</strong> and a
-          <strong className="text-orange-400 font-semibold"> full-stack developer</strong> with strong frontend specialization.
-          I build production-grade applications using React 18, Tailwind CSS, Three.js, GSAP, and Framer Motion, with backend
-          support through FastAPI services.
-        </motion.p>
+              <div
+                className="glass-card"
+                style={{
+                  position: "relative",
+                  borderRadius: "24px",
+                  overflow: "hidden",
+                  padding: "18px",
+                  zIndex: 1,
+                }}
+              >
+                <img
+                  src="/cassette.png"
+                  alt="Cassette visual identity"
+                  style={{
+                    width: "100%",
+                    borderRadius: "16px",
+                    display: "block",
+                    border: "1px solid rgba(249,115,22,0.26)",
+                  }}
+                />
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-gray-400 leading-relaxed text-base mb-4"
-        >
-          Alongside UI engineering, I work on AI-integrated systems including Whisper-based workflows, Backboard AI
-          verification, authentication flows, and rate-limited APIs. My focus is maintainability, performance, and clean user
-          experience.
-        </motion.p>
+                <motion.div
+                  aria-hidden="true"
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3.8, repeat: Infinity, ease: "linear" }}
+                  style={{
+                    position: "absolute",
+                    width: "26px",
+                    height: "26px",
+                    left: "32%",
+                    top: "53%",
+                    borderRadius: "999px",
+                    border: "2px solid rgba(255,255,255,0.45)",
+                    boxShadow: "0 0 0 4px rgba(249,115,22,0.14)",
+                  }}
+                />
+                <motion.div
+                  aria-hidden="true"
+                  animate={{ rotate: [0, -360] }}
+                  transition={{ duration: 3.8, repeat: Infinity, ease: "linear" }}
+                  style={{
+                    position: "absolute",
+                    width: "26px",
+                    height: "26px",
+                    right: "32%",
+                    top: "53%",
+                    borderRadius: "999px",
+                    border: "2px solid rgba(255,255,255,0.45)",
+                    boxShadow: "0 0 0 4px rgba(249,115,22,0.14)",
+                  }}
+                />
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-gray-500 leading-relaxed text-sm"
-        >
-          I have worked across startup and engineering teams including MossX, Aarvasa, and Team Sammard (VIT Rocket Team),
-          contributing to real-time dashboards and production-ready frontend systems.
-        </motion.p>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "14px",
+                    right: "14px",
+                    padding: "6px 10px",
+                    borderRadius: "999px",
+                    background: "rgba(8,8,8,0.78)",
+                    border: "1px solid rgba(249,115,22,0.35)",
+                    fontSize: "0.75rem",
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.85)",
+                  }}
+                >
+                  Design + Engineering
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          whileInView={{ opacity: 1, scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="mt-10 w-32 h-1.5 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full shadow-lg shadow-orange-500/50 origin-left"
-        />
+          <motion.div style={{ y: contentY }}>
+            <p style={{ color: "#fb923c", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700, fontSize: "0.78rem", marginBottom: "10px" }}>
+              About Me
+            </p>
+            <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.3rem)", marginBottom: "16px", lineHeight: 1.12 }}>
+              Product-minded developer with an execution focus
+            </h2>
+            <p style={{ color: "rgba(255,255,255,0.82)", lineHeight: 1.75, maxWidth: "60ch" }}>
+              I design and build end-to-end web experiences with React, motion systems, and backend integrations. I care about clear
+              interfaces, reliable architecture, and writing code that teams can scale confidently.
+            </p>
+
+            <div style={{ marginTop: "18px", display: "grid", gap: "10px" }}>
+              {HIGHLIGHTS.map((highlight, index) => (
+                <motion.div
+                  key={highlight}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.45, delay: index * 0.08 }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    padding: "10px 12px",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(249,115,22,0.2)",
+                    background: "rgba(249,115,22,0.06)",
+                  }}
+                >
+                  <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#f97316", flexShrink: 0 }} />
+                  <span style={{ color: "rgba(255,255,255,0.88)", fontSize: "0.95rem" }}>{highlight}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </motion.div>
     </section>
   )
