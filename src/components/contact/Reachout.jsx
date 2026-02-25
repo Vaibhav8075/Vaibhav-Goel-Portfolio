@@ -184,7 +184,7 @@ export default function Reachout() {
         }}
       />
 
-      <div style={{ width: "100%", maxWidth: "1040px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+      <div className="container-shell" style={{ position: "relative", zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -611,15 +611,37 @@ export default function Reachout() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
           style={{
-            marginTop: "clamp(1rem, 2vw, 1.35rem)",
-            paddingTop: "0.9rem",
-            borderTop: "1px solid rgba(249, 115, 22, 0.2)",
-            textAlign: "center",
+            marginTop: "clamp(2rem, 4vw, 3rem)",
+            paddingTop: "1.5rem",
+            borderTop: "1px solid rgba(249, 115, 22, 0.15)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "1rem",
             color: "rgba(255, 255, 255, 0.5)",
-            fontSize: "0.82rem"
+            fontSize: "0.85rem",
+            fontFamily: "'Space Grotesk', sans-serif"
           }}
         >
-          <p>&copy; 2026 Vaibhav Goel</p>
+          <p>&copy; {new Date().getFullYear()} Vaibhav Goel. All rights reserved.</p>
+          <button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "rgba(255,255,255,0.7)",
+              cursor: "pointer",
+              fontSize: "0.85rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              transition: "color 0.2s"
+            }}
+            onMouseOver={(e) => e.target.style.color = "#f97316"}
+            onMouseOut={(e) => e.target.style.color = "rgba(255,255,255,0.7)"}
+          >
+            Back to top ↑
+          </button>
         </motion.div>
       </div>
       </motion.div>

@@ -2,36 +2,41 @@ import { motion } from "framer-motion"
 
 export function Button({ children, variant = "primary", onClick, ...props }) {
   const base = {
-    padding: "14px 28px",
-    borderRadius: "12px",
-    fontSize: "1rem",
-    fontWeight: "600",
+    padding: "13px 24px",
+    borderRadius: "999px",
+    fontSize: "0.95rem",
+    fontWeight: "700",
     cursor: "pointer",
-    border: "none",
+    border: "1px solid transparent",
     transition: "all 0.25s ease",
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
   }
   const variants = {
     primary: {
-      background: "linear-gradient(135deg, #f97316, #ea580c)",
+      background: "linear-gradient(135deg, #f97316, #ea580c 72%)",
       color: "white",
-      boxShadow: "0 4px 20px rgba(249, 115, 22, 0.35)",
+      boxShadow: "0 8px 28px rgba(249, 115, 22, 0.34)",
     },
     outline: {
       background: "transparent",
       color: "#f97316",
-      border: "2px solid #f97316",
+      border: "1px solid rgba(249, 115, 22, 0.65)",
     },
     ghost: {
-      background: "transparent",
-      color: "#f97316",
-      border: "1px solid rgba(249, 115, 22, 0.4)",
+      background: "rgba(249, 115, 22, 0.08)",
+      color: "rgba(255,255,255,0.9)",
+      border: "1px solid rgba(249, 115, 22, 0.35)",
     },
   }
   return (
     <motion.button
       style={{ ...base, ...variants[variant] }}
       onClick={onClick}
-      whileHover={{ y: -2, boxShadow: variant === "primary" ? "0 6px 28px rgba(249, 115, 22, 0.45)" : "0 4px 12px rgba(249, 115, 22, 0.2)" }}
+      whileHover={{
+        y: -2,
+        boxShadow: variant === "primary" ? "0 10px 34px rgba(249, 115, 22, 0.44)" : "0 6px 22px rgba(249, 115, 22, 0.2)",
+      }}
       whileTap={{ scale: 0.98 }}
       {...props}
     >

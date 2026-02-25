@@ -75,6 +75,7 @@ export function ShootingStars() {
 export function GlowingParticles() {
   const count = 400
   const particlesRef = useRef()
+  const { mouse } = useThree()
 
   const positions = useMemo(() => {
     const values = new Float32Array(count * 3)
@@ -95,6 +96,15 @@ export function GlowingParticles() {
     for (let i = 0; i < count; i += 1) {
       const i3 = i * 3
       attributePositions[i3 + 1] += Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.002
+
+      const dx = (mouse.x * 25) - attributePositions[i3]
+      const dy = (mouse.y * 25) - attributePositions[i3 + 1]
+      const dist = Math.sqrt(dx * dx + dy * dy)
+      
+      if (dist < 8) {
+        attributePositions[i3] -= (dx / dist) * 0.1
+        attributePositions[i3 + 1] -= (dy / dist) * 0.1
+      }
     }
 
     particlesRef.current.geometry.attributes.position.needsUpdate = true
@@ -151,12 +161,20 @@ export function CameraMotion() {
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
+    const scrollY = window.scrollY
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
+    const scrollProgress = scrollY / maxScroll
 
-    camera.position.x += (Math.sin(t * 0.1) * 1.5 - camera.position.x) * 0.02
-    camera.position.y += (Math.cos(t * 0.12) * 0.8 - camera.position.y) * 0.02
+    const baseOscX = Math.sin(t * 0.1) * 1.5
+    const baseOscY = Math.cos(t * 0.12) * 0.8
 
-    camera.position.x += (mouse.x * 1.2 - camera.position.x) * 0.05
-    camera.position.y += (mouse.y * 0.8 - camera.position.y) * 0.05
+    const targetZ = 11 - scrollProgress * 9
+    const targetX = baseOscX + mouse.x * 0.8
+    const targetY = baseOscY + mouse.y * 0.5
+
+    camera.position.x += (targetX - camera.position.x) * 0.03
+    camera.position.y += (targetY - camera.position.y) * 0.03
+    camera.position.z += (targetZ - camera.position.z) * 0.03
 
     camera.lookAt(0, 0, 0)
   })
@@ -170,10 +188,14 @@ export function GLBModel() {
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
-
     if (!modelRef.current) return
 
-    modelRef.current.rotation.y = t * 0.3
+    const scrollY = window.scrollY
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
+    const scrollProgress = scrollY / maxScroll
+
+    // Rotate more as the user scrolls further down
+    modelRef.current.rotation.y = t * 0.3 + scrollProgress * Math.PI * 2
     modelRef.current.position.y = Math.sin(t * 0.8) * 0.4
   })
 

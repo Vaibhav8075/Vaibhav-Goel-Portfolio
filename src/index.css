@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap");
 @import "tailwindcss";
 
 * {
@@ -18,11 +19,18 @@ html {
 }
 
 body {
+  font-family: "Space Grotesk", sans-serif;
   background:
     radial-gradient(1200px 800px at 85% -10%, rgba(249, 115, 22, 0.12), transparent 60%),
     radial-gradient(1000px 700px at 0% 20%, rgba(251, 146, 60, 0.08), transparent 52%),
     #080808;
   color: rgba(255, 255, 255, 0.94);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Sora", sans-serif;
+  letter-spacing: -0.02em;
 }
 
 ::selection {
@@ -32,7 +40,6 @@ body {
 
 canvas {
   display: block;
-  vertical-align: middle;
 }
 
 input:focus, textarea:focus {
@@ -62,4 +69,44 @@ input::placeholder, textarea::placeholder {
   .story-line {
     display: none !important;
   }
+}
+
+.glass-card,
+.project-card {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.project-card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(16, 16, 16, 0.4);
+  backdrop-filter: blur(12px);
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border-radius: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  border-color: rgba(249, 115, 22, 0.3);
+  box-shadow: 0 4px 24px rgba(249, 115, 22, 0.05);
+}
+
+.skill-tag {
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.skill-tag:hover {
+  transform: translateY(-2px);
+  background: rgba(249, 115, 22, 0.18);
+}
+
+.container-shell {
+  width: min(1120px, 92vw);
+  margin: 0 auto;
 }

@@ -1,113 +1,167 @@
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function LaunchLoadingScreen() {
   const [loading, setLoading] = useState(true)
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 3000)
-    return () => clearTimeout(timer)
+    const duration = 2800
+    const intervalTime = 30
+    const steps = duration / intervalTime
+    let currentStep = 0
+
+    const timer = setInterval(() => {
+      currentStep++
+      const newProgress = Math.min(100, Math.floor((currentStep / steps) * 100))
+      
+      if (newProgress > 90 && Math.random() > 0.5) {
+        return
+      }
+      
+      setProgress(newProgress)
+
+      if (currentStep >= steps) {
+        clearInterval(timer)
+        setTimeout(() => setLoading(false), 200)
+      }
+    }, intervalTime)
+
+    return () => clearInterval(timer)
   }, [])
 
-  if (!loading) return null
-
   return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        background: "linear-gradient(135deg, #000000, #0a0a0a)",
-        zIndex: 10000,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        style={{
-          fontSize: "clamp(2rem, 6vw, 4rem)",
-          fontFamily: "'Orbitron', monospace",
-          fontWeight: "800",
-          marginBottom: "40px",
-          letterSpacing: "0.2em",
-        }}
-      >
-        <motion.span
-          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+    <AnimatePresence>
+      {loading && (
+        <motion.div
+          key="loader"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           style={{
-            background: "linear-gradient(90deg, #f97316, #fb923c, #ea580c, #f97316)",
-            backgroundSize: "200% 100%",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            position: "fixed",
+            inset: 0,
+            background: "#050505",
+            zIndex: 10000,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: "'Space Grotesk', sans-serif"
           }}
         >
-          PORTFOLIO
-        </motion.span>
-      </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            style={{
+              position: "relative",
+              width: "100%",
+              maxWidth: "400px",
+              padding: "0 2rem",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "2rem"
+            }}
+          >
+            <div style={{ textAlign: "center" }}>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                style={{
+                  fontFamily: "'Sora', sans-serif",
+                  fontSize: "1.5rem",
+                  fontWeight: "800",
+                  letterSpacing: "-0.02em",
+                  color: "#fff",
+                  marginBottom: "0.25rem"
+                }}
+              >
+                Vaibhav Goel
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                style={{
+                  fontSize: "0.85rem",
+                  color: "rgba(249, 115, 22, 0.9)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  fontWeight: "600"
+                }}
+              >
+                Portfolio 2026
+              </motion.div>
+            </div>
 
-      <motion.div
-        style={{
-          width: "300px",
-          height: "4px",
-          background: "rgba(249, 115, 22, 0.2)",
-          borderRadius: "2px",
-          overflow: "hidden",
-          marginBottom: "20px",
-        }}
-      >
-        <motion.div
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 2.5, ease: "easeInOut" }}
-          style={{
-            height: "100%",
-            background: "linear-gradient(90deg, #f97316, #fb923c)",
-            boxShadow: "0 0 20px rgba(249, 115, 22, 0.6)",
-          }}
-        />
-      </motion.div>
+            <div style={{ width: "100%", position: "relative" }}>
+              <div style={{ 
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "flex-end",
+                marginBottom: "12px"
+              }}>
+                <span style={{ 
+                  fontSize: "0.75rem", 
+                  color: "rgba(255,255,255,0.4)", 
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em"
+                }}>
+                  System Initialization
+                </span>
+                <span style={{ 
+                  fontFamily: "'Sora', sans-serif", 
+                  fontSize: "1.2rem", 
+                  fontWeight: "700", 
+                  color: "#fff" 
+                }}>
+                  {progress}%
+                </span>
+              </div>
 
-      <motion.div
-        animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 1.5, repeat: Infinity }}
-        style={{
-          fontFamily: "'Orbitron', monospace",
-          fontSize: "0.9rem",
-          letterSpacing: "0.3em",
-          color: "rgba(255, 255, 255, 0.6)",
-        }}
-      >
-        LOADING EXPERIENCE
-      </motion.div>
-
-      {[...Array(8)].map((_, i) => (
-        <motion.div
-          key={i}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: i * 0.2 }}
-          style={{
-            position: "absolute",
-            width: "4px",
-            height: "4px",
-            background: "#f97316",
-            borderRadius: "50%",
-            boxShadow: "0 0 10px rgba(249, 115, 22, 0.8)",
-            left: `calc(50% + ${Math.cos((i * Math.PI) / 4) * 100}px)`,
-            top: `calc(50% + ${Math.sin((i * Math.PI) / 4) * 100}px)`,
-          }}
-        />
-      ))}
-    </motion.div>
+              <div
+                style={{
+                  width: "100%",
+                  height: "2px",
+                  background: "rgba(255, 255, 255, 0.08)",
+                  borderRadius: "2px",
+                  overflow: "hidden",
+                }}
+              >
+                <motion.div
+                  style={{
+                    height: "100%",
+                    background: "linear-gradient(90deg, #ea580c, #f97316)",
+                    boxShadow: "0 0 10px rgba(249, 115, 22, 0.4)",
+                    width: `${progress}%`,
+                    transition: "width 0.1s linear"
+                  }}
+                />
+              </div>
+            </div>
+            
+            <motion.div
+              animate={{ opacity: [0.1, 0.15, 0.1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "100%",
+                paddingBottom: "100%",
+                background: "radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 60%)",
+                borderRadius: "50%",
+                pointerEvents: "none",
+                zIndex: -1
+              }}
+            />
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }

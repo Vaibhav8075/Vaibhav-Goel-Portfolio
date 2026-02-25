@@ -1,16 +1,22 @@
 import { motion } from "framer-motion"
-import { scrollToSection } from "../../../theme"
 import { PROJECTS } from "./data"
 import { useSectionStory } from "./useSectionStory"
 
 export default function ProjectsSection() {
-  const { sectionRef, contentY, contentOpacity, contentScale, backgroundY, lineScaleY } = useSectionStory()
+  const { sectionRef, contentY, contentYDelayed, contentYFast, contentOpacity, contentScale, backgroundY, lineScaleY, labelY } = useSectionStory()
 
   return (
     <section
       ref={sectionRef}
       id="projects"
-      style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "10vw", color: "white", position: "relative", overflow: "hidden" }}
+      style={{
+        minHeight: "95vh",
+        position: "relative",
+        overflow: "hidden",
+        display: "grid",
+        placeItems: "center",
+        padding: "clamp(4rem, 8vw, 6rem) 0",
+      }}
     >
       <motion.div
         aria-hidden="true"
@@ -19,7 +25,7 @@ export default function ProjectsSection() {
           inset: 0,
           y: backgroundY,
           background:
-            "radial-gradient(circle at 86% 18%, rgba(249, 115, 22, 0.2), transparent 36%), radial-gradient(circle at 14% 82%, rgba(251, 146, 60, 0.13), transparent 32%)",
+            "radial-gradient(circle at 85% 12%, rgba(249,115,22,0.2), transparent 38%), radial-gradient(circle at 14% 82%, rgba(251,146,60,0.12), transparent 34%)",
         }}
       />
       <motion.p
@@ -28,8 +34,9 @@ export default function ProjectsSection() {
         style={{
           position: "absolute",
           right: "2vw",
-          bottom: "12%",
+          bottom: "9%",
           margin: 0,
+          y: labelY,
           fontSize: "clamp(2.4rem, 10vw, 8rem)",
           fontWeight: 900,
           color: "rgba(255,255,255,0.04)",
@@ -45,60 +52,56 @@ export default function ProjectsSection() {
         style={{
           position: "absolute",
           right: "max(16px, 2.2vw)",
-          top: "18%",
+          top: "17%",
           width: "3px",
           height: "60vh",
           borderRadius: "999px",
-          background: "rgba(249, 115, 22, 0.22)",
+          background: "rgba(249,115,22,0.22)",
           transformOrigin: "top",
           scaleY: lineScaleY,
         }}
       />
 
-      <motion.div style={{ maxWidth: "900px", width: "100%", y: contentY, opacity: contentOpacity, scale: contentScale, zIndex: 2 }}>
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8 }}
-          style={{
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
-            marginBottom: "50px",
-            background: "linear-gradient(135deg, #fb923c, #f97316)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontWeight: "800",
-          }}
-        >
-          Featured Projects
-        </motion.h2>
+      <motion.div className="container-shell" style={{ opacity: contentOpacity, scale: contentScale, zIndex: 1 }}>
+        <motion.h2 style={{ y: contentYFast, fontSize: "clamp(1.9rem, 4.2vw, 3rem)", marginBottom: "10px" }}>Selected Work</motion.h2>
+        <motion.p style={{ y: contentY, color: "rgba(255,255,255,0.74)", maxWidth: "54ch", marginBottom: "20px", lineHeight: 1.7 }}>
+          Projects that combine product thinking, clean UI architecture, and reliable integration patterns.
+        </motion.p>
 
-        {PROJECTS.map((project, index) => (
-          <motion.div
-            key={project.title}
-            className="project-card"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, delay: index * 0.15 }}
-            whileHover={{ x: 12 }}
-            onClick={() => scrollToSection("#contact")}
-          >
-            <h3 style={{ fontSize: "clamp(1.3rem, 3vw, 1.8rem)", color: project.color, marginBottom: "12px", fontWeight: "700" }}>
-              {project.title}
-            </h3>
-            <p style={{ color: "rgba(255,255,255,0.85)", lineHeight: "1.7", fontSize: "clamp(1rem, 2vw, 1.1rem)", marginBottom: "15px" }}>
-              {project.desc}
-            </p>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-              {project.skills.map((skill) => (
-                <span key={skill} className="skill-tag">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
+        <div style={{ display: "grid", gap: "14px" }}>
+          {PROJECTS.map((project, index) => {
+            const y = index % 3 === 0 ? contentYFast : index % 3 === 1 ? contentY : contentYDelayed
+            return (
+              <motion.article key={project.title} className="project-card" style={{ y }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: "10px", flexWrap: "wrap", marginBottom: "8px" }}>
+                  <h3 style={{ fontSize: "clamp(1.16rem, 2.4vw, 1.52rem)", color: project.color }}>{project.title}</h3>
+                  <span
+                    style={{
+                      borderRadius: "999px",
+                      border: "1px solid rgba(249,115,22,0.35)",
+                      color: "rgba(255,255,255,0.78)",
+                      fontSize: "0.75rem",
+                      padding: "6px 10px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                    }}
+                  >
+                    {project.kind}
+                  </span>
+                </div>
+                <p style={{ color: "rgba(255,255,255,0.82)", lineHeight: 1.68 }}>{project.desc}</p>
+                <p style={{ color: "rgba(255,255,255,0.62)", marginTop: "8px", fontSize: "0.92rem" }}>{project.impact}</p>
+                <div style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}>
+                  {project.skills.map((skill) => (
+                    <span key={skill} className="skill-tag">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </motion.article>
+            )
+          })}
+        </div>
       </motion.div>
     </section>
   )
