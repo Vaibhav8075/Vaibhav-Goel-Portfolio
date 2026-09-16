@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
 }
 
 @layer base {
   html {
-    scroll-behavior: auto; /* Lenis handles smooth scroll */
+    scroll-behavior: auto;
   }
   
   body {
@@ -18,17 +18,21 @@
   }
 }
 
-/* Custom Scrollbar for a premium feel */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1A1A1A;
-  border-radius: 4px;
+  background: #222;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #333333;
+  background: #444;
+}
+
+/* Utilities for spotlight cards */
+.group:hover .spotlight {
+  opacity: 1;
 }

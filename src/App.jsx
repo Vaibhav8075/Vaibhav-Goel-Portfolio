@@ -9,6 +9,7 @@ import Experience from "./components/sections/Experience"
 import Footer from "./components/sections/Footer"
 import GridBackground from "./components/layout/GridBackground"
 import CustomCursor from "./components/ui/CustomCursor"
+import CommandPalette from "./components/ui/CommandPalette"
 
 function App() {
   useEffect(() => {
@@ -39,9 +40,10 @@ function App() {
   }, [])
 
   return (
-    <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-[#00E5FF] selection:text-black overflow-hidden relative">
+    <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-hidden relative">
       <CustomCursor />
       <GridBackground />
+      <CommandPalette />
       
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
         <Navbar />
