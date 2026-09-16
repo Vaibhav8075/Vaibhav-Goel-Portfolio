@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { projects } from "../../data/content";
 import SpotlightCard from "../ui/SpotlightCard";
 import { ArrowUpRight } from "lucide-react";
@@ -6,9 +7,18 @@ import { ArrowUpRight } from "lucide-react";
 export default function EngineeringModules() {
   const featuredProject = projects[0];
   const regularProjects = projects.slice(1);
+  const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 40]);
 
   return (
-    <section id="work" className="py-24 border-t border-white/[0.05]">
+    <section id="work" className="py-24 border-t border-white/[0.05]" ref={containerRef}>
       <div className="flex flex-col gap-16">
         <div>
           <h2 className="font-mono text-xs tracking-[0.2em] text-white/40 mb-4">02. WORK</h2>
@@ -111,18 +121,19 @@ export default function EngineeringModules() {
           </SpotlightCard>
         </motion.div>
         
-        {/* Secondary Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Secondary Projects Grid with Parallax */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           {regularProjects.map((project, index) => (
             <motion.div
               key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              style={{ y: index % 2 === 0 ? y1 : y2 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.6 }}
             >
               <a href={project.link} target="_blank" rel="noreferrer" className="block h-full group outline-none">
-                <SpotlightCard className="h-full p-8 flex flex-col justify-between min-h-[280px]">
+                <SpotlightCard className="h-full p-8 flex flex-col justify-between min-h-[300px]">
                   
                   <div className="flex flex-col gap-4 z-10 relative">
                     <div className="flex justify-between items-start">
