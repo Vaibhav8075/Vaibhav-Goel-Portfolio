@@ -6,8 +6,8 @@ export default function TechStack() {
     <section id="stack" className="py-24 border-t border-[#1A1A1A]">
       <div className="flex flex-col md:flex-row gap-12 md:gap-24">
         <div className="w-full md:w-1/3">
-          <h2 className="font-mono text-xs tracking-[0.2em] text-[#555555] mb-4">04. STACK</h2>
-          <h3 className="text-3xl font-medium text-[#EAEAEA]">Technologies</h3>
+          <h2 className="font-mono text-xs tracking-[0.2em] text-white/40 mb-4">04. STACK</h2>
+          <h3 className="text-3xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Technologies</h3>
         </div>
         
         <div className="w-full md:w-2/3 grid grid-cols-2 md:grid-cols-3 gap-y-16 gap-x-8">

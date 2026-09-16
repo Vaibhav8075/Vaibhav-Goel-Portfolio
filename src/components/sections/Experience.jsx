@@ -7,7 +7,7 @@ export default function Experience() {
       <div className="flex flex-col md:flex-row gap-12 md:gap-24">
         <div className="w-full md:w-1/3">
           <h2 className="font-mono text-xs tracking-[0.2em] text-white/40 mb-4">03. EXPERIENCE</h2>
-          <h3 className="text-3xl font-medium text-white tracking-tight">Timeline</h3>
+          <h3 className="text-3xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Timeline</h3>
         </div>
         
         <div className="w-full md:w-2/3 flex flex-col relative">

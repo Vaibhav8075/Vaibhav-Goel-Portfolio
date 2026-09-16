@@ -9,7 +9,7 @@ export default function EngineeringModules() {
       <div className="flex flex-col gap-16">
         <div>
           <h2 className="font-mono text-xs tracking-[0.2em] text-white/40 mb-4">02. WORK</h2>
-          <h3 className="text-3xl font-medium text-white tracking-tight">Selected Projects</h3>
+          <h3 className="text-3xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Selected Projects</h3>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -17,10 +17,10 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight text-[#EAEAEA] leading-[1.1]"
+          className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[1.1]"
         >
-          Architecting <br />
-          <span className="text-[#888888]">Intelligent Systems.</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-500">Software Engineer</span> <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-700">Intelligent Systems.</span>
         </motion.h1>
         
         <motion.p 
