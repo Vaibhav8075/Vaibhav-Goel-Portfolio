@@ -6,7 +6,7 @@ export default function Experience() {
     <section id="experience" className="py-24 border-t border-[#1A1A1A]">
       <div className="flex flex-col md:flex-row gap-12 md:gap-24">
         <div className="w-full md:w-1/3">
-          <h2 className="font-mono text-xs tracking-[0.2em] text-[#555555] mb-4">03 // OPERATIONAL_HISTORY</h2>
+          <h2 className="font-mono text-xs tracking-[0.2em] text-[#555555] mb-4">03. EXPERIENCE</h2>
           <h3 className="text-3xl font-medium text-[#EAEAEA]">Experience</h3>
         </div>
         

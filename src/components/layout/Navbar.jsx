@@ -10,12 +10,12 @@ export default function Navbar() {
     >
       <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 h-24 flex items-center justify-between">
         <div className="font-mono text-sm tracking-widest text-[#EAEAEA]">
-          VG_OS // 2026
+          Vaibhav Goel
         </div>
         
         <nav className="hidden md:flex gap-8 font-mono text-xs tracking-widest text-[#888888]">
           <a href="#profile" className="hover:text-[#00E5FF] transition-colors duration-300">PROFILE</a>
-          <a href="#modules" className="hover:text-[#00E5FF] transition-colors duration-300">MODULES</a>
+          <a href="#WORK" className="hover:text-[#00E5FF] transition-colors duration-300">WORK</a>
           <a href="#experience" className="hover:text-[#00E5FF] transition-colors duration-300">EXPERIENCE</a>
           <a href="#stack" className="hover:text-[#00E5FF] transition-colors duration-300">STACK</a>
         </nav>

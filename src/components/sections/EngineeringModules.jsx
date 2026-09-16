@@ -3,11 +3,11 @@ import { projects } from "../../data/content";
 
 export default function EngineeringModules() {
   return (
-    <section id="modules" className="py-24 border-t border-[#1A1A1A]">
+    <section id="work" className="py-24 border-t border-[#1A1A1A]">
       <div className="flex flex-col gap-16">
         <div>
-          <h2 className="font-mono text-xs tracking-[0.2em] text-[#555555] mb-4">02 // ENGINEERING_MODULES</h2>
-          <h3 className="text-3xl font-medium text-[#EAEAEA]">Selected Architecture</h3>
+          <h2 className="font-mono text-xs tracking-[0.2em] text-[#555555] mb-4">02. WORK</h2>
+          <h3 className="text-3xl font-medium text-[#EAEAEA]">Selected Projects</h3>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

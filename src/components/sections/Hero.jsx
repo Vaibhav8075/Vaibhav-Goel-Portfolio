@@ -10,7 +10,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="font-mono text-[#00E5FF] text-sm tracking-[0.3em] uppercase"
         >
-          System Initialized
+          Software Engineer
         </motion.div>
         
         <motion.h1 
@@ -38,8 +38,8 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="flex flex-wrap gap-4 mt-8"
         >
-          <a href="#modules" className="group flex items-center gap-3 bg-[#EAEAEA] text-[#050505] px-8 py-4 font-mono text-sm tracking-wider hover:bg-[#00E5FF] transition-colors duration-300">
-            EXPLORE MODULES
+          <a href="#work" className="group flex items-center gap-3 bg-[#EAEAEA] text-[#050505] px-8 py-4 font-mono text-sm tracking-wider hover:bg-[#00E5FF] transition-colors duration-300">
+            VIEW WORK
             <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
           </a>
           <a href="mailto:vaibhav.goel0531@gmail.com" className="flex items-center gap-3 border border-[#333333] text-[#EAEAEA] px-8 py-4 font-mono text-sm tracking-wider hover:bg-[#111111] transition-colors duration-300">
@@ -55,7 +55,7 @@ export default function Hero() {
         className="absolute bottom-12 left-6 md:left-12 lg:left-24 font-mono text-xs text-[#555555] tracking-widest flex items-center gap-4"
       >
         <span className="w-8 h-[1px] bg-[#555555]"></span>
-        SCROLL TO INSPECT
+        SCROLL TO EXPLORE
       </motion.div>
     </section>
   );
