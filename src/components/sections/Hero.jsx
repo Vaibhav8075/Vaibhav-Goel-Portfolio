@@ -38,7 +38,7 @@ export default function Hero() {
         >
           <div className="w-2 h-2 rounded-full bg-white/40 animate-pulse"></div>
           <span className="font-mono text-xs tracking-[0.2em] text-white/50 uppercase">
-            Available for Engineering Roles
+            third-year CS · VIT Vellore · Software Engineering
           </span>
         </motion.div>
         
@@ -46,17 +46,26 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[1.1]"
+          className="text-6xl md:text-8xl lg:text-[10rem] font-medium tracking-tighter leading-[0.95]"
         >
-          <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-500">Software Engineer</span> <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-700">Intelligent Systems.</span>
+          <span className="text-white">Vaibhav</span> <br />
+          <span className="text-white">Goel.</span>
         </motion.h1>
         
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="text-xl md:text-2xl text-gray-400 font-light tracking-wide mt-2"
+        >
+          Software Engineer & Intelligent Systems
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-lg md:text-xl text-white/50 max-w-2xl font-light leading-relaxed min-h-[80px]"
+          className="text-lg md:text-xl text-white/40 max-w-2xl font-light leading-relaxed min-h-[80px] mt-4"
         >
           <Typewriter 
             text="I build high-performance data pipelines, multi-agent frameworks, and distributed architectures. Bridging the gap between complex ML models and production-ready applications." 
