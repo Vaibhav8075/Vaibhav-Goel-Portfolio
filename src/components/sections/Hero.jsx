@@ -46,7 +46,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-6xl md:text-8xl lg:text-[10rem] font-medium tracking-tighter leading-[0.95]"
+          className="text-6xl md:text-7xl lg:text-[8rem] font-medium tracking-tighter leading-[0.95]"
         >
           <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-500">Vaibhav</span> <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-700">Goel.</span>
