@@ -1,12 +1,20 @@
 import { useEffect } from "react"
 import Lenis from "lenis"
-import Hero from "./components/home/Hero.jsx"
-import Navbar from "./components/navbar/Navbar.jsx"
+import Navbar from "./components/layout/Navbar"
+import Hero from "./components/sections/Hero"
+import SystemProfile from "./components/sections/SystemProfile"
+import EngineeringModules from "./components/sections/EngineeringModules"
+import TechStack from "./components/sections/TechStack"
+import Experience from "./components/sections/Experience"
+import Footer from "./components/sections/Footer"
+import GridBackground from "./components/layout/GridBackground"
+import CustomCursor from "./components/ui/CustomCursor"
 
 function App() {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       smoothTouch: false,
     })
@@ -31,9 +39,21 @@ function App() {
   }, [])
 
   return (
-    <div style={{ width: "100%", minHeight: "100vh", position: "relative" }}>
-      <Navbar />
-      <Hero />
+    <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-[#00E5FF] selection:text-black overflow-hidden relative">
+      <CustomCursor />
+      <GridBackground />
+      
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+        <Navbar />
+        <main className="flex flex-col gap-32 md:gap-48 pb-32 pt-24">
+          <Hero />
+          <SystemProfile />
+          <EngineeringModules />
+          <Experience />
+          <TechStack />
+        </main>
+        <Footer />
+      </div>
     </div>
   )
 }
