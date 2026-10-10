@@ -57,7 +57,7 @@ function FeaturedProject({ project }) {
               CENTERPIECE
             </span>
           </div>
-          <a href={project.github} target="_blank" rel="noreferrer" className="text-white/30 hover:text-white transition-colors duration-300">
+          <a href={project.github} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub`} className="text-white/30 hover:text-white transition-colors duration-300">
             <ArrowUpRight size={24} />
           </a>
         </div>
@@ -93,7 +93,7 @@ function FeaturedProject({ project }) {
 
 function ProjectCard({ project }) {
   return (
-    <a href={project.github} target="_blank" rel="noreferrer" className="block h-full group outline-none">
+    <a href={project.github} target="_blank" rel="noreferrer" className="block h-full group rounded-2xl">
       <SpotlightCard className="h-full p-8 flex flex-col justify-between min-h-[300px]">
         <div className="flex flex-col gap-4 z-10 relative">
           <div className="flex justify-between items-start">

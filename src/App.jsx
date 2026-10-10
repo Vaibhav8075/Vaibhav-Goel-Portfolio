@@ -56,14 +56,19 @@ function App() {
     <MotionConfig reducedMotion="user">
       <ProjectFilterContext value={projectFilterValue}>
         <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-x-clip relative">
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[70] focus:px-4 focus:py-2 focus:rounded-full focus:bg-white focus:text-black font-mono text-xs tracking-widest uppercase"
+          >
+            Skip to content
+          </a>
           <ScrollProgress />
           <CustomCursor />
           <GridBackground />
-          <CommandPalette />
 
           <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
             <Navbar />
-            <main className="flex flex-col gap-32 md:gap-48 pb-32 pt-24">
+            <main id="main" tabIndex={-1} className="focus:outline-none flex flex-col gap-32 md:gap-48 pb-32 pt-24">
               <Hero />
               <SystemProfile />
               <EngineeringModules />
@@ -73,6 +78,9 @@ function App() {
             </main>
             <Footer />
           </div>
+
+          {/* Last in DOM so its floating trigger comes last in the tab order */}
+          <CommandPalette />
         </div>
       </ProjectFilterContext>
     </MotionConfig>
