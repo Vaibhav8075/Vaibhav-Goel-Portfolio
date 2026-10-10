@@ -12,7 +12,8 @@ const NODE_STYLES = {
 };
 
 function FlowSvg({ flow, layout, activeStep, revealAll }) {
-  const direction = layout === flow.tall ? "vertical" : "horizontal";
+  // A layout can override the default (sensors fanning in from the side read better horizontally)
+  const direction = layout.direction ?? (layout === flow.tall ? "vertical" : "horizontal");
   const isVisible = (step) => revealAll || step <= activeStep;
   const isCurrent = (step) => !revealAll && step === activeStep;
 
