@@ -1,6 +1,9 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useRef } from "react";
+import { ArrowRight } from "lucide-react";
 import { experience } from "../../data/content";
+import { caseStudyPath } from "../../data/meta";
+import Link from "../ui/Link";
 
 export default function Experience() {
   const listRef = useRef(null);
@@ -56,6 +59,14 @@ export default function Experience() {
                 <p className="text-white/60 text-sm md:text-base leading-relaxed mt-2 font-light max-w-2xl">
                   {exp.description}
                 </p>
+                {exp.caseStudy && (
+                  <Link
+                    to={caseStudyPath(exp.caseStudy)}
+                    className="self-start flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-white pb-1 border-b border-white/20 hover:border-white/60 transition-colors"
+                  >
+                    Read the case study <ArrowRight size={12} />
+                  </Link>
+                )}
                 <ul className="flex flex-wrap gap-2" aria-label={`Tools used at ${exp.company}`}>
                   {exp.tech.map((tool) => (
                     <li key={tool} className="font-mono text-[10px] tracking-wider text-white/50 px-2 py-1 border border-white/10 rounded">

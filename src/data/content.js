@@ -121,7 +121,8 @@ export const experience = [
     company: "DCM SHRIRAM LTD.",
     period: "2026.05 — 2026.07",
     description: "Built and supported an audit management system in React, FastAPI and PostgreSQL for secure call-audio handling and QA reviews. Moved production from SQLite to PostgreSQL, deployed on Ubuntu with Nginx and Uvicorn, and added role-based auth, protected audio storage and automatic retention. Also gained hands-on exposure to MPLS, VPN and Linux networking.",
-    tech: ["React", "FastAPI", "PostgreSQL", "Nginx", "Linux"]
+    tech: ["React", "FastAPI", "PostgreSQL", "Nginx", "Linux"],
+    caseStudy: "call-audit-platform"
   },
   {
     id: "aarvasa",
