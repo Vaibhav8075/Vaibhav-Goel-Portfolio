@@ -537,4 +537,101 @@ export const caseStudies = {
       ],
     },
   },
+  "road-segmentation": {
+    name: "Road Scene Segmentation",
+    context: "Computer vision · autonomous driving",
+    started: "Jun 2026",
+    problem: {
+      lead: "A self-driving stack needs to know what every pixel in front of it is: drivable road, a lane line, a pedestrian. Thin, rare classes like lane markings and traffic signs are swamped by road and sky.",
+      points: [
+        "Compare classic and modern segmentation architectures fairly, in one pipeline.",
+        "Make the predictions explainable and deployable, not just accurate in a notebook.",
+      ],
+    },
+    approach: [
+      { title: "One pipeline, four models", text: "A model factory swaps U-Net from scratch (~31M parameters), ResNet50-UNet (~33M), DeepLabV3+ with ASPP (~40M) and SegFormer-B2 (~25M) over the same data, loss and metrics." },
+      { title: "A loss built for imbalance", text: "Cross-entropy for the per-pixel baseline, Dice for region overlap and Focal loss (γ = 2) to down-weight the easy pixels." },
+      { title: "A serious training loop", text: "Mixed precision, gradient clipping, cosine annealing, early stopping, resumable checkpoints and TensorBoard logging." },
+      { title: "Complete metrics", text: "Pixel accuracy, mIoU, Dice, precision, recall and F1 per class, plus a confusion matrix." },
+      { title: "Explain and deploy", text: "Per-class Grad-CAM attention maps, validated ONNX export, and a Streamlit app for images, video playback and live webcam segmentation." },
+    ],
+    architecture: {
+      caption: "Seven classes per pixel, from road image to explainable, exportable model.",
+      flow: {
+        label: "Road scene segmentation pipeline",
+        wide: {
+          width: 640,
+          height: 262,
+          node: { w: 120, h: 52 },
+          nodes: { data: [10, 124], onnx: [170, 20], model: [170, 124], loss: [330, 20], logits: [330, 124], gradcam: [490, 64], app: [490, 190] },
+        },
+        tall: {
+          width: 300,
+          height: 320,
+          direction: "horizontal",
+          node: { w: 124, h: 46 },
+          nodes: { data: [8, 8], onnx: [168, 8], model: [8, 92], loss: [168, 136], logits: [8, 180], gradcam: [8, 266], app: [168, 266] },
+        },
+        nodes: [
+          { id: "data", label: "ROAD SCENES", sub: "7-class Cityscapes", kind: "input", step: 0 },
+          { id: "model", label: "NETWORK", sub: "1 of 4 architectures", step: 1 },
+          { id: "logits", label: "CLASS MAP", sub: "7 × 512 × 512", step: 2 },
+          { id: "loss", label: "COMBINED LOSS", sub: "CE + Dice + Focal", step: 3 },
+          { id: "gradcam", label: "GRAD-CAM", sub: "per-class attention", step: 4 },
+          { id: "onnx", label: "ONNX EXPORT", sub: "validated", kind: "store", step: 5 },
+          { id: "app", label: "STREAMLIT APP", sub: "image/video/webcam", kind: "store", step: 5 },
+        ],
+        edges: [
+          { from: "data", to: "model", step: 1 },
+          { from: "model", to: "logits", step: 2 },
+          { from: "logits", to: "loss", step: 3 },
+          { from: "loss", to: "model", step: 3, dashed: true },
+          { from: "logits", to: "gradcam", step: 4 },
+          { from: "model", to: "onnx", step: 5 },
+          { from: "logits", to: "app", step: 5 },
+        ],
+        steps: [
+          { title: "Road scenes in", text: "Cityscapes remapped to road, lane marking, vehicle, pedestrian, sidewalk, traffic sign and background, or a mock dataset for quick runs." },
+          { title: "Pick an architecture", text: "U-Net, ResNet50-UNet, DeepLabV3+ or SegFormer-B2, all behind one factory." },
+          { title: "A class for every pixel", text: "Each network outputs a 7 × 512 × 512 map of class logits." },
+          { title: "Train against imbalance", text: "CE + Dice + Focal loss flows back into the network (dashed line)." },
+          { title: "Explain it", text: "Grad-CAM shows which regions drove each class." },
+          { title: "Ship it", text: "Validated ONNX export and a Streamlit app for images, video and webcam." },
+        ],
+      },
+    },
+    results: {
+      title: "What's built",
+      caption: "The full Cityscapes benchmark run is still to come, so this section shows the system rather than scores.",
+      stats: [
+        { value: 4, label: "architectures behind one interface" },
+        { value: 7, label: "semantic classes per pixel" },
+        { value: 3, label: "loss terms: CE, Dice and Focal" },
+        { value: 6, label: "metrics tracked per class" },
+      ],
+      charts: [
+        {
+          title: "Model size",
+          caption: "Parameters, in millions.",
+          max: 40,
+          unit: "M",
+          bars: [
+            { label: "DeepLabV3+", value: 40 },
+            { label: "ResNet50-UNet", value: 33 },
+            { label: "U-Net (from scratch)", value: 31 },
+            { label: "SegFormer-B2", value: 25, highlight: true },
+          ],
+        },
+      ],
+    },
+    closing: {
+      label: "Next",
+      title: "Next steps",
+      points: [
+        "Train all four architectures on full Cityscapes and publish per-class IoU.",
+        "Quantise to INT8 and target edge hardware such as NVIDIA Jetson.",
+        "Add temporal consistency for video segmentation.",
+      ],
+    },
+  },
 };
