@@ -83,7 +83,7 @@ function FeaturedProject({ project }) {
       </div>
 
       {/* Premium Technical Diagram */}
-      <div className="lg:w-1/2 bg-[#080808] border-l border-white/5 p-8 flex items-center justify-center relative overflow-hidden">
+      <div className="lg:w-1/2 bg-[#080808] border-t lg:border-t-0 lg:border-l border-white/5 p-5 sm:p-8 flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)', backgroundSize: '16px 16px' }}></div>
         <AgentLedgerDiagram />
       </div>
