@@ -84,11 +84,11 @@ function FlowSvg({ flow, layout, activeStep, revealAll }) {
               strokeDasharray={style.dash}
               style={{ transition: "stroke 0.4s, fill 0.4s" }}
             />
-            <text x={box.x + box.w / 2} y={box.y + box.h / 2 - (node.sub ? 3 : -4)} textAnchor="middle" fill="#EEE" fontFamily="monospace" fontSize="10.5">
+            <text x={box.x + box.w / 2} y={box.y + box.h / 2 - (node.sub ? 3 : -4)} textAnchor="middle" fill="#EEE" fontFamily="monospace" fontSize="11.5" fontWeight="500">
               {node.label}
             </text>
             {node.sub && (
-              <text x={box.x + box.w / 2} y={box.y + box.h / 2 + 12} textAnchor="middle" fill="#8a8a8a" fontFamily="monospace" fontSize="9">
+              <text x={box.x + box.w / 2} y={box.y + box.h / 2 + 12} textAnchor="middle" fill="#8a8a8a" fontFamily="monospace" fontSize="9.5">
                 {node.sub}
               </text>
             )}
@@ -144,8 +144,8 @@ export default function ScrollFlow({ flow }) {
 
   return (
     <div ref={containerRef} className="relative" style={{ height: `calc(${steps * 55}vh + 100vh)` }}>
-      <div className="sticky top-24 h-[calc(100vh-8rem)] grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-10 items-center">
-        <div className="max-h-full flex items-center rounded-2xl border border-white/[0.06] bg-[#080808] p-8">
+      <div className="sticky top-24 h-[calc(100vh-8rem)] grid grid-cols-[minmax(0,5fr)_minmax(0,2fr)] gap-8 items-center">
+        <div className="max-h-full flex items-center rounded-2xl border border-white/[0.06] bg-[#080808] p-6">
           <FlowSvg flow={flow} layout={flow.wide} activeStep={activeStep} />
         </div>
         <ol className="flex flex-col gap-2">
