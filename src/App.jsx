@@ -54,7 +54,7 @@ function App() {
   return (
     <MotionConfig reducedMotion="user">
       <ProjectFilterContext value={projectFilterValue}>
-        <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-hidden relative">
+        <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-x-clip relative">
           <ScrollProgress />
           <CustomCursor />
           <GridBackground />
