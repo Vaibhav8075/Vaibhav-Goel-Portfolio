@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import useActiveSection from "../../lib/useActiveSection";
+import { profile } from "../../data/content";
 
 const links = [
   { name: "About", id: "about" },
@@ -48,7 +49,7 @@ export default function Navbar() {
         <div className="hidden sm:block w-px h-4 bg-white/20 mx-2"></div>
         
         <a 
-          href="https://github.com/Vaibhav8075" 
+          href={profile.github} 
           target="_blank" 
           rel="noreferrer"
           className="hidden sm:block px-4 py-2 rounded-full text-xs font-mono tracking-widest text-white/90 hover:bg-white hover:text-black transition-all uppercase"

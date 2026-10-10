@@ -1,3 +1,10 @@
+export const profile = {
+  name: "Vaibhav Goel",
+  email: "vaibhav.goel0531@gmail.com",
+  github: "https://github.com/Vaibhav8075",
+  linkedin: "https://www.linkedin.com/in/vaibhav-goel-23983b344"
+};
+
 export const projects = [
   {
     id: "agentic-ledger",
