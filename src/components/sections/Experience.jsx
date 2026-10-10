@@ -12,7 +12,7 @@ export default function Experience() {
     <section id="experience" className="py-24 border-t border-white/[0.05]">
       <div className="flex flex-col md:flex-row gap-12 md:gap-24">
         <div className="w-full md:w-1/3">
-          <h2 className="font-mono text-xs tracking-[0.2em] text-white/40 mb-4">03. EXPERIENCE</h2>
+          <h2 className="font-mono text-xs tracking-[0.2em] text-white/50 mb-4">03. EXPERIENCE</h2>
           <h3 className="text-3xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Timeline</h3>
         </div>
 
@@ -48,7 +48,7 @@ export default function Experience() {
                   <h4 className="text-xl font-medium text-white group-hover:text-white transition-colors duration-300">
                     {exp.role}
                   </h4>
-                  <span className="font-mono text-xs text-white/40 tracking-widest">{exp.period}</span>
+                  <span className="font-mono text-xs text-white/50 tracking-widest">{exp.period}</span>
                 </div>
                 <div className="font-mono text-sm tracking-widest text-white/50">
                   {exp.company}

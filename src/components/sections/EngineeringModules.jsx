@@ -53,11 +53,11 @@ function FeaturedProject({ project }) {
             <span className="font-mono text-[10px] tracking-widest text-white px-2 py-1 bg-white/10 rounded uppercase">
               {project.type}
             </span>
-            <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase">
+            <span className="font-mono text-[10px] tracking-widest text-white/50 uppercase">
               CENTERPIECE
             </span>
           </div>
-          <a href={project.github} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub`} className="text-white/30 hover:text-white transition-colors duration-300">
+          <a href={project.github} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub`} className="text-white/50 hover:text-white transition-colors duration-300">
             <ArrowUpRight size={24} />
           </a>
         </div>
@@ -75,7 +75,7 @@ function FeaturedProject({ project }) {
 
         <div className="flex flex-wrap gap-x-4 gap-y-2 mt-12">
           {project.tech.map((tech) => (
-            <span key={tech} className="font-mono text-xs text-white/40 group-hover:text-white/80 transition-colors duration-300">
+            <span key={tech} className="font-mono text-xs text-white/50 group-hover:text-white/80 transition-colors duration-300">
               {tech}
             </span>
           ))}
@@ -100,7 +100,7 @@ function ProjectCard({ project }) {
             <span className="font-mono text-[9px] tracking-widest text-white/50 px-2 py-1 border border-white/10 bg-white/[0.03] rounded uppercase">
               {project.type}
             </span>
-            <ArrowUpRight size={18} className="text-white/20 group-hover:text-white transition-colors duration-300" />
+            <ArrowUpRight size={18} className="text-white/40 group-hover:text-white transition-colors duration-300" />
           </div>
 
           <div className="mt-4">
@@ -117,7 +117,7 @@ function ProjectCard({ project }) {
 
         <div className="flex flex-wrap gap-x-4 gap-y-2 mt-8 z-10 relative">
           {project.tech.map((tech) => (
-            <span key={tech} className="font-mono text-[10px] text-white/30 group-hover:text-white/60 transition-colors duration-300">
+            <span key={tech} className="font-mono text-[10px] text-white/50 group-hover:text-white/60 transition-colors duration-300">
               {tech}
             </span>
           ))}
@@ -146,7 +146,7 @@ export default function EngineeringModules() {
     <section id="work" className="py-24 border-t border-white/[0.05]" ref={containerRef}>
       <div className="flex flex-col gap-16">
         <div>
-          <h2 className="font-mono text-xs tracking-[0.2em] text-white/40 mb-4">02. WORK</h2>
+          <h2 className="font-mono text-xs tracking-[0.2em] text-white/50 mb-4">02. WORK</h2>
           <h3 className="text-3xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Selected Projects</h3>
         </div>
 

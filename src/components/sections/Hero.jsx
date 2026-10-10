@@ -65,7 +65,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-lg md:text-xl text-white/40 max-w-2xl font-light leading-relaxed min-h-[80px] mt-4"
+          className="text-lg md:text-xl text-white/50 max-w-2xl font-light leading-relaxed min-h-[80px] mt-4"
         >
           <Typewriter 
             text="I build high-performance data pipelines, multi-agent frameworks, and distributed architectures. Bridging the gap between complex ML models and production-ready applications." 

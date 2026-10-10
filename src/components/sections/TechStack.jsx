@@ -90,7 +90,7 @@ export default function TechStack() {
       <div className="flex flex-col md:flex-row gap-12 md:gap-24">
         <div className="w-full md:w-1/3">
           <div className="md:sticky md:top-32">
-            <h2 className="font-mono text-xs tracking-[0.2em] text-white/40 mb-4">04. STACK</h2>
+            <h2 className="font-mono text-xs tracking-[0.2em] text-white/50 mb-4">04. STACK</h2>
             <h3 className="text-3xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Technologies</h3>
             <div className="hidden md:block mt-10">
               <UsagePanel skill={selected} onShowProjects={showProjects} />
@@ -108,7 +108,7 @@ export default function TechStack() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="flex flex-col gap-6"
             >
-              <h4 className="font-mono text-[10px] tracking-[0.2em] text-[#555555] uppercase border-b border-[#1A1A1A] pb-3">
+              <h4 className="font-mono text-[10px] tracking-[0.2em] text-[#808080] uppercase border-b border-[#1A1A1A] pb-3">
                 {category}
               </h4>
               <ul className="flex flex-col gap-3">
@@ -136,7 +136,7 @@ export default function TechStack() {
                       >
                         <span className="w-1 h-1 rounded-full bg-current opacity-60" />
                         {item}
-                        <span className="text-[10px] text-white/40 group-hover:text-white/60">{uses}</span>
+                        <span className="text-[10px] text-white/50 group-hover:text-white/60">{uses}</span>
                       </button>
                     </li>
                   );

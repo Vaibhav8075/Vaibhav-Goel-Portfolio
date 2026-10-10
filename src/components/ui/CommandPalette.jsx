@@ -171,7 +171,7 @@ export default function CommandPalette() {
                 className="w-full max-w-lg bg-[#0C0C0C] border border-white/10 shadow-2xl rounded-xl overflow-hidden pointer-events-auto"
               >
                 <div className="flex items-center px-4 py-3 border-b border-white/5">
-                  <Search size={16} className="text-white/40 mr-3 shrink-0" />
+                  <Search size={16} className="text-white/50 mr-3 shrink-0" />
                   <input
                     autoFocus
                     role="combobox"
@@ -186,14 +186,14 @@ export default function CommandPalette() {
                     onKeyDown={handleInputKeyDown}
                     className="w-full bg-transparent text-sm text-white placeholder-white/40 focus:outline-none font-mono"
                   />
-                  <button type="button" tabIndex={-1} aria-label="Close" onClick={() => setOpen(false)} className="text-white/40 hover:text-white transition-colors">
+                  <button type="button" tabIndex={-1} aria-label="Close" onClick={() => setOpen(false)} className="text-white/50 hover:text-white transition-colors">
                     <X size={16} />
                   </button>
                 </div>
 
                 <ul id="palette-results" role="listbox" aria-label="Results" data-lenis-prevent className="max-h-80 overflow-y-auto p-2 overscroll-contain">
                   {filteredCommands.length === 0 ? (
-                    <li role="presentation" className="p-4 text-center text-sm text-white/40 font-mono">No results found.</li>
+                    <li role="presentation" className="p-4 text-center text-sm text-white/50 font-mono">No results found.</li>
                   ) : (
                     filteredCommands.map((cmd, index) => {
                       const Icon = cmd.icon;
@@ -202,7 +202,7 @@ export default function CommandPalette() {
                       return (
                         <li key={cmd.id} role="presentation">
                           {startsGroup && (
-                            <div className="px-3 pt-3 pb-1 font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase">{cmd.group}</div>
+                            <div className="px-3 pt-3 pb-1 font-mono text-[10px] tracking-[0.2em] text-white/50 uppercase">{cmd.group}</div>
                           )}
                           <div
                             id={`palette-${cmd.id}`}
@@ -212,10 +212,10 @@ export default function CommandPalette() {
                             onClick={() => runCommand(cmd)}
                             className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg cursor-pointer transition-colors font-mono ${isActive ? "bg-white/[0.06] text-white" : "text-white/70"}`}
                           >
-                            <span className="text-white/40 shrink-0"><Icon size={16} /></span>
+                            <span className="text-white/50 shrink-0"><Icon size={16} /></span>
                             <span className="truncate">{cmd.name}</span>
-                            {cmd.hint && <span className="ml-auto pl-3 text-[11px] text-white/35 truncate">{cmd.hint}</span>}
-                            {isActive && !cmd.hint && <CornerDownLeft size={14} className="ml-auto text-white/40 shrink-0" />}
+                            {cmd.hint && <span className="ml-auto pl-3 text-[11px] text-white/50 truncate">{cmd.hint}</span>}
+                            {isActive && !cmd.hint && <CornerDownLeft size={14} className="ml-auto text-white/50 shrink-0" />}
                           </div>
                         </li>
                       );
@@ -223,7 +223,7 @@ export default function CommandPalette() {
                   )}
                 </ul>
 
-                <div className="hidden sm:flex items-center gap-4 px-4 py-2 border-t border-white/5 font-mono text-[10px] tracking-widest text-white/35">
+                <div className="hidden sm:flex items-center gap-4 px-4 py-2 border-t border-white/5 font-mono text-[10px] tracking-widest text-white/50">
                   <span>↑↓ MOVE</span>
                   <span>↵ OPEN</span>
                   <span>ESC CLOSE</span>

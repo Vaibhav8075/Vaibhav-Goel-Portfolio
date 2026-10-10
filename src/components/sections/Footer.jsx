@@ -3,7 +3,7 @@ import { profile } from "../../data/content";
 export default function Footer() {
   return (
     <footer className="pt-12 pb-24 border-t border-[#1A1A1A] flex flex-col md:flex-row items-center justify-between gap-6">
-      <div className="font-mono text-[10px] tracking-widest text-[#555555]">
+      <div className="font-mono text-[10px] tracking-widest text-[#808080]">
         &copy; {new Date().getFullYear()} {profile.name.toUpperCase()}
       </div>
 
