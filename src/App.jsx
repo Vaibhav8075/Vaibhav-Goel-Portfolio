@@ -1,8 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { MotionConfig, useReducedMotion } from "framer-motion"
 import Lenis from "lenis"
 import "lenis/dist/lenis.css"
 import { setLenis } from "./lib/scroll"
+import { ProjectFilterContext } from "./lib/projectFilter"
 import Navbar from "./components/layout/Navbar"
 import Hero from "./components/sections/Hero"
 import SystemProfile from "./components/sections/SystemProfile"
@@ -17,6 +18,11 @@ import CommandPalette from "./components/ui/CommandPalette"
 
 function App() {
   const prefersReducedMotion = useReducedMotion()
+  const [projectFilter, setProjectFilter] = useState(null)
+  const projectFilterValue = useMemo(
+    () => ({ filter: projectFilter, setFilter: setProjectFilter }),
+    [projectFilter],
+  )
 
   useEffect(() => {
     if (prefersReducedMotion) return
@@ -47,24 +53,26 @@ function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-hidden relative">
-        <ScrollProgress />
-        <CustomCursor />
-        <GridBackground />
-        <CommandPalette />
+      <ProjectFilterContext value={projectFilterValue}>
+        <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-hidden relative">
+          <ScrollProgress />
+          <CustomCursor />
+          <GridBackground />
+          <CommandPalette />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-          <Navbar />
-          <main className="flex flex-col gap-32 md:gap-48 pb-32 pt-24">
-            <Hero />
-            <SystemProfile />
-            <EngineeringModules />
-            <Experience />
-            <TechStack />
-          </main>
-          <Footer />
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+            <Navbar />
+            <main className="flex flex-col gap-32 md:gap-48 pb-32 pt-24">
+              <Hero />
+              <SystemProfile />
+              <EngineeringModules />
+              <Experience />
+              <TechStack />
+            </main>
+            <Footer />
+          </div>
         </div>
-      </div>
+      </ProjectFilterContext>
     </MotionConfig>
   )
 }
