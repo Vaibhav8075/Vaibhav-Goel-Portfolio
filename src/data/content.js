@@ -30,6 +30,28 @@ export const projects = [
     domains: ["ai"]
   },
   {
+    id: "call-audit-platform",
+    title: "CALL AUDIT PLATFORM",
+    tagline: "AI-assisted call QA, shipped to production at DCM Shriram.",
+    description: "Admins upload call recordings; Whisper transcribes them and Llama 3.3 scores quality, CSAT and sentiment. Agents self-evaluate and HODs rate compliance. Audio only streams through JWT-authenticated blobs and is purged on a schedule.",
+    tech: ["React", "FastAPI", "PostgreSQL", "Whisper", "Nginx"],
+    metrics: ["Production move from SQLite to PostgreSQL", "3 roles, no public audio URLs"],
+    github: "https://github.com/Vaibhav8075/Audict-audio-Technology",
+    type: "FULL-STACK/AI",
+    domains: ["backend", "frontend", "ai"]
+  },
+  {
+    id: "java-safe-cpp",
+    title: "JAVA-SAFE C++",
+    tagline: "A memory-safe compiler and VM for a subset of C++.",
+    description: "A from-scratch compiler in C++17 with a lexer, recursive-descent parser, semantic analysis and code generator. It injects null checks, bounds checks and reference counting into custom bytecode for a stack-based VM.",
+    tech: ["C++", "Compilers", "Virtual Machines", "CMake"],
+    metrics: ["No LLVM, Lex or Yacc", "4 injected safety opcodes"],
+    github: "https://github.com/Vaibhav8075/Compiler",
+    type: "SYSTEMS",
+    domains: ["systems"]
+  },
+  {
     id: "banking-call-intelligence",
     title: "BANKING CALL INTELLIGENCE",
     tagline: "Hybrid rules + AI analysis of financial calls.",
@@ -80,7 +102,8 @@ export const domains = [
   { id: "ai", label: "AI / ML" },
   { id: "backend", label: "Backend" },
   { id: "hardware", label: "Hardware" },
-  { id: "frontend", label: "Frontend" }
+  { id: "frontend", label: "Frontend" },
+  { id: "systems", label: "Systems" }
 ];
 
 export const experience = [
