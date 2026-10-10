@@ -4,7 +4,9 @@ import { domains, projects } from "../../data/content";
 import { matchesFilter, useProjectFilter } from "../../lib/projectFilter";
 import SpotlightCard from "../ui/SpotlightCard";
 import AgentLedgerDiagram from "../ui/AgentLedgerDiagram";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, X } from "lucide-react";
+import Link from "../ui/Link";
+import { caseStudyPath } from "../../data/meta";
 
 // The centerpiece card carries the Agentic Ledger architecture diagram
 const CENTERPIECE_ID = "agentic-ledger";
@@ -71,6 +73,12 @@ function FeaturedProject({ project }) {
             {project.description}
           </p>
           <Metrics items={project.metrics} className="mt-6" />
+          <Link
+            to={caseStudyPath(project.id)}
+            className="mt-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-mono text-[11px] tracking-widest uppercase hover:bg-white/85 transition-colors"
+          >
+            Read the case study <ArrowRight size={14} />
+          </Link>
         </div>
 
         <div className="flex flex-wrap gap-x-4 gap-y-2 mt-12">
@@ -93,14 +101,16 @@ function FeaturedProject({ project }) {
 
 function ProjectCard({ project }) {
   return (
-    <a href={project.github} target="_blank" rel="noreferrer" className="block h-full group rounded-2xl">
+    <Link to={caseStudyPath(project.id)} className="block h-full group rounded-2xl">
       <SpotlightCard className="h-full p-8 flex flex-col justify-between min-h-[300px]">
         <div className="flex flex-col gap-4 z-10 relative">
           <div className="flex justify-between items-start">
             <span className="font-mono text-[9px] tracking-widest text-white/50 px-2 py-1 border border-white/10 bg-white/[0.03] rounded uppercase">
               {project.type}
             </span>
-            <ArrowUpRight size={18} className="text-white/40 group-hover:text-white transition-colors duration-300" />
+            <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase text-white/50 group-hover:text-white transition-colors duration-300">
+              Case study <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </span>
           </div>
 
           <div className="mt-4">
@@ -123,7 +133,7 @@ function ProjectCard({ project }) {
           ))}
         </div>
       </SpotlightCard>
-    </a>
+    </Link>
   );
 }
 

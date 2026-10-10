@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, FileCode2, Terminal, Briefcase, GitBranch, Mail, Command, X, User, FolderGit2, Copy, Check, UserRound, CornerDownLeft, Download } from "lucide-react";
 import { profile, projects } from "../../data/content";
 import { setScrollLocked } from "../../lib/scroll";
-import { goToSection } from "../../lib/router";
+import { goToSection, navigate } from "../../lib/router";
+import { caseStudyPath } from "../../data/meta";
 import useCopyToClipboard from "../../lib/useCopyToClipboard";
 
 const subscribeToNothing = () => () => {};
@@ -33,8 +34,8 @@ function buildCommands({ copied, copy }) {
       name: project.title,
       hint: project.tagline,
       icon: FolderGit2,
-      keywords: `${project.type} ${project.tech.join(" ")} repo github`,
-      run: () => window.open(project.github, "_blank", "noopener"),
+      keywords: `${project.type} ${project.tech.join(" ")} case study`,
+      run: () => navigate(caseStudyPath(project.id)),
     })),
     {
       id: "copy-email",
