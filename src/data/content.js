@@ -98,6 +98,33 @@ export const projects = [
   }
 ];
 
+export const moreProjects = [
+  {
+    name: "Little World",
+    summary: "A local-first photo journal for two that syncs through a Google Drive you own, with last-edit-wins merging.",
+    tech: ["TypeScript", "React", "IndexedDB", "Google Drive API"],
+    github: "https://github.com/Vaibhav8075/little-world"
+  },
+  {
+    name: "GlassLink",
+    summary: "BLE protocol parser and simulator that survives fragmented, concatenated and corrupted packets, plus a Hindi/Telugu voice-intent classifier.",
+    tech: ["TypeScript", "React", "Zustand", "Vitest"],
+    github: "https://github.com/Vaibhav8075/GlassLink"
+  },
+  {
+    name: "OpenRescue",
+    summary: "Live disaster-incident map: reports are scored for severity by an ML model and pushed to every client over WebSockets.",
+    tech: ["FastAPI", "Scikit-Learn", "Next.js", "Leaflet"],
+    github: "https://github.com/Vaibhav8075/OpenRescue-AI-Driven-Disaster-Response-Resource-Optimization-System"
+  },
+  {
+    name: "Dijkstra vs A*",
+    summary: "Side-by-side shortest-path visualizer with live metrics, plus routing over real OpenStreetMap roads.",
+    tech: ["React", "Vite", "OpenStreetMap"],
+    github: "https://github.com/Vaibhav8075/Shortest-path-visualizer"
+  }
+];
+
 export const domains = [
   { id: "ai", label: "AI / ML" },
   { id: "backend", label: "Backend" },
