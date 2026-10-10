@@ -1,15 +1,21 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import useActiveSection from "../../lib/useActiveSection";
+
+const links = [
+  { name: "About", id: "about" },
+  { name: "Work", id: "work" },
+  { name: "Experience", id: "experience" },
+  { name: "Stack", id: "stack" }
+];
+const sectionIds = links.map((link) => link.id);
 
 export default function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-
-  const links = [
-    { name: "About", href: "#about" },
-    { name: "Work", href: "#work" },
-    { name: "Experience", href: "#experience" },
-    { name: "Stack", href: "#stack" }
-  ];
+  const activeId = useActiveSection(sectionIds);
+  const activeIndex = links.findIndex((link) => link.id === activeId);
+  // The pill follows the hovered link and settles back on the section in view
+  const pillIndex = hoveredIndex ?? (activeIndex === -1 ? null : activeIndex);
 
   return (
     <motion.nav 
@@ -22,18 +28,16 @@ export default function Navbar() {
         {links.map((link, index) => (
           <a
             key={link.name}
-            href={link.href}
+            href={`#${link.id}`}
+            aria-current={index === activeIndex ? "true" : undefined}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
-            className="relative px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-mono tracking-wider sm:tracking-widest text-white/60 hover:text-white transition-colors uppercase"
+            className={`relative px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-mono tracking-wider sm:tracking-widest ${index === activeIndex ? "text-white" : "text-white/60"} hover:text-white transition-colors uppercase`}
           >
-            {hoveredIndex === index && (
+            {pillIndex === index && (
               <motion.div
                 layoutId="nav-pill"
                 className="absolute inset-0 bg-white/10 rounded-full -z-10"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
