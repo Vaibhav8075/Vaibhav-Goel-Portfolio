@@ -11,6 +11,7 @@ import TechStack from "./components/sections/TechStack"
 import Experience from "./components/sections/Experience"
 import Footer from "./components/sections/Footer"
 import GridBackground from "./components/layout/GridBackground"
+import ScrollProgress from "./components/layout/ScrollProgress"
 import CustomCursor from "./components/ui/CustomCursor"
 import CommandPalette from "./components/ui/CommandPalette"
 
@@ -47,6 +48,7 @@ function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-hidden relative">
+        <ScrollProgress />
         <CustomCursor />
         <GridBackground />
         <CommandPalette />
