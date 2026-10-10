@@ -41,17 +41,6 @@ export const projects = [
     domains: ["backend", "frontend", "ai"]
   },
   {
-    id: "java-safe-cpp",
-    title: "JAVA-SAFE C++",
-    tagline: "A memory-safe compiler and VM for a subset of C++.",
-    description: "A from-scratch compiler in C++17 with a lexer, recursive-descent parser, semantic analysis and code generator. It injects null checks, bounds checks and reference counting into custom bytecode for a stack-based VM.",
-    tech: ["C++", "Compilers", "Virtual Machines", "CMake"],
-    metrics: ["No LLVM, Lex or Yacc", "4 injected safety opcodes"],
-    github: "https://github.com/Vaibhav8075/Compiler",
-    type: "SYSTEMS",
-    domains: ["systems"]
-  },
-  {
     id: "banking-call-intelligence",
     title: "BANKING CALL INTELLIGENCE",
     tagline: "Hybrid rules + AI analysis of financial calls.",
@@ -102,8 +91,7 @@ export const domains = [
   { id: "ai", label: "AI / ML" },
   { id: "backend", label: "Backend" },
   { id: "hardware", label: "Hardware" },
-  { id: "frontend", label: "Frontend" },
-  { id: "systems", label: "Systems" }
+  { id: "frontend", label: "Frontend" }
 ];
 
 export const experience = [
