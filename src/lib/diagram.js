@@ -1,15 +1,20 @@
 // Shared geometry for the SVG architecture diagrams. Boxes are { x, y, w, h } in viewBox units.
 
-// Connect the facing sides of two boxes with a smooth S-curve, horizontally or vertically
-export function edgePath(a, b) {
+// Connect the facing sides of two boxes with a smooth S-curve. Edges follow the layout's
+// direction ("horizontal" left-to-right, "vertical" top-to-bottom) and only turn when
+// both boxes sit in the same column or row, so diagonal links never squeeze between boxes
+export function edgePath(a, b, direction = "horizontal") {
   const acx = a.x + a.w / 2
   const acy = a.y + a.h / 2
   const bcx = b.x + b.w / 2
   const bcy = b.y + b.h / 2
   const dx = bcx - acx
   const dy = bcy - acy
+  const sameColumn = Math.abs(dx) < a.w
+  const sameRow = Math.abs(dy) < a.h
+  const horizontal = direction === "horizontal" ? !sameColumn : sameRow
 
-  if (Math.abs(dx) >= Math.abs(dy)) {
+  if (horizontal) {
     const sx = dx >= 0 ? a.x + a.w : a.x
     const ex = dx >= 0 ? b.x : b.x + b.w
     const mx = (sx + ex) / 2

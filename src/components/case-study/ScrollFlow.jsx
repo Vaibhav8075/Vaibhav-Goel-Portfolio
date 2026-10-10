@@ -12,6 +12,7 @@ const NODE_STYLES = {
 };
 
 function FlowSvg({ flow, layout, activeStep, revealAll }) {
+  const direction = layout === flow.tall ? "vertical" : "horizontal";
   const isVisible = (step) => revealAll || step <= activeStep;
   const isCurrent = (step) => !revealAll && step === activeStep;
 
@@ -35,7 +36,7 @@ function FlowSvg({ flow, layout, activeStep, revealAll }) {
         return (
           <g key={`${edge.from}-${edge.to}`}>
             <motion.path
-              d={edgePath(a, b)}
+              d={edgePath(a, b, direction)}
               fill="none"
               stroke="#fff"
               strokeWidth="1.5"

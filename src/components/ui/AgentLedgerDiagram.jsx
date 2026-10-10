@@ -92,7 +92,7 @@ export default function AgentLedgerDiagram() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const isNarrow = useMediaQuery("(max-width: 639px)");
   const layout = LAYOUTS[isNarrow ? "tall" : "wide"];
-  const edges = EDGES.map((edge) => ({ ...edge, d: edgePath(boxFor(layout, edge.from), boxFor(layout, edge.to)) }));
+  const edges = EDGES.map((edge) => ({ ...edge, d: edgePath(boxFor(layout, edge.from), boxFor(layout, edge.to), isNarrow ? "vertical" : "horizontal") }));
   const [scenarioId, setScenarioId] = useState("bill");
   const [activeId, setActiveId] = useState(null);
   const scenario = SCENARIOS[scenarioId];
