@@ -36,3 +36,8 @@ export function scrollToY(y) {
     window.scrollTo(0, y)
   }
 }
+
+export function smoothScrollTo(y) {
+  if (lenis) lenis.scrollTo(y)
+  else window.scrollTo({ top: y, behavior: "smooth" })
+}
