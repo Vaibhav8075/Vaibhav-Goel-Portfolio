@@ -72,18 +72,6 @@ export const projects = [
     github: "https://github.com/Vaibhav8075/Semantic-Segmentation-for-Autonomous-Driving-",
     type: "CV/AI",
     domains: ["ai"]
-  },
-  {
-    id: "mossx",
-    title: "MOSSX PLATFORM",
-    tagline: "Frontend for a full-stack e-commerce platform.",
-    description: "Reusable React components across 6–8 production features of an e-commerce platform with guest carts, coupons, Stripe and Razorpay checkout and admin analytics. Framer Motion views hold 60 FPS and Zustand manages the async dashboard data.",
-    tech: ["React", "Framer Motion", "Zustand", "Tailwind CSS"],
-    metrics: ["40% more code reuse", "60 FPS animated views"],
-    github: "https://github.com/Moss-X/Website",
-    live: "https://mossx.in/",
-    type: "FRONTEND",
-    domains: ["frontend"]
   }
 ];
 
