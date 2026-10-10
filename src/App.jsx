@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { MotionConfig, useReducedMotion } from "framer-motion"
 import Lenis from "lenis"
 import "lenis/dist/lenis.css"
 import { setLenis } from "./lib/scroll"
@@ -14,7 +15,11 @@ import CustomCursor from "./components/ui/CustomCursor"
 import CommandPalette from "./components/ui/CommandPalette"
 
 function App() {
+  const prefersReducedMotion = useReducedMotion()
+
   useEffect(() => {
+    if (prefersReducedMotion) return
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -37,26 +42,28 @@ function App() {
       lenis.destroy()
       setLenis(null)
     }
-  }, [])
+  }, [prefersReducedMotion])
 
   return (
-    <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-hidden relative">
-      <CustomCursor />
-      <GridBackground />
-      <CommandPalette />
-      
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-        <Navbar />
-        <main className="flex flex-col gap-32 md:gap-48 pb-32 pt-24">
-          <Hero />
-          <SystemProfile />
-          <EngineeringModules />
-          <Experience />
-          <TechStack />
-        </main>
-        <Footer />
+    <MotionConfig reducedMotion="user">
+      <div className="bg-[#050505] min-h-screen text-[#EAEAEA] font-sans selection:bg-white/20 selection:text-white overflow-hidden relative">
+        <CustomCursor />
+        <GridBackground />
+        <CommandPalette />
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+          <Navbar />
+          <main className="flex flex-col gap-32 md:gap-48 pb-32 pt-24">
+            <Hero />
+            <SystemProfile />
+            <EngineeringModules />
+            <Experience />
+            <TechStack />
+          </main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </MotionConfig>
   )
 }
 
