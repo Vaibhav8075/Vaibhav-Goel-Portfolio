@@ -15,3 +15,12 @@ export function scrollToSection(id) {
   }
   history.replaceState(null, "", `#${id}`)
 }
+
+// Freeze page scrolling behind modal UI
+export function setScrollLocked(locked) {
+  if (lenis) {
+    if (locked) lenis.stop()
+    else lenis.start()
+  }
+  document.documentElement.style.overflow = locked ? "hidden" : ""
+}
