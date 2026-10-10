@@ -5,6 +5,19 @@ import SpotlightCard from "../ui/SpotlightCard";
 import AgentLedgerDiagram from "../ui/AgentLedgerDiagram";
 import { ArrowUpRight } from "lucide-react";
 
+function Metrics({ items, className = "" }) {
+  return (
+    <ul className={`flex flex-col gap-1.5 ${className}`}>
+      {items.map((metric) => (
+        <li key={metric} className="flex items-center gap-2 font-mono text-[11px] tracking-wide text-white/60">
+          <span className="w-1 h-1 rounded-full bg-white/40 shrink-0" />
+          {metric}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function EngineeringModules() {
   const featuredProject = projects[0];
   const regularProjects = projects.slice(1);
@@ -57,6 +70,7 @@ export default function EngineeringModules() {
                 <p className="text-white/60 text-base leading-relaxed mt-6 max-w-lg font-light">
                   {featuredProject.description}
                 </p>
+                <Metrics items={featuredProject.metrics} className="mt-6" />
               </div>
               
               <div className="flex flex-wrap gap-x-4 gap-y-2 mt-12">
@@ -107,6 +121,7 @@ export default function EngineeringModules() {
                     <p className="text-white/50 text-sm leading-relaxed font-light">
                       {project.description}
                     </p>
+                    <Metrics items={project.metrics} />
                   </div>
                   
                   <div className="flex flex-wrap gap-x-4 gap-y-2 mt-8 z-10 relative">
