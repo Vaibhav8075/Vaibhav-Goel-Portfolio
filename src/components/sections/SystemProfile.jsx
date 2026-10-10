@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 import SpotlightCard from "../ui/SpotlightCard";
-import { MapPin, Globe, Cpu, Zap } from "lucide-react";
+import { MapPin, Globe } from "lucide-react";
 
 export default function SystemProfile() {
   return (
     <section id="about" className="py-24 border-t border-white/[0.05]">
       <div className="flex flex-col gap-16">
         <div>
-          <h2 className="font-mono text-xs tracking-[0.2em] text-white/40 mb-4">01. ABOUT</h2>
+          <h2 className="font-mono text-xs tracking-[0.2em] text-white/50 mb-4">01. ABOUT</h2>
           <h3 className="text-3xl font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Background</h3>
         </div>
         
@@ -45,7 +45,7 @@ export default function SystemProfile() {
                   <MapPin size={20} className="text-white/50" />
                 </div>
                 <div>
-                  <div className="font-mono text-[10px] tracking-widest text-white/40 mb-1">LOCATION</div>
+                  <div className="font-mono text-[10px] tracking-widest text-white/50 mb-1">LOCATION</div>
                   <div className="text-sm font-medium">Vellore, India</div>
                 </div>
               </div>
@@ -57,7 +57,7 @@ export default function SystemProfile() {
                   <Globe size={20} className="text-white/50" />
                 </div>
                 <div>
-                  <div className="font-mono text-[10px] tracking-widest text-white/40 mb-1">EDUCATION</div>
+                  <div className="font-mono text-[10px] tracking-widest text-white/50 mb-1">EDUCATION</div>
                   <div className="text-sm font-medium">Vellore Inst. of Technology</div>
                 </div>
               </div>

@@ -1,76 +1,85 @@
+export const profile = {
+  name: "Vaibhav Goel",
+  email: "vaibhav.goel0531@gmail.com",
+  github: "https://github.com/Vaibhav8075",
+  linkedin: "https://www.linkedin.com/in/vaibhav-goel-23983b344",
+  resume: "/Vaibhav-Goel-Resume.pdf"
+};
+
 export const projects = [
   {
     id: "agentic-ledger",
     title: "AGENTIC LEDGER",
     tagline: "Autonomous multi-agent financial engine.",
-    description: "Built on Phinite OS. Leverages PyTorch LSTMs and FastAPI to dynamically underwrite SMB micro-loans and prevent transaction fraud in real-time.",
-    tech: ["PyTorch", "FastAPI", "Python", "Phinite OS"],
-    metrics: ["Real-time fraud prevention", "Dynamic underwriting"],
-    link: "https://github.com/Vaibhav8075/Agentic-Ledger",
+    description: "Four Phinite OS agents for Paytm merchants: they catch fake-payment spoofs in under 200 ms and use a PyTorch LSTM revenue forecast to underwrite instant micro-loans for supplier bills.",
+    tech: ["PyTorch", "FastAPI", "Python", "Docker", "Phinite OS"],
+    metrics: ["94% revenue-forecast accuracy", "<200 ms spoof check"],
     github: "https://github.com/Vaibhav8075/Agentic-Ledger",
     type: "AI/SYSTEMS",
-    featured: true
+    domains: ["ai", "backend"]
   },
   {
-    id: "physics-cnn",
+    id: "physics-1d-cnn",
     title: "PHYSICS-AUGMENTED 1D-CNN",
-    tagline: "Industrial fault diagnosis system.",
-    description: "Engineered a predictive maintenance and condition monitoring model using a physics-informed 1D Convolutional Neural Network for industrial bearing analysis.",
-    tech: ["Python", "TensorFlow", "Deep Learning", "Signal Processing"],
-    metrics: ["Condition Monitoring", "Predictive Maintenance"],
-    link: "https://github.com/Vaibhav8075/-Physics-Augmented-1D-CNN",
+    tagline: "An honest evaluation of bearing-fault diagnosis.",
+    description: "A dual-stream 1D-CNN with a physics-based residual filter, tested under leakage-free protocols on the CWRU and Paderborn datasets. The ~99% accuracies common in the literature collapse once the test bearings are truly unseen.",
+    tech: ["PyTorch", "Python", "Scikit-Learn", "ONNX", "Signal Processing"],
+    metrics: ["3 protocols, 2 datasets, 9 models", "0.30 ms INT8 inference on CPU"],
     github: "https://github.com/Vaibhav8075/-Physics-Augmented-1D-CNN",
     type: "ML/RESEARCH",
-    featured: true
+    domains: ["ai"]
   },
   {
-    id: "audict",
-    title: "FINANCIAL AUDIO AI",
-    tagline: "End-to-end AI speech pipeline.",
-    description: "Architected an asynchronous FastAPI backend utilizing Celery and Redis to process audio streams via OpenAI Whisper for custom NLP risk-signal detection.",
-    tech: ["FastAPI", "Celery", "Redis", "Whisper", "NLP"],
-    metrics: ["Asynchronous processing", "Risk-signal detection"],
-    link: "https://github.com/Vaibhav8075/Audict-audio-Technology",
+    id: "call-audit-platform",
+    title: "CALL AUDIT PLATFORM",
+    tagline: "AI-assisted call QA, shipped to production at DCM Shriram.",
+    description: "Admins upload call recordings; Whisper transcribes them and Llama 3.3 scores quality, CSAT and sentiment. Agents self-evaluate and HODs rate compliance. Audio only streams through JWT-authenticated blobs and is purged on a schedule.",
+    tech: ["React", "FastAPI", "PostgreSQL", "Whisper", "Nginx"],
+    metrics: ["Production move from SQLite to PostgreSQL", "3 roles, no public audio URLs"],
     github: "https://github.com/Vaibhav8075/Audict-audio-Technology",
-    type: "BACKEND/AI",
-    featured: true
+    type: "FULL-STACK/AI",
+    domains: ["backend", "frontend", "ai"]
   },
   {
-    id: "iot-ml",
-    title: "IoT SMART MONITORING",
-    tagline: "Edge ML telemetry network.",
-    description: "Integrated a Random Forest classifier with ESP32 hardware to process sensor data locally, reducing false alarms by 25% with real-time cloud connectivity.",
-    tech: ["ESP32", "Python", "Random Forest", "IoT"],
-    metrics: ["25% false alarm reduction", "Real-time edge inference"],
-    link: "https://github.com/Vaibhav8075/IOT-ML-Project",
+    id: "banking-call-intelligence",
+    title: "BANKING CALL INTELLIGENCE",
+    tagline: "Hybrid rules + AI analysis of financial calls.",
+    description: "Transcribes banking calls with Whisper, runs a deterministic rule engine for intent, risk and PII masking, and layers an AI verifier on top that falls back to the rules whenever its confidence is low.",
+    tech: ["FastAPI", "Whisper", "React", "Python"],
+    metrics: ["Rule-based fallback for every decision", "PII masking, JWT auth, rate limiting"],
+    github: "https://github.com/Vaibhav8075/Financial-Technology",
+    type: "BACKEND/AI",
+    domains: ["ai", "backend"]
+  },
+  {
+    id: "iot-fire-detection",
+    title: "IoT FIRE DETECTION",
+    tagline: "Multi-sensor fire detection with a digital twin.",
+    description: "Fuses five sensors on an ESP32-S3 and classifies each reading as normal, warning or fire with a Random Forest trained on 367,550 real sensor rows, streamed to a live Dash digital twin.",
+    tech: ["ESP32", "Python", "Scikit-Learn", "Flask", "Dash"],
+    metrics: ["94.93% test accuracy", "98% fire recall"],
     github: "https://github.com/Vaibhav8075/IOT-ML-Project",
     type: "HARDWARE/ML",
-    featured: true
+    domains: ["ai", "hardware"]
   },
   {
-    id: "semantic-seg",
-    title: "AUTONOMOUS VISION",
-    tagline: "Semantic segmentation for road scenes.",
-    description: "Trained and evaluated deep learning models for autonomous driving capable of classifying each pixel of an image into meaningful categories in real-time.",
-    tech: ["Deep Learning", "Computer Vision", "Python"],
-    metrics: ["Real-time interpretation", "Pixel-level classification"],
-    link: "https://github.com/Vaibhav8075/Semantic-Segmentation-for-Autonomous-Driving-",
+    id: "road-segmentation",
+    title: "ROAD SCENE SEGMENTATION",
+    tagline: "Pixel-level perception for autonomous driving.",
+    description: "Labels every pixel of a road scene with one of seven classes. Four interchangeable architectures (U-Net, ResNet50-UNet, DeepLabV3+, SegFormer) train with a combined CE + Dice + Focal loss, plus Grad-CAM explanations and ONNX export.",
+    tech: ["PyTorch", "Computer Vision", "Python", "ONNX"],
+    metrics: ["4 architectures, 7 classes", "Grad-CAM explainability"],
     github: "https://github.com/Vaibhav8075/Semantic-Segmentation-for-Autonomous-Driving-",
     type: "CV/AI",
-    featured: false
-  },
-  {
-    id: "mossx",
-    title: "MOSSX PLATFORM",
-    tagline: "Frontend architecture & UI/UX engineering.",
-    description: "Modular React component architectures and high-performance interactive interfaces sustaining 60 FPS animation pipelines via Framer Motion and Zustand.",
-    tech: ["React", "Framer Motion", "Zustand", "Tailwind"],
-    metrics: ["60 FPS performance", "40% code reusability increase"],
-    link: "https://github.com/Moss-X/Website",
-    github: "https://github.com/Moss-X/Website",
-    type: "FRONTEND",
-    featured: false
+    domains: ["ai"]
   }
+];
+
+export const domains = [
+  { id: "ai", label: "AI / ML" },
+  { id: "backend", label: "Backend" },
+  { id: "hardware", label: "Hardware" },
+  { id: "frontend", label: "Frontend" }
 ];
 
 export const experience = [
@@ -79,35 +88,40 @@ export const experience = [
     role: "FRONTEND DEVELOPER",
     company: "MOSSX",
     period: "2025.06 — PRESENT",
-    description: "Engineered modular React component architectures, improving code reusability by 40%. Built sustained 60 FPS animation pipelines using Framer Motion and implemented Zustand global state."
+    description: "Organised reusable React components for 6–8 production features (dashboards, API pages and responsive layouts), improving code reuse by 40%. Built Framer Motion animations that hold 60 FPS in complex views, with async dashboard data managed in Zustand.",
+    tech: ["React", "Framer Motion", "Zustand"]
   },
   {
     id: "dcm",
     role: "SOFTWARE ENGINEERING INTERN",
     company: "DCM SHRIRAM LTD.",
     period: "2026.05 — 2026.07",
-    description: "Architected an enterprise audit management platform. Handled database migrations (SQLite to PostgreSQL) and configured Linux networking (MPLS, VPN). Deployed production servers via Nginx and Uvicorn."
+    description: "Built and supported an audit management system in React, FastAPI and PostgreSQL for secure call-audio handling and QA reviews. Moved production from SQLite to PostgreSQL, deployed on Ubuntu with Nginx and Uvicorn, and added role-based auth, protected audio storage and automatic retention. Also gained hands-on exposure to MPLS, VPN and Linux networking.",
+    tech: ["React", "FastAPI", "PostgreSQL", "Nginx", "Linux"],
+    caseStudy: "call-audit-platform"
   },
   {
     id: "aarvasa",
     role: "FRONTEND DEVELOPER INTERN",
     company: "AARVASA",
     period: "2026.01 — 2026.05",
-    description: "Delivered over 20 responsive components with high-fidelity design accuracy. Built highly interactive interfaces using GSAP and optimized REST API integrations."
+    description: "Produced 20+ React and Tailwind CSS components from Figma (navigation, heroes, forms, cards, dashboards and tables) across mobile, tablet and desktop. Integrated REST APIs and GSAP/Framer Motion animations with the backend and design teams without compatibility breaks.",
+    tech: ["React", "Tailwind CSS", "GSAP", "Framer Motion", "REST APIs"]
   },
   {
     id: "sammard",
-    role: "SOFTWARE DIVISION MEMBER",
-    company: "TEAM SAMMARD (VIT ROCKETRY)",
+    role: "SOFTWARE TEAM MEMBER",
+    company: "TEAM SAMMARD (VIT ROCKET TEAM)",
     period: "2025.05 — 2025.10",
-    description: "Built a real-time Ground Control Station (GCS) telemetry dashboard via WebSocket pipelines. Integrated hardware-level ESP32 avionics streams into flight simulation frameworks."
+    description: "Developed a Ground Control Station dashboard for ground and flight tests, streaming live altitude, velocity and multi-sensor telemetry over WebSockets, and fed ESP32 avionics data into the simulation pipeline.",
+    tech: ["WebSockets", "ESP32"]
   }
 ];
 
 export const skills = {
-  languages: ["Python", "C++", "TypeScript", "SQL"],
-  frontend: ["React", "Next.js", "Three.js", "Tailwind CSS", "Framer Motion"],
-  backend: ["FastAPI", "Node.js", "PostgreSQL", "Redis", "Celery"],
-  systems: ["Linux", "Nginx", "Docker", "ESP32", "WebSockets"],
-  ai: ["PyTorch", "Scikit-Learn", "Computer Vision", "Whisper NLP"]
+  languages: ["Python", "C++", "JavaScript", "TypeScript"],
+  frontend: ["React", "Next.js", "Tailwind CSS", "Three.js", "Framer Motion", "GSAP", "Zustand"],
+  backend: ["FastAPI", "Node.js", "PostgreSQL", "REST APIs", "Redis", "Celery"],
+  systems: ["Linux", "Nginx", "Docker", "ESP32", "WebSockets", "MPLS / VPN"],
+  ai: ["PyTorch", "Scikit-Learn", "Whisper", "Computer Vision", "ONNX"]
 };

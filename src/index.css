@@ -8,8 +8,16 @@
 @layer base {
   html {
     scroll-behavior: auto;
+    /* Framer Motion's useScroll measures section offsets against the root scroller */
+    position: relative;
   }
   
+  /* Keyboard focus is otherwise invisible on the near-black background */
+  :focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 3px;
+  }
+
   body {
     background-color: #050505;
     color: #EAEAEA;
@@ -30,9 +38,4 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #444;
-}
-
-/* Utilities for spotlight cards */
-.group:hover .spotlight {
-  opacity: 1;
 }
