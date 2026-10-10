@@ -1,27 +1,44 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import usePrefersReducedMotion from "../../lib/usePrefersReducedMotion";
+import useMediaQuery from "../../lib/useMediaQuery";
+import { boxFor, edgePath } from "../../lib/diagram";
 
 // Mirrors the agent flow described in the Agentic Ledger README
 const NODES = [
-  { id: "soundbox", label: "SOUNDBOX", sub: "MQTT telemetry", x: 8, y: 40, info: "Every payment the merchant's Soundbox announces arrives as an MQTT telemetry ping." },
-  { id: "whatsapp", label: "WHATSAPP", sub: "vendor bills", x: 8, y: 200, info: "Distributors send unstructured bills over WhatsApp, and a webhook forwards them into the system." },
-  { id: "supervisor", label: "SUPERVISOR", sub: "event router", x: 152, y: 120, info: "The Master Supervisor agent sends security events to Spoof Guard and financial events to the Supplier Ledger." },
-  { id: "spoof", label: "SPOOF GUARD", sub: "hash check <200ms", x: 296, y: 40, info: "Verifies the gateway hash in under 200ms. A missing hash raises a fraud alert; a real payment delayed by 4G congestion gets a \"payment safe, audio delayed\" notice." },
-  { id: "ledger", label: "SUPPLIER LEDGER", sub: "PII mask · parse", x: 296, y: 200, info: "Parses the bill, masks PII such as bank account numbers with Phinite guardrails, and extracts the amount owed." },
-  { id: "liquidity", label: "LIQUIDITY ENGINE", sub: "PyTorch LSTM", x: 440, y: 200, info: "A PyTorch LSTM trained on ~400k rows of retail data forecasts the evening's revenue from transaction velocity, and auto-approves a micro-loan when it covers the bill." },
-  { id: "backend", label: "FASTAPI", sub: "bank rails", x: 440, y: 310, info: "Simulated bank calls with idempotency, 504-timeout handling and double-debit protection." },
+  { id: "soundbox", label: "SOUNDBOX", sub: "MQTT telemetry", info: "Every payment the merchant's Soundbox announces arrives as an MQTT telemetry ping." },
+  { id: "whatsapp", label: "WHATSAPP", sub: "vendor bills", info: "Distributors send unstructured bills over WhatsApp, and a webhook forwards them into the system." },
+  { id: "supervisor", label: "SUPERVISOR", sub: "event router", info: "The Master Supervisor agent sends security events to Spoof Guard and financial events to the Supplier Ledger." },
+  { id: "spoof", label: "SPOOF GUARD", sub: "hash check <200ms", info: "Verifies the gateway hash in under 200ms. A missing hash raises a fraud alert; a real payment delayed by 4G congestion gets a \"payment safe, audio delayed\" notice." },
+  { id: "ledger", label: "SUPPLIER LEDGER", sub: "PII mask · parse", info: "Parses the bill, masks PII such as bank account numbers with Phinite guardrails, and extracts the amount owed." },
+  { id: "liquidity", label: "LIQUIDITY ENGINE", sub: "PyTorch LSTM", info: "A PyTorch LSTM trained on ~400k rows of retail data forecasts the evening's revenue from transaction velocity, and auto-approves a micro-loan when it covers the bill." },
+  { id: "backend", label: "FASTAPI", sub: "bank rails", info: "Simulated bank calls with idempotency, 504-timeout handling and double-debit protection." },
 ];
-const NODE_W = 112;
-const NODE_H = 56;
+// Left-to-right on wide screens; stacked top-to-bottom on phones so labels stay legible
+const LAYOUTS = {
+  wide: {
+    width: 560,
+    height: 380,
+    node: { w: 112, h: 56 },
+    frame: { x: 140, y: 14, w: 416, h: 262 },
+    nodes: { soundbox: [8, 40], whatsapp: [8, 200], supervisor: [152, 120], spoof: [296, 40], ledger: [296, 200], liquidity: [440, 200], backend: [440, 310] },
+  },
+  tall: {
+    width: 300,
+    height: 470,
+    node: { w: 134, h: 52 },
+    frame: { x: 2, y: 84, w: 296, h: 282 },
+    nodes: { soundbox: [8, 8], whatsapp: [158, 8], supervisor: [83, 106], spoof: [8, 206], ledger: [158, 206], liquidity: [158, 306], backend: [158, 410] },
+  },
+};
 
 const EDGES = [
-  { id: "soundbox-supervisor", d: "M120 68 C136 68 136 148 152 148" },
-  { id: "whatsapp-supervisor", d: "M120 228 C136 228 136 148 152 148" },
-  { id: "supervisor-spoof", d: "M264 148 C280 148 280 68 296 68" },
-  { id: "supervisor-ledger", d: "M264 148 C280 148 280 228 296 228" },
-  { id: "ledger-liquidity", d: "M408 228 L440 228" },
-  { id: "liquidity-backend", d: "M496 256 L496 310" },
+  { id: "soundbox-supervisor", from: "soundbox", to: "supervisor" },
+  { id: "whatsapp-supervisor", from: "whatsapp", to: "supervisor" },
+  { id: "supervisor-spoof", from: "supervisor", to: "spoof" },
+  { id: "supervisor-ledger", from: "supervisor", to: "ledger" },
+  { id: "ledger-liquidity", from: "ledger", to: "liquidity" },
+  { id: "liquidity-backend", from: "liquidity", to: "backend" },
 ];
 
 const SCENARIOS = {
@@ -73,6 +90,9 @@ function Packets({ edges }) {
 
 export default function AgentLedgerDiagram() {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isNarrow = useMediaQuery("(max-width: 639px)");
+  const layout = LAYOUTS[isNarrow ? "tall" : "wide"];
+  const edges = EDGES.map((edge) => ({ ...edge, d: edgePath(boxFor(layout, edge.from), boxFor(layout, edge.to)) }));
   const [scenarioId, setScenarioId] = useState("bill");
   const [activeId, setActiveId] = useState(null);
   const scenario = SCENARIOS[scenarioId];
@@ -103,18 +123,18 @@ export default function AgentLedgerDiagram() {
       </div>
 
       <svg
-        viewBox="0 0 560 380"
+        viewBox={`0 0 ${layout.width} ${layout.height}`}
         className="w-full h-auto"
         role="group"
         aria-label="Agentic Ledger architecture: Soundbox and WhatsApp events flow through a Supervisor agent to Spoof Guard, or through the Supplier Ledger and Liquidity Engine to the FastAPI bank rails"
         onMouseLeave={() => setActiveId(null)}
       >
         {/* Phinite OS hosts the agents */}
-        <rect x="140" y="14" width="416" height="262" rx="10" fill="none" stroke="#fff" strokeOpacity="0.12" strokeDasharray="3 5" />
-        <text x="152" y="32" fill="#fff" fillOpacity="0.4" fontFamily="monospace" fontSize="9" letterSpacing="2">PHINITE OS</text>
+        <rect x={layout.frame.x} y={layout.frame.y} width={layout.frame.w} height={layout.frame.h} rx="10" fill="none" stroke="#fff" strokeOpacity="0.12" strokeDasharray="3 5" />
+        <text x={layout.frame.x + 12} y={layout.frame.y + 18} fill="#fff" fillOpacity="0.4" fontFamily="monospace" fontSize="9" letterSpacing="2">PHINITE OS</text>
 
         {/* Faint wiring draws in once; the traced route is overlaid on top */}
-        {EDGES.map((edge, i) => (
+        {edges.map((edge, i) => (
           <motion.path
             key={edge.id}
             d={edge.d}
@@ -128,7 +148,7 @@ export default function AgentLedgerDiagram() {
             transition={{ duration: 1, ease: "easeInOut", delay: 0.2 + i * 0.1 }}
           />
         ))}
-        {EDGES.map((edge) => (
+        {edges.map((edge) => (
           <path
             key={edge.id}
             d={edge.d}
@@ -142,13 +162,14 @@ export default function AgentLedgerDiagram() {
 
         {!prefersReducedMotion && (
           <g key={scenarioId}>
-            <Packets edges={scenario.edges.map((id) => EDGES.find((edge) => edge.id === id))} />
+            <Packets edges={scenario.edges.map((id) => edges.find((edge) => edge.id === id))} />
           </g>
         )}
 
         {NODES.map((node, i) => {
           const onRoute = scenario.nodes.includes(node.id);
           const isActive = node.id === activeId;
+          const box = boxFor(layout, node.id);
           return (
             <motion.g
               key={node.id}
@@ -175,20 +196,20 @@ export default function AgentLedgerDiagram() {
                 style={{ opacity: onRoute ? 1 : 0.4, transition: "opacity 0.4s" }}
               >
                 <rect
-                  x={node.x}
-                  y={node.y}
-                  width={NODE_W}
-                  height={NODE_H}
+                  x={box.x}
+                  y={box.y}
+                  width={box.w}
+                  height={box.h}
                   rx="6"
                   fill={isActive ? "#181818" : "#0E0E0E"}
                   stroke={isActive ? "#fff" : onRoute ? "#666" : "#333"}
                   strokeWidth={isActive ? 1.5 : 1}
                   style={{ transition: "stroke 0.3s, fill 0.3s" }}
                 />
-                <text x={node.x + NODE_W / 2} y={node.y + 25} textAnchor="middle" fill="#EEE" fontFamily="monospace" fontSize="10.5">
+                <text x={box.x + box.w / 2} y={box.y + box.h / 2 - 3} textAnchor="middle" fill="#EEE" fontFamily="monospace" fontSize="10.5">
                   {node.label}
                 </text>
-                <text x={node.x + NODE_W / 2} y={node.y + 41} textAnchor="middle" fill="#888" fontFamily="monospace" fontSize="9">
+                <text x={box.x + box.w / 2} y={box.y + box.h / 2 + 12} textAnchor="middle" fill="#888" fontFamily="monospace" fontSize="9">
                   {node.sub}
                 </text>
               </g>
