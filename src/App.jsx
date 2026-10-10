@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react"
-import { MotionConfig, useReducedMotion } from "framer-motion"
+import { MotionConfig } from "framer-motion"
 import Lenis from "lenis"
 import "lenis/dist/lenis.css"
 import { setLenis } from "./lib/scroll"
+import usePrefersReducedMotion from "./lib/usePrefersReducedMotion"
 import { ProjectFilterContext } from "./lib/projectFilter"
 import Navbar from "./components/layout/Navbar"
 import Hero from "./components/sections/Hero"
@@ -18,7 +19,7 @@ import CustomCursor from "./components/ui/CustomCursor"
 import CommandPalette from "./components/ui/CommandPalette"
 
 function App() {
-  const prefersReducedMotion = useReducedMotion()
+  const prefersReducedMotion = usePrefersReducedMotion()
   const [projectFilter, setProjectFilter] = useState(null)
   const projectFilterValue = useMemo(
     () => ({ filter: projectFilter, setFilter: setProjectFilter }),

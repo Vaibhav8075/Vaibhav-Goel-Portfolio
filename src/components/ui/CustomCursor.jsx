@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import useMediaQuery from "../../lib/useMediaQuery";
+import usePrefersReducedMotion from "../../lib/usePrefersReducedMotion";
 
 const INTERACTIVE = "a, button, [role='button'], input, textarea, select, label";
 
 export default function CustomCursor() {
   // Touch screens and stylus-only devices never move a pointer, so the follower would sit in a corner
   const hasFinePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const enabled = hasFinePointer && !prefersReducedMotion;
 
   const [isHovering, setIsHovering] = useState(false);

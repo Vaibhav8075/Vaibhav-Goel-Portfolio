@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import usePrefersReducedMotion from '../../lib/usePrefersReducedMotion';
 
 export default function Typewriter({ text, delay = 0, speed = 50 }) {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [count, setCount] = useState(0);
   const [started, setStarted] = useState(false);
 

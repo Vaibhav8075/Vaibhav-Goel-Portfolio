@@ -1,5 +1,6 @@
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import usePrefersReducedMotion from "../../lib/usePrefersReducedMotion";
 
 // Mirrors the agent flow described in the Agentic Ledger README
 const NODES = [
@@ -71,7 +72,7 @@ function Packets({ edges }) {
 }
 
 export default function AgentLedgerDiagram() {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [scenarioId, setScenarioId] = useState("bill");
   const [activeId, setActiveId] = useState(null);
   const scenario = SCENARIOS[scenarioId];

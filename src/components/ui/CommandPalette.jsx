@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, FileCode2, Terminal, Briefcase, GitBranch, Mail, Command, X, User, FolderGit2, Copy, Check, UserRound, CornerDownLeft, Download } from "lucide-react";
 import { profile, projects } from "../../data/content";
 import { scrollToSection, setScrollLocked } from "../../lib/scroll";
 import useCopyToClipboard from "../../lib/useCopyToClipboard";
 
-const isMac = typeof navigator !== "undefined" && /mac|iphone|ipad/i.test(navigator.userAgentData?.platform ?? navigator.platform);
+const subscribeToNothing = () => () => {};
+const detectMac = () => /mac|iphone|ipad/i.test(navigator.userAgentData?.platform ?? navigator.platform);
 
 const sections = [
   { id: "about", name: "About", icon: User },
@@ -74,6 +75,8 @@ export default function CommandPalette() {
   const [search, setSearch] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [copied, copy] = useCopyToClipboard();
+  // Read the platform after hydration so pre-rendered markup always matches the first client render
+  const isMac = useSyncExternalStore(subscribeToNothing, detectMac, () => false);
 
   const openPalette = () => {
     setSearch("");
