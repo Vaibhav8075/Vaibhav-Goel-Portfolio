@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import SpotlightCard from "../ui/SpotlightCard";
-import { MapPin, Globe, Cpu, Zap } from "lucide-react";
+import { MapPin, Globe } from "lucide-react";
 
 export default function SystemProfile() {
   return (
