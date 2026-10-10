@@ -3,57 +3,67 @@
 <div align="center">
   <img alt="Project Status" src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge&logo=appveyor">
   <img alt="React" src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react">
-  <img alt="Three.js" src="https://img.shields.io/badge/Three.js-WebGL-black?style=for-the-badge&logo=three.js">
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white">
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white">
 </div>
 
 <br />
 
-A modern, highly interactive portfolio website built with a focus on immersive 3D scrollytelling, premium typography, and hardware-accelerated performance. This project serves as a showcase of product engineering, combining clean UI architecture with complex WebGL interactions.
+**Live:** [vaibhavgoel.dev](https://www.vaibhavgoel.dev/)
 
-## Key Features
+A minimal, monochrome portfolio built around interaction rather than decoration: you can trace requests through a live architecture diagram, filter projects, explore where each technology was used, and drive the whole site from a command palette.
 
-- **Deep 3D Scrollytelling:** A seamless `Three.js` camera flight through a dynamic starfield that maps to the user's scroll progress, creating a true narrative journey.
-- **Multi-layered Parallax:** Staggered, independent scroll speeds for content cards yielding an impressive sense of depth across the Experience and Projects sections.
-- **Micro-Interactions & Fluid Motion:** 60fps layout animations, glowing hover states, and seamless tab glides powered by `Framer Motion`.
-- **Premium Typography:** A carefully curated typographic hierarchy using `Space Grotesk` (body) and `Sora` (headings) for an award-winning aesthetic.
-- **Hardware Accelerated:** Optimized CSS (`will-change`, `translateZ`) locks complex parallax cards to the GPU compositor layer, ensuring buttery-smooth scrolling.
+## Features
 
-## Technology Stack
+- **Interactive architecture diagram:** The Agentic Ledger centerpiece traces a vendor bill or a payment ping through its agents, with packets animating along the active route. Hover, focus or tap a node to read what it does.
+- **Project filters:** AI/ML, Backend, Hardware and Frontend chips with animated layout transitions and a live result count.
+- **Skill explorer:** Technologies used in a project or role show where they were used, and one click filters the Work section to match.
+- **Command palette:** Open it with `Ctrl/⌘ + K` or `/` to jump to sections, search projects by name or tech, copy the email address, or open GitHub and LinkedIn. It is fully keyboard-driven.
+- **Scroll-aware UI:** The navbar highlights the section in view, a progress bar runs along the top, and the experience timeline fills as you scroll.
+- **Accessible by default:** Respects `prefers-reduced-motion`, has visible focus rings and a skip link, keeps text contrast at WCAG AA, and labels interactive SVG.
+- **Smooth, cheap animation:** Lenis smooth scrolling, plus pointer effects (hero glow, spotlight cards, custom cursor) that run on motion values and CSS variables instead of React re-renders.
+
+## Tech Stack
 
 - **Framework:** React 19, Vite 7
-- **3D Environment:** Three.js, React Three Fiber, React Three Drei
-- **Animations:** Framer Motion
-- **Scroll Management:** Lenis (smooth scrolling)
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS 4
+- **Animation:** Framer Motion
+- **Scrolling:** Lenis
+- **Icons:** Lucide
+- **Hosting:** Vercel
+
+## Project Structure
+
+```
+src/
+├── data/content.js        # All copy: profile links, projects, experience, skills
+├── lib/                   # Hooks and helpers (scroll, active section, filters, clipboard)
+├── components/
+│   ├── layout/            # Navbar, grid background, scroll progress
+│   ├── sections/          # Hero, About, Work, Experience, Stack, Contact, Footer
+│   └── ui/                # Command palette, architecture diagram, cursor, cards
+└── App.jsx
+```
+
+To update projects, roles or skills, edit `src/data/content.js`. Tech names are matched exactly between `projects[].tech`, `experience[].tech` and `skills`, which is how the skill explorer links them.
 
 ## Getting Started
 
-To run this project locally, clone the repository and follow the instructions below:
+You need Node.js 20.19+ or 22.12+ (required by Vite 7).
 
-### Prerequisites
-Make sure you have Node.js installed on your machine.
-
-### Installation
-
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-2. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-
-3. **Create a production build:**
-   ```bash
-   npm run build
-   ```
+```bash
+npm install      # install dependencies
+npm run dev      # start the dev server
+npm run lint     # lint
+npm run build    # production build in dist/
+npm run preview  # serve the production build locally
+```
 
 ## Contact & Links
 
 - **Email:** [vaibhav.goel0531@gmail.com](mailto:vaibhav.goel0531@gmail.com)
 - **GitHub:** [@Vaibhav8075](https://github.com/Vaibhav8075)
+- **LinkedIn:** [Vaibhav Goel](https://www.linkedin.com/in/vaibhav-goel-23983b344)
 
 ---
 *Designed and engineered by Vaibhav Goel.*
