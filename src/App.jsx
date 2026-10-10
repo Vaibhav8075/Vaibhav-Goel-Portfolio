@@ -4,11 +4,13 @@ import Lenis from "lenis"
 import "lenis/dist/lenis.css"
 import { scrollToSection, scrollToY, setLenis } from "./lib/scroll"
 import { usePathname } from "./lib/router"
+import { caseStudyId, pageMeta } from "./data/meta"
 import usePrefersReducedMotion from "./lib/usePrefersReducedMotion"
 import { ProjectFilterContext } from "./lib/projectFilter"
 import Navbar from "./components/layout/Navbar"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
+import CaseStudy from "./pages/CaseStudy"
 import Footer from "./components/sections/Footer"
 import GridBackground from "./components/layout/GridBackground"
 import ScrollProgress from "./components/layout/ScrollProgress"
@@ -66,7 +68,16 @@ function App() {
     })
   }, [pathname])
 
-  const page = pathname === "/" ? <Home /> : <NotFound />
+  // Keep the tab title, description and canonical URL in sync with client-side navigation
+  useEffect(() => {
+    const meta = pageMeta(pathname)
+    document.title = meta.title
+    document.querySelector('meta[name="description"]')?.setAttribute("content", meta.description)
+    if (meta.url) document.querySelector('link[rel="canonical"]')?.setAttribute("href", meta.url)
+  }, [pathname])
+
+  const studyId = caseStudyId(pathname)
+  const page = pathname === "/" ? <Home /> : studyId ? <CaseStudy key={studyId} id={studyId} /> : <NotFound />
 
   return (
     <MotionConfig reducedMotion="user">
