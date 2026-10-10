@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, FileCode2, Terminal, Briefcase, GitBranch, Mail, Command, X } from "lucide-react";
+import { profile } from "../../data/content";
+import { scrollToSection } from "../../lib/scroll";
+
+const isMac = typeof navigator !== "undefined" && /mac|iphone|ipad/i.test(navigator.userAgentData?.platform ?? navigator.platform);
 
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -21,11 +25,11 @@ export default function CommandPalette() {
   }, []);
 
   const commands = [
-    { id: 1, name: "View Projects", icon: <FileCode2 size={16} />, action: () => { window.location.href = "#work"; setOpen(false); } },
-    { id: 2, name: "View Experience", icon: <Briefcase size={16} />, action: () => { window.location.href = "#experience"; setOpen(false); } },
-    { id: 3, name: "View Tech Stack", icon: <Terminal size={16} />, action: () => { window.location.href = "#stack"; setOpen(false); } },
-    { id: 4, name: "Open GitHub", icon: <GitBranch size={16} />, action: () => { window.open("https://github.com/Vaibhav8075", "_blank"); setOpen(false); } },
-    { id: 5, name: "Send Email", icon: <Mail size={16} />, action: () => { window.location.href = "mailto:vaibhav.goel0531@gmail.com"; setOpen(false); } },
+    { id: 1, name: "View Projects", icon: <FileCode2 size={16} />, action: () => { scrollToSection("work"); setOpen(false); } },
+    { id: 2, name: "View Experience", icon: <Briefcase size={16} />, action: () => { scrollToSection("experience"); setOpen(false); } },
+    { id: 3, name: "View Tech Stack", icon: <Terminal size={16} />, action: () => { scrollToSection("stack"); setOpen(false); } },
+    { id: 4, name: "Open GitHub", icon: <GitBranch size={16} />, action: () => { window.open(profile.github, "_blank", "noopener"); setOpen(false); } },
+    { id: 5, name: "Send Email", icon: <Mail size={16} />, action: () => { window.location.assign(`mailto:${profile.email}`); setOpen(false); } },
   ];
 
   const filteredCommands = search === "" 
@@ -40,7 +44,7 @@ export default function CommandPalette() {
           className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-2 rounded-lg text-xs text-white/50 hover:bg-white/10 hover:text-white transition-colors"
         >
           <Command size={14} /> 
-          <span className="font-mono">CMD + K</span>
+          <span className="font-mono">{isMac ? "⌘ K" : "CTRL + K"}</span>
         </button>
       </div>
 
