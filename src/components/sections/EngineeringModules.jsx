@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { domains, moreProjects, profile, projects } from "../../data/content";
+import { domains, projects } from "../../data/content";
 import { matchesFilter, useProjectFilter } from "../../lib/projectFilter";
 import SpotlightCard from "../ui/SpotlightCard";
 import AgentLedgerDiagram from "../ui/AgentLedgerDiagram";
@@ -215,40 +215,6 @@ export default function EngineeringModules() {
             ))}
           </AnimatePresence>
         </motion.div>
-
-        <div className="mt-8">
-          <div className="flex items-baseline justify-between border-b border-white/[0.06] pb-4">
-            <h4 className="font-mono text-[10px] tracking-[0.2em] text-white/50 uppercase">More on GitHub</h4>
-            <a href={profile.github} target="_blank" rel="noreferrer" className="flex items-center gap-1 font-mono text-[10px] tracking-[0.2em] text-white/50 hover:text-white uppercase transition-colors">
-              All repositories <ArrowUpRight size={12} />
-            </a>
-          </div>
-          <ul>
-            {moreProjects.map((project, index) => (
-              <motion.li
-                key={project.name}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.06 }}
-              >
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group grid grid-cols-[1fr_auto] md:grid-cols-[12rem_1fr_auto] items-baseline gap-x-6 gap-y-2 py-5 border-b border-white/[0.06] hover:bg-white/[0.02] transition-colors"
-                >
-                  <span className="text-white font-medium tracking-tight">{project.name}</span>
-                  <ArrowUpRight size={16} className="md:order-last self-center text-white/40 group-hover:text-white group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
-                  <span className="col-span-2 md:col-span-1 flex flex-col gap-2">
-                    <span className="text-sm text-white/60 font-light leading-relaxed">{project.summary}</span>
-                    <span className="font-mono text-[10px] tracking-wider text-white/50">{project.tech.join(" · ")}</span>
-                  </span>
-                </a>
-              </motion.li>
-            ))}
-          </ul>
-        </div>
       </div>
     </section>
   );
