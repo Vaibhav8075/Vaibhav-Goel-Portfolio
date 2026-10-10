@@ -634,4 +634,71 @@ export const caseStudies = {
       ],
     },
   },
+  mossx: {
+    name: "MossX Platform",
+    context: "Frontend Developer · MossX · Remote",
+    started: "Jun 2025",
+    problem: {
+      lead: "MossX is a full-stack e-commerce platform: browse and search, guest carts that merge on login, coupons and bundles, Stripe and Razorpay checkout, and an admin with live sales analytics. As a frontend developer, my job was to keep a growing set of features consistent and fast.",
+      points: [
+        "Dashboards and API pages kept multiplying, so one-off components were becoming a maintenance cost.",
+        "Animated, data-heavy views had to stay smooth on ordinary devices.",
+      ],
+    },
+    approach: [
+      { title: "A shared component system", text: "Organised reusable React components for 6–8 production features (dashboards, API pages and responsive layouts), improving code reuse by 40% and speeding up UI delivery." },
+      { title: "Motion that holds 60 FPS", text: "Framer Motion animations tuned to stay at 60 FPS in complex views." },
+      { title: "Predictable async state", text: "Async dashboard data flows through Zustand global state, so views stay in sync without prop drilling." },
+    ],
+    architecture: {
+      caption: "Where the frontend sits in the platform. The highlighted node is my part.",
+      flow: {
+        label: "MossX platform architecture",
+        wide: {
+          width: 680,
+          height: 310,
+          node: { w: 128, h: 52 },
+          nodes: { client: [10, 124], api: [180, 124], services: [350, 124], payments: [540, 20], mongo: [540, 100], redis: [540, 176], cdn: [540, 252] },
+        },
+        tall: {
+          width: 300,
+          height: 340,
+          direction: "horizontal",
+          node: { w: 126, h: 44 },
+          nodes: { client: [8, 20], api: [8, 110], services: [8, 200], payments: [166, 110], mongo: [166, 170], redis: [166, 230], cdn: [166, 290] },
+        },
+        nodes: [
+          { id: "client", label: "REACT SPA", sub: "my work", kind: "focus", step: 0 },
+          { id: "api", label: "EXPRESS API", sub: "JWT + refresh", step: 1 },
+          { id: "services", label: "SERVICES", sub: "auth · cart · catalog", step: 2 },
+          { id: "payments", label: "PAYMENTS", sub: "Stripe · Razorpay", kind: "input", step: 3 },
+          { id: "mongo", label: "MONGODB", sub: "records", kind: "store", step: 4 },
+          { id: "redis", label: "REDIS", sub: "Upstash cache", kind: "store", step: 4 },
+          { id: "cdn", label: "CLOUDINARY", sub: "image CDN", kind: "store", step: 4 },
+        ],
+        edges: [
+          { from: "client", to: "api", step: 1 },
+          { from: "api", to: "services", step: 2 },
+          { from: "services", to: "payments", step: 3 },
+          { from: "services", to: "mongo", step: 4 },
+          { from: "services", to: "redis", step: 4 },
+          { from: "services", to: "cdn", step: 4 },
+        ],
+        steps: [
+          { title: "The storefront and dashboards", text: "My part: the React SPA, shared components, Framer Motion views and Zustand state." },
+          { title: "One API gateway", text: "The client talks to an Express API with short-lived JWTs and HttpOnly refresh tokens." },
+          { title: "Domain services", text: "Auth, catalog, cart (with guest-cart merging on login) and analytics." },
+          { title: "Payments", text: "Stripe and Razorpay checkout with signature-verified webhooks." },
+          { title: "Data and media", text: "MongoDB for records, Upstash Redis for hot catalog queries, Cloudinary for images." },
+        ],
+      },
+    },
+    results: {
+      stats: [
+        { value: 40, suffix: "%", label: "more code reuse across features" },
+        { value: 60, suffix: " FPS", label: "in complex animated views" },
+        { value: "6–8", label: "production features built on shared components" },
+      ],
+    },
+  },
 };
