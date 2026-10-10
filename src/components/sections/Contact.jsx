@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, Check, Copy } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Download } from "lucide-react";
 import { profile } from "../../data/content";
 import useCopyToClipboard from "../../lib/useCopyToClipboard";
 
@@ -42,7 +42,10 @@ export default function Contact() {
             </button>
           </div>
 
-          <div className="flex gap-8 font-mono text-xs tracking-widest">
+          <div className="flex flex-wrap gap-x-8 gap-y-4 font-mono text-xs tracking-widest">
+            <a href={profile.resume} download className="flex items-center gap-1 text-white/60 hover:text-white transition-colors">
+              RÉSUMÉ (PDF) <Download size={12} />
+            </a>
             <a href={profile.github} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-white/60 hover:text-white transition-colors">
               GITHUB <ArrowUpRight size={12} />
             </a>

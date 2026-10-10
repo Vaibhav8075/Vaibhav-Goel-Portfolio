@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, FileCode2, Terminal, Briefcase, GitBranch, Mail, Command, X, User, FolderGit2, Copy, Check, UserRound, CornerDownLeft } from "lucide-react";
+import { Search, FileCode2, Terminal, Briefcase, GitBranch, Mail, Command, X, User, FolderGit2, Copy, Check, UserRound, CornerDownLeft, Download } from "lucide-react";
 import { profile, projects } from "../../data/content";
 import { scrollToSection, setScrollLocked } from "../../lib/scroll";
 import useCopyToClipboard from "../../lib/useCopyToClipboard";
@@ -43,6 +43,18 @@ function buildCommands({ copied, copy }) {
       keywords: "email mail clipboard contact",
       keepOpen: true,
       run: () => copy(profile.email),
+    },
+    {
+      id: "resume",
+      group: "Contact",
+      name: "Download résumé",
+      hint: "PDF",
+      icon: Download,
+      keywords: "resume cv pdf download hire",
+      run: () => {
+        const link = Object.assign(document.createElement("a"), { href: profile.resume, download: "" });
+        link.click();
+      },
     },
     { id: "send-email", group: "Contact", name: "Send an email", icon: Mail, keywords: "mail contact hire", run: () => window.location.assign(`mailto:${profile.email}`) },
     { id: "github", group: "Contact", name: "Open GitHub", icon: GitBranch, keywords: "code repos", run: () => window.open(profile.github, "_blank", "noopener") },

@@ -2,7 +2,8 @@ export const profile = {
   name: "Vaibhav Goel",
   email: "vaibhav.goel0531@gmail.com",
   github: "https://github.com/Vaibhav8075",
-  linkedin: "https://www.linkedin.com/in/vaibhav-goel-23983b344"
+  linkedin: "https://www.linkedin.com/in/vaibhav-goel-23983b344",
+  resume: "/Vaibhav-Goel-Resume.pdf"
 };
 
 export const projects = [
