@@ -1,5 +1,7 @@
 import { useEffect } from "react"
 import Lenis from "lenis"
+import "lenis/dist/lenis.css"
+import { setLenis } from "./lib/scroll"
 import Navbar from "./components/layout/Navbar"
 import Hero from "./components/sections/Hero"
 import SystemProfile from "./components/sections/SystemProfile"
@@ -17,10 +19,10 @@ function App() {
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      smoothTouch: false,
+      anchors: true,
     })
 
-    window.__lenis = lenis
+    setLenis(lenis)
 
     let rafId = 0
     const raf = (time) => {
@@ -33,9 +35,7 @@ function App() {
     return () => {
       cancelAnimationFrame(rafId)
       lenis.destroy()
-      if (window.__lenis === lenis) {
-        delete window.__lenis
-      }
+      setLenis(null)
     }
   }, [])
 
