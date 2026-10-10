@@ -89,7 +89,7 @@ export const experience = [
     role: "FRONTEND DEVELOPER",
     company: "MOSSX",
     period: "2025.06 — PRESENT",
-    description: "Engineered modular React component architectures, improving code reusability by 40%. Built sustained 60 FPS animation pipelines using Framer Motion and implemented Zustand global state.",
+    description: "Organised reusable React components for 6–8 production features (dashboards, API pages and responsive layouts), improving code reuse by 40%. Built Framer Motion animations that hold 60 FPS in complex views, with async dashboard data managed in Zustand.",
     tech: ["React", "Framer Motion", "Zustand"]
   },
   {
@@ -97,31 +97,31 @@ export const experience = [
     role: "SOFTWARE ENGINEERING INTERN",
     company: "DCM SHRIRAM LTD.",
     period: "2026.05 — 2026.07",
-    description: "Architected an enterprise audit management platform. Handled database migrations (SQLite to PostgreSQL) and configured Linux networking (MPLS, VPN). Deployed production servers via Nginx and Uvicorn.",
-    tech: ["PostgreSQL", "SQLite", "Linux", "Nginx", "Uvicorn"]
+    description: "Built and supported an audit management system in React, FastAPI and PostgreSQL for secure call-audio handling and QA reviews. Moved production from SQLite to PostgreSQL, deployed on Ubuntu with Nginx and Uvicorn, and added role-based auth, protected audio storage and automatic retention. Also gained hands-on exposure to MPLS, VPN and Linux networking.",
+    tech: ["React", "FastAPI", "PostgreSQL", "Nginx", "Linux"]
   },
   {
     id: "aarvasa",
     role: "FRONTEND DEVELOPER INTERN",
     company: "AARVASA",
     period: "2026.01 — 2026.05",
-    description: "Delivered over 20 responsive components with high-fidelity design accuracy. Built highly interactive interfaces using GSAP and optimized REST API integrations.",
-    tech: ["GSAP", "REST APIs"]
+    description: "Produced 20+ React and Tailwind CSS components from Figma (navigation, heroes, forms, cards, dashboards and tables) across mobile, tablet and desktop. Integrated REST APIs and GSAP/Framer Motion animations with the backend and design teams without compatibility breaks.",
+    tech: ["React", "Tailwind CSS", "GSAP", "Framer Motion", "REST APIs"]
   },
   {
     id: "sammard",
-    role: "SOFTWARE DIVISION MEMBER",
-    company: "TEAM SAMMARD (VIT ROCKETRY)",
+    role: "SOFTWARE TEAM MEMBER",
+    company: "TEAM SAMMARD (VIT ROCKET TEAM)",
     period: "2025.05 — 2025.10",
-    description: "Built a real-time Ground Control Station (GCS) telemetry dashboard via WebSocket pipelines. Integrated hardware-level ESP32 avionics streams into flight simulation frameworks.",
+    description: "Developed a Ground Control Station dashboard for ground and flight tests, streaming live altitude, velocity and multi-sensor telemetry over WebSockets, and fed ESP32 avionics data into the simulation pipeline.",
     tech: ["WebSockets", "ESP32"]
   }
 ];
 
 export const skills = {
-  languages: ["Python", "C++", "TypeScript", "SQL"],
-  frontend: ["React", "Next.js", "Three.js", "Tailwind CSS", "Framer Motion"],
-  backend: ["FastAPI", "Node.js", "PostgreSQL", "Redis", "Celery"],
-  systems: ["Linux", "Nginx", "Docker", "ESP32", "WebSockets"],
-  ai: ["PyTorch", "Scikit-Learn", "Computer Vision", "Whisper"]
+  languages: ["Python", "C++", "JavaScript", "TypeScript"],
+  frontend: ["React", "Next.js", "Tailwind CSS", "Three.js", "Framer Motion", "GSAP", "Zustand"],
+  backend: ["FastAPI", "Node.js", "PostgreSQL", "REST APIs", "Redis", "Celery"],
+  systems: ["Linux", "Nginx", "Docker", "ESP32", "WebSockets", "MPLS / VPN"],
+  ai: ["PyTorch", "Scikit-Learn", "Whisper", "Computer Vision", "ONNX"]
 };
