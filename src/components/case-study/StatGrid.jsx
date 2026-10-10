@@ -35,7 +35,7 @@ function Counter({ stat }) {
 
 export default function StatGrid({ stats }) {
   return (
-    <dl className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06] rounded-2xl overflow-hidden border border-white/[0.06]">
+    <dl className={`grid ${stats.length === 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 lg:grid-cols-4"} gap-px bg-white/[0.06] rounded-2xl overflow-hidden border border-white/[0.06]`}>
       {stats.map((stat) => (
         <div key={stat.label} className="bg-[#070707] p-6 md:p-8 flex flex-col gap-3">
           <dt className="order-2 font-mono text-[11px] tracking-wide text-white/50 leading-relaxed">{stat.label}</dt>

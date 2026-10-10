@@ -9,6 +9,8 @@ const NODE_STYLES = {
   core: { fill: "#121212", stroke: "#6b6b6b", dash: undefined },
   input: { fill: "#0B0B0B", stroke: "#4a4a4a", dash: "4 3" },
   store: { fill: "#0E0E0E", stroke: "#555", dash: undefined },
+  // Marks the part of a larger system that I built
+  focus: { fill: "#1C1C1C", stroke: "#d4d4d4", dash: undefined },
 };
 
 function FlowSvg({ flow, layout, activeStep, revealAll }) {
