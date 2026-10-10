@@ -8,6 +8,8 @@
 @layer base {
   html {
     scroll-behavior: auto;
+    /* Framer Motion's useScroll measures section offsets against the root scroller */
+    position: relative;
   }
   
   body {
