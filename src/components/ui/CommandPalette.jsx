@@ -2,7 +2,8 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, FileCode2, Terminal, Briefcase, GitBranch, Mail, Command, X, User, FolderGit2, Copy, Check, UserRound, CornerDownLeft, Download } from "lucide-react";
 import { profile, projects } from "../../data/content";
-import { scrollToSection, setScrollLocked } from "../../lib/scroll";
+import { setScrollLocked } from "../../lib/scroll";
+import { goToSection } from "../../lib/router";
 import useCopyToClipboard from "../../lib/useCopyToClipboard";
 
 const subscribeToNothing = () => () => {};
@@ -24,7 +25,7 @@ function buildCommands({ copied, copy }) {
       name: section.name,
       icon: section.icon,
       keywords: `go section ${section.id}`,
-      run: () => scrollToSection(section.id),
+      run: () => goToSection(section.id),
     })),
     ...projects.map((project) => ({
       id: `project-${project.id}`,

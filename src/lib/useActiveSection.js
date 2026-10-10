@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 
 // Returns the id of the section crossing the middle of the viewport, or null (e.g. over the hero)
-export default function useActiveSection(ids) {
+// Pass the current path as `page` so the observer re-attaches when the sections are re-mounted
+export default function useActiveSection(ids, page) {
   const [active, setActive] = useState(null)
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function useActiveSection(ids) {
     }
 
     return () => observer.disconnect()
-  }, [ids])
+  }, [ids, page])
 
   return active
 }

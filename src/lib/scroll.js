@@ -9,6 +9,8 @@ export function scrollToSection(id) {
   if (!target) return
 
   if (lenis) {
+    // Re-measure first: after a route change Lenis may still clamp to the old page height
+    lenis.resize()
     lenis.scrollTo(target)
   } else {
     target.scrollIntoView({ behavior: "smooth" })
@@ -23,4 +25,14 @@ export function setScrollLocked(locked) {
     else lenis.start()
   }
   document.documentElement.style.overflow = locked ? "hidden" : ""
+}
+
+// Jump without animation, e.g. when a new page replaces the old one
+export function scrollToY(y) {
+  if (lenis) {
+    lenis.resize()
+    lenis.scrollTo(y, { immediate: true, force: true })
+  } else {
+    window.scrollTo(0, y)
+  }
 }

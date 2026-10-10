@@ -1,17 +1,14 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { MotionConfig } from "framer-motion"
 import Lenis from "lenis"
 import "lenis/dist/lenis.css"
-import { setLenis } from "./lib/scroll"
+import { scrollToSection, scrollToY, setLenis } from "./lib/scroll"
+import { usePathname } from "./lib/router"
 import usePrefersReducedMotion from "./lib/usePrefersReducedMotion"
 import { ProjectFilterContext } from "./lib/projectFilter"
 import Navbar from "./components/layout/Navbar"
-import Hero from "./components/sections/Hero"
-import SystemProfile from "./components/sections/SystemProfile"
-import EngineeringModules from "./components/sections/EngineeringModules"
-import TechStack from "./components/sections/TechStack"
-import Experience from "./components/sections/Experience"
-import Contact from "./components/sections/Contact"
+import Home from "./pages/Home"
+import NotFound from "./pages/NotFound"
 import Footer from "./components/sections/Footer"
 import GridBackground from "./components/layout/GridBackground"
 import ScrollProgress from "./components/layout/ScrollProgress"
@@ -20,6 +17,7 @@ import CommandPalette from "./components/ui/CommandPalette"
 
 function App() {
   const prefersReducedMotion = usePrefersReducedMotion()
+  const pathname = usePathname()
   const [projectFilter, setProjectFilter] = useState(null)
   const projectFilterValue = useMemo(
     () => ({ filter: projectFilter, setFilter: setProjectFilter }),
@@ -53,6 +51,23 @@ function App() {
     }
   }, [prefersReducedMotion])
 
+  // After a route change, jump to the requested section or back to where this page was left
+  const isFirstRender = useRef(true)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      if (history.state?.scrollY) requestAnimationFrame(() => scrollToY(history.state.scrollY))
+      return
+    }
+    const hash = window.location.hash.slice(1)
+    requestAnimationFrame(() => {
+      if (hash) scrollToSection(hash)
+      else scrollToY(history.state?.scrollY ?? 0)
+    })
+  }, [pathname])
+
+  const page = pathname === "/" ? <Home /> : <NotFound />
+
   return (
     <MotionConfig reducedMotion="user">
       <ProjectFilterContext value={projectFilterValue}>
@@ -69,13 +84,8 @@ function App() {
 
           <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
             <Navbar />
-            <main id="main" tabIndex={-1} className="focus:outline-none flex flex-col gap-32 md:gap-48 pb-32 pt-24">
-              <Hero />
-              <SystemProfile />
-              <EngineeringModules />
-              <Experience />
-              <TechStack />
-              <Contact />
+            <main id="main" tabIndex={-1} className="focus:outline-none pb-32 pt-24">
+              {page}
             </main>
             <Footer />
           </div>

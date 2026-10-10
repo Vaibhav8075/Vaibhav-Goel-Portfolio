@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import useActiveSection from "../../lib/useActiveSection";
+import { usePathname } from "../../lib/router";
+import Link from "../ui/Link";
 import { profile } from "../../data/content";
 
 const links = [
@@ -13,8 +15,9 @@ const sectionIds = links.map((link) => link.id);
 
 export default function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const activeId = useActiveSection(sectionIds);
-  const activeIndex = links.findIndex((link) => link.id === activeId);
+  const pathname = usePathname();
+  const activeId = useActiveSection(sectionIds, pathname);
+  const activeIndex = pathname === "/" ? links.findIndex((link) => link.id === activeId) : -1;
   // The pill follows the hovered link and settles back on the section in view
   const pillIndex = hoveredIndex ?? (activeIndex === -1 ? null : activeIndex);
 
@@ -27,9 +30,9 @@ export default function Navbar() {
     >
       <div className="flex items-center gap-0.5 sm:gap-1 md:gap-2 px-2 sm:px-3 py-2 bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 rounded-full shadow-2xl relative">
         {links.map((link, index) => (
-          <a
+          <Link
             key={link.name}
-            href={`#${link.id}`}
+            to={`/#${link.id}`}
             aria-current={index === activeIndex ? "true" : undefined}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
@@ -43,7 +46,7 @@ export default function Navbar() {
               />
             )}
             {link.name}
-          </a>
+          </Link>
         ))}
         
         <div className="hidden sm:block w-px h-4 bg-white/20 mx-2"></div>
