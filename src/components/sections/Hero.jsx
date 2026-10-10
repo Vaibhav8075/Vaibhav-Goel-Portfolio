@@ -1,5 +1,5 @@
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 import Typewriter from "../ui/Typewriter";
 
@@ -82,6 +82,9 @@ export default function Hero() {
         >
           <a href="#work" className="font-mono text-xs tracking-widest text-white hover:text-white/70 transition-colors uppercase flex items-center gap-2 pb-1 border-b border-white/20 hover:border-white/50">
             View Work <ArrowDown size={14} />
+          </a>
+          <a href="#contact" className="font-mono text-xs tracking-widest text-white/60 hover:text-white transition-colors uppercase flex items-center gap-2 pb-1 border-b border-transparent hover:border-white/30">
+            Get in touch <ArrowUpRight size={14} />
           </a>
         </motion.div>
       </div>

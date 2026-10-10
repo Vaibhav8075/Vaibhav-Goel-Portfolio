@@ -10,6 +10,7 @@ import SystemProfile from "./components/sections/SystemProfile"
 import EngineeringModules from "./components/sections/EngineeringModules"
 import TechStack from "./components/sections/TechStack"
 import Experience from "./components/sections/Experience"
+import Contact from "./components/sections/Contact"
 import Footer from "./components/sections/Footer"
 import GridBackground from "./components/layout/GridBackground"
 import ScrollProgress from "./components/layout/ScrollProgress"
@@ -68,6 +69,7 @@ function App() {
               <EngineeringModules />
               <Experience />
               <TechStack />
+              <Contact />
             </main>
             <Footer />
           </div>
