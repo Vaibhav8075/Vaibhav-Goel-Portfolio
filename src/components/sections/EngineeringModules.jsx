@@ -43,7 +43,7 @@ export default function EngineeringModules() {
                     CENTERPIECE
                   </span>
                 </div>
-                <a href={featuredProject.link} target="_blank" rel="noreferrer" className="text-white/30 hover:text-white transition-colors duration-300">
+                <a href={featuredProject.github} target="_blank" rel="noreferrer" className="text-white/30 hover:text-white transition-colors duration-300">
                   <ArrowUpRight size={24} />
                 </a>
               </div>
@@ -132,7 +132,7 @@ export default function EngineeringModules() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6 }}
             >
-              <a href={project.link} target="_blank" rel="noreferrer" className="block h-full group outline-none">
+              <a href={project.github} target="_blank" rel="noreferrer" className="block h-full group outline-none">
                 <SpotlightCard className="h-full p-8 flex flex-col justify-between min-h-[300px]">
                   
                   <div className="flex flex-col gap-4 z-10 relative">
