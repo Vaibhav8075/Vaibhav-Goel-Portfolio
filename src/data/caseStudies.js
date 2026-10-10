@@ -205,4 +205,78 @@ export const caseStudies = {
       ],
     },
   },
+  "call-audit-platform": {
+    name: "Call Audit Platform",
+    context: "Software Engineering Internship · DCM Shriram Ltd.",
+    started: "May 2026",
+    problem: {
+      lead: "DCM Shriram's QA and customer-service teams needed one place to audit calls: score them, collect agents' self-evaluations and HOD ratings, and keep a permanent feedback trail.",
+      points: [
+        "Recordings are sensitive. Employees should see that an audit exists, but only the right people may hear it.",
+        "Audio is large and shouldn't pile up forever, yet the feedback history must never be lost.",
+        "It started on SQLite and had to become a production service on the company's Ubuntu server.",
+      ],
+    },
+    approach: [
+      { title: "AI first pass on every call", text: "Each upload is transcribed by Whisper large-v3 and scored by Llama 3.3 70B (both on Groq): quality score, CSAT, sentiment, topics, keywords and coaching suggestions. Calls are tagged by ISO week for reporting." },
+      { title: "A workflow for three roles", text: "Admins create audits and design the self-evaluation form (yes/no, 1–5 ratings, free text), agents fill it in and HODs add a compliance rating. Scores roll up into scorecards and leaderboards." },
+      { title: "Audio that can't leak", text: "No audio URL is ever exposed. The browser fetches each recording as an authenticated blob through Axios interceptors and renders it with WaveSurfer.js; other people's calls show up locked." },
+      { title: "Retention without data loss", text: "An APScheduler job deletes recordings after an admin-configurable number of days and runs weekly disk checks, while transcripts and feedback are kept permanently." },
+      { title: "From SQLite to production", text: "A migration script copies every table into PostgreSQL and re-syncs the sequences. The app runs on Ubuntu with Uvicorn under systemd behind an Nginx reverse proxy that also serves the React build." },
+    ],
+    architecture: {
+      caption: "One Ubuntu server: Nginx in front, FastAPI in the middle, AI in the cloud.",
+      flow: {
+        label: "Call Audit Platform architecture",
+        wide: {
+          width: 760,
+          height: 290,
+          node: { w: 120, h: 52 },
+          nodes: { users: [10, 110], nginx: [160, 110], spa: [310, 30], api: [310, 180], groq: [470, 100], storage: [470, 220], scheduler: [630, 220] },
+        },
+        tall: {
+          width: 300,
+          height: 400,
+          node: { w: 134, h: 50 },
+          nodes: { users: [83, 8], nginx: [83, 84], spa: [8, 160], api: [158, 160], groq: [8, 250], storage: [158, 250], scheduler: [158, 340] },
+        },
+        nodes: [
+          { id: "users", label: "USERS", sub: "Admin · HOD · Agent", kind: "input", step: 0 },
+          { id: "nginx", label: "NGINX", sub: "reverse proxy", step: 1 },
+          { id: "spa", label: "REACT SPA", sub: "WaveSurfer audio", step: 1 },
+          { id: "api", label: "FASTAPI", sub: "JWT · role checks", step: 2 },
+          { id: "groq", label: "GROQ", sub: "Whisper · Llama 3.3", kind: "input", step: 3 },
+          { id: "storage", label: "STORAGE", sub: "PostgreSQL + audio", kind: "store", step: 4 },
+          { id: "scheduler", label: "APSCHEDULER", sub: "retention cleanup", step: 5 },
+        ],
+        edges: [
+          { from: "users", to: "nginx", step: 1 },
+          { from: "nginx", to: "spa", step: 1 },
+          { from: "nginx", to: "api", step: 2 },
+          { from: "api", to: "groq", step: 3 },
+          { from: "api", to: "storage", step: 4 },
+          { from: "scheduler", to: "storage", step: 5 },
+        ],
+        steps: [
+          { title: "Three kinds of user", text: "Admins upload recordings, call agents review their own calls, HODs rate compliance." },
+          { title: "One entry point", text: "Nginx serves the React build and reverse-proxies API calls to FastAPI on the same Ubuntu server." },
+          { title: "FastAPI owns the rules", text: "JWT auth and strict role boundaries decide who can see and hear what." },
+          { title: "AI does the first pass", text: "Whisper large-v3 transcribes; Llama 3.3 70B returns scores, sentiment, topics and tips." },
+          { title: "Split storage", text: "Audits and feedback live in PostgreSQL; audio stays on disk with only its path in the database." },
+          { title: "Retention on autopilot", text: "Recordings are purged after the configured number of days; the text record is kept for good." },
+        ],
+      },
+    },
+    results: {
+      stats: [
+        { value: 3, label: "roles with separate permissions" },
+        { value: 2, label: "AI models per call: Whisper large-v3 and Llama 3.3 70B" },
+        { value: 0, label: "audio URLs exposed to the browser" },
+        { value: "PostgreSQL", label: "in production, migrated from SQLite" },
+      ],
+      notes: [
+        "Built and supported in production during my May–July 2026 internship, resolving production issues and shipping features with the HR, QA and infrastructure teams.",
+      ],
+    },
+  },
 };
