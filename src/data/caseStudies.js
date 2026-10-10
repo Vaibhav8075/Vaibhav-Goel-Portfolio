@@ -279,4 +279,85 @@ export const caseStudies = {
       ],
     },
   },
+  "java-safe-cpp": {
+    name: "Java-Safe C++",
+    context: "Systems project · compiler and virtual machine",
+    started: "Sep 2026",
+    problem: {
+      lead: "C++ is fast and expressive, but nothing stops a null dereference, an out-of-bounds write or a leaked allocation. The result is undefined behaviour, and often a security hole.",
+      points: [
+        "Could a compiler make a subset of C++ as memory-safe as Java by building the checks into its own pipeline and targeting its own VM?",
+        "Could it be done from scratch, with no LLVM and no Lex/Yacc, so every phase stays understandable?",
+      ],
+    },
+    approach: [
+      { title: "Lexer", text: "Tokenises the source and records the line and column of every token, so diagnostics point at the exact spot." },
+      { title: "Recursive-descent parser", text: "Hand-written, producing a custom AST. The language is deliberately small: templates, classes, the STL and preprocessor macros are refused with specific errors." },
+      { title: "Semantic analysis", text: "Static typing, scoping and function resolution, so type errors never reach the VM." },
+      { title: "Safety in code generation", text: "The generator lowers the AST to custom bytecode and emits CHECK_NULL, CHECK_BOUNDS, INC_REF and DEC_REF exactly where pointers are dereferenced, arrays are indexed and objects are allocated." },
+      { title: "A VM that can't misbehave", text: "A stack-based interpreter with an operand stack, call stack and managed heap. Automatic reference counting reclaims every new, and a CLI can run programs, compile them, dump bytecode or trace execution." },
+    ],
+    architecture: {
+      caption: "Source to safe execution, through five hand-written stages.",
+      flow: {
+        label: "Java-Safe C++ compiler pipeline",
+        wide: {
+          width: 640,
+          height: 250,
+          node: { w: 128, h: 52 },
+          nodes: { source: [10, 40], lexer: [170, 40], parser: [330, 40], sema: [490, 40], codegen: [490, 176], bytecode: [330, 176], vm: [170, 176], heap: [10, 176] },
+        },
+        tall: {
+          width: 300,
+          height: 520,
+          node: { w: 200, h: 46 },
+          nodes: { source: [50, 8], lexer: [50, 72], parser: [50, 136], sema: [50, 200], codegen: [50, 264], bytecode: [50, 328], vm: [50, 392], heap: [50, 456] },
+        },
+        nodes: [
+          { id: "source", label: "SOURCE", sub: ".cppsafe file", kind: "input", step: 0 },
+          { id: "lexer", label: "LEXER", sub: "tokens + line/col", step: 1 },
+          { id: "parser", label: "PARSER", sub: "recursive descent", step: 2 },
+          { id: "sema", label: "SEMANTIC CHECKS", sub: "types · scopes", step: 3 },
+          { id: "codegen", label: "CODE GENERATOR", sub: "+ safety opcodes", step: 4 },
+          { id: "bytecode", label: "BYTECODE", sub: ".jbc", kind: "store", step: 4 },
+          { id: "vm", label: "STACK VM", sub: "operand + call stack", step: 5 },
+          { id: "heap", label: "MANAGED HEAP", sub: "reference counted", kind: "store", step: 5 },
+        ],
+        edges: [
+          { from: "source", to: "lexer", step: 1 },
+          { from: "lexer", to: "parser", step: 2 },
+          { from: "parser", to: "sema", step: 3 },
+          { from: "sema", to: "codegen", step: 4 },
+          { from: "codegen", to: "bytecode", step: 4 },
+          { from: "bytecode", to: "vm", step: 5 },
+          { from: "vm", to: "heap", step: 5 },
+        ],
+        steps: [
+          { title: "Source in", text: "A .cppsafe file using ints, bools, pointers, arrays, loops and functions." },
+          { title: "Lex", text: "Tokens carry exact line and column numbers for precise error messages." },
+          { title: "Parse", text: "Recursive descent builds the AST and rejects unsupported C++ features with clear errors." },
+          { title: "Check", text: "Types, scopes and function calls are validated before any code is generated." },
+          { title: "Generate safe bytecode", text: "CHECK_NULL before dereferences, CHECK_BOUNDS before indexing, INC_REF/DEC_REF around allocations." },
+          { title: "Run on the VM", text: "Unsafe operations become runtime exceptions, never undefined behaviour; the heap is reclaimed by reference counting." },
+        ],
+      },
+    },
+    results: {
+      stats: [
+        { value: 5, label: "compiler stages, all hand-written" },
+        { value: 4, label: "safety opcodes injected by the code generator" },
+        { value: 0, label: "external dependencies: no LLVM, Lex or Yacc" },
+        { value: "C++17", label: "built with CMake" },
+      ],
+    },
+    closing: {
+      label: "Limitations",
+      title: "Known trade-offs",
+      points: [
+        "Reference counting doesn't reclaim cyclic references.",
+        "The VM interprets bytecode and favours safety over speed.",
+        "The supported subset is intentionally small: no classes, templates or STL.",
+      ],
+    },
+  },
 };
