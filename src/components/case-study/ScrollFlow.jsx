@@ -35,19 +35,35 @@ function FlowSvg({ flow, layout, activeStep, revealAll }) {
         const current = isCurrent(edge.step);
         return (
           <g key={`${edge.from}-${edge.to}`}>
-            <motion.path
-              d={edgePath(a, b, direction)}
-              fill="none"
-              stroke="#fff"
-              strokeWidth="1.5"
-              strokeDasharray={edge.dashed ? "4 4" : undefined}
-              initial={revealAll ? { pathLength: 0 } : false}
-              whileInView={revealAll ? { pathLength: 1 } : undefined}
-              viewport={{ once: true }}
-              animate={revealAll ? undefined : { pathLength: visible ? 1 : 0 }}
-              transition={{ duration: 0.7, ease: "easeInOut" }}
-              style={{ strokeOpacity: current ? 0.8 : 0.35, transition: "stroke-opacity 0.4s" }}
-            />
+            {edge.dashed ? (
+              // pathLength animates stroke-dasharray, so dashed edges fade in instead of drawing
+              <motion.path
+                d={edgePath(a, b, direction)}
+                fill="none"
+                stroke="#fff"
+                strokeWidth="1.5"
+                strokeDasharray="4 4"
+                initial={revealAll ? { opacity: 0 } : false}
+                whileInView={revealAll ? { opacity: 1 } : undefined}
+                viewport={{ once: true }}
+                animate={revealAll ? undefined : { opacity: visible ? 1 : 0 }}
+                transition={{ duration: 0.7 }}
+                style={{ strokeOpacity: current ? 0.8 : 0.35 }}
+              />
+            ) : (
+              <motion.path
+                d={edgePath(a, b, direction)}
+                fill="none"
+                stroke="#fff"
+                strokeWidth="1.5"
+                initial={revealAll ? { pathLength: 0 } : false}
+                whileInView={revealAll ? { pathLength: 1 } : undefined}
+                viewport={{ once: true }}
+                animate={revealAll ? undefined : { pathLength: visible ? 1 : 0 }}
+                transition={{ duration: 0.7, ease: "easeInOut" }}
+                style={{ strokeOpacity: current ? 0.8 : 0.35, transition: "stroke-opacity 0.4s" }}
+              />
+            )}
             {edge.label && visible && (
               <text
                 x={(a.x + a.w / 2 + b.x + b.w / 2) / 2}
