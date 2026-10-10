@@ -18,14 +18,14 @@ export default function Navbar() {
       transition={{ duration: 0.8, delay: 0.5 }}
       className="fixed top-6 left-1/2 -translate-x-1/2 z-50"
     >
-      <div className="flex items-center gap-1 md:gap-2 px-3 py-2 bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 rounded-full shadow-2xl relative">
+      <div className="flex items-center gap-0.5 sm:gap-1 md:gap-2 px-2 sm:px-3 py-2 bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 rounded-full shadow-2xl relative">
         {links.map((link, index) => (
           <a
             key={link.name}
             href={link.href}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
-            className="relative px-4 py-2 rounded-full text-xs font-mono tracking-widest text-white/60 hover:text-white transition-colors uppercase"
+            className="relative px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-mono tracking-wider sm:tracking-widest text-white/60 hover:text-white transition-colors uppercase"
           >
             {hoveredIndex === index && (
               <motion.div
@@ -41,13 +41,13 @@ export default function Navbar() {
           </a>
         ))}
         
-        <div className="w-px h-4 bg-white/20 mx-2"></div>
+        <div className="hidden sm:block w-px h-4 bg-white/20 mx-2"></div>
         
         <a 
           href="https://github.com/Vaibhav8075" 
           target="_blank" 
           rel="noreferrer"
-          className="px-4 py-2 rounded-full text-xs font-mono tracking-widest text-white/90 hover:bg-white hover:text-black transition-all uppercase"
+          className="hidden sm:block px-4 py-2 rounded-full text-xs font-mono tracking-widest text-white/90 hover:bg-white hover:text-black transition-all uppercase"
         >
           GitHub
         </a>
