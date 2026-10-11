@@ -66,9 +66,9 @@ export const projects = [
     id: "road-segmentation",
     title: "ROAD SCENE SEGMENTATION",
     tagline: "Pixel-level perception for autonomous driving.",
-    description: "Labels every pixel of a road scene with one of seven classes. Four interchangeable architectures (U-Net, ResNet50-UNet, DeepLabV3+, SegFormer) train with a combined CE + Dice + Focal loss, plus Grad-CAM explanations and ONNX export.",
-    tech: ["PyTorch", "Computer Vision", "Python", "ONNX"],
-    metrics: ["4 architectures, 7 classes", "Grad-CAM explainability"],
+    description: "Labels every pixel of a road scene as road, vehicle, pedestrian, sidewalk, traffic sign or background. Trained on Cityscapes, a pretrained SegFormer-B2 reaches 0.833 mIoU on 500 held-out images at full 1024×2048 resolution, with Grad-CAM explanations and validated ONNX export.",
+    tech: ["PyTorch", "SegFormer", "Computer Vision", "ONNX"],
+    metrics: ["0.833 mIoU on Cityscapes", "28 FPS on a laptop GPU"],
     github: "https://github.com/Vaibhav8075/Semantic-Segmentation-for-Autonomous-Driving-",
     type: "CV/AI",
     domains: ["ai"]
