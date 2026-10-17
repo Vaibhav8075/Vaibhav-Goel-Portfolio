@@ -22,9 +22,9 @@ export const projects = [
     id: "physics-1d-cnn",
     title: "PHYSICS-AUGMENTED 1D-CNN",
     tagline: "An honest evaluation of bearing-fault diagnosis.",
-    description: "A dual-stream 1D-CNN with a physics-based residual filter, tested under leakage-free protocols on the CWRU and Paderborn datasets. The ~99% accuracies common in the literature collapse once the test bearings are truly unseen.",
+    description: "A dual-stream 1D-CNN with a physics-based residual filter, tested against eleven other models under leakage-free protocols on the CWRU and Paderborn datasets. The ~99% accuracies common in the literature collapse once the test bearings are truly unseen.",
     tech: ["PyTorch", "Python", "Scikit-Learn", "ONNX", "Signal Processing"],
-    metrics: ["3 protocols, 2 datasets, 9 models", "0.30 ms INT8 inference on CPU"],
+    metrics: ["4 protocols, 2 datasets, 12 models", "0.30 ms INT8 inference on CPU"],
     github: "https://github.com/Vaibhav8075/-Physics-Augmented-1D-CNN",
     type: "ML/RESEARCH",
     domains: ["ai"]
