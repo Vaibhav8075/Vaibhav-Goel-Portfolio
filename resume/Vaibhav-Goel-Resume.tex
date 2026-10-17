@@ -1,0 +1,145 @@
+% Vaibhav Goel - Resume
+% One page, single column and ATS-friendly: standard section names, no tables, icons or images,
+% real text with Unicode mapping (glyphtounicode) so applicant tracking systems can parse it.
+% Build: pdflatex Vaibhav-Goel-Resume.tex, then copy the PDF to public/Vaibhav-Goel-Resume.pdf.
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tgtermes}
+\usepackage[top=0.35in,bottom=0.35in,left=0.4in,right=0.4in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+\hypersetup{
+  pdftitle={Vaibhav Goel - Resume},
+  pdfauthor={Vaibhav Goel},
+  pdfsubject={Software Engineer resume},
+  pdfkeywords={Software Engineer, Python, React, FastAPI, PyTorch, Machine Learning}
+}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\raggedright
+
+% Section headings: bold with a rule underneath
+\titleformat{\section}{\fontsize{11.5}{13}\selectfont\bfseries}{}{0em}{}[\vspace{-7pt}\rule{\textwidth}{0.4pt}]
+\titlespacing*{\section}{0pt}{5pt}{2pt}
+
+\setlist[itemize]{leftmargin=1.1em, label=\textbullet, itemsep=0pt, parsep=0pt, topsep=1pt, partopsep=0pt}
+
+% \role{Organisation}{Dates}{Title}{Location}
+\newcommand{\role}[4]{%
+  \textbf{#1}\hfill\textbf{#2}\\
+  \textit{#3}\hfill\textit{#4}\par}
+
+% \project{Name}{Stack}{GitHub URL}
+\newcommand{\project}[3]{%
+  \textbf{#1} \textbar{} \textit{#2} \textbar{} \href{#3}{GitHub}\par}
+
+\begin{document}
+\fontsize{9.5}{10.8}\selectfont
+
+%----------------------------------------------------------------- HEADER
+\begin{center}
+  {\fontsize{24}{28}\selectfont Vaibhav Goel}\\[3pt]
+  Phone: +91-7678655471 \quad
+  Email: \href{mailto:vaibhav.goel0531@gmail.com}{vaibhav.goel0531@gmail.com} \quad
+  GitHub: \href{https://github.com/Vaibhav8075}{Vaibhav8075}\\
+  Portfolio: \href{https://www.vaibhavgoel.dev}{vaibhavgoel.dev} \quad
+  LinkedIn: \href{https://www.linkedin.com/in/vaibhav-goel-23983b344}{vaibhav-goel-23983b344}
+\end{center}
+\vspace{-10pt}
+
+%----------------------------------------------------------------- EXPERIENCE
+\section{Work Experience}
+
+\role{DCM Shriram Ltd.}{May 2026 -- July 2026}{Software Engineering Intern}{Uttar Pradesh, India}
+\begin{itemize}
+  \item Developed and supported an Audit Management System in React, FastAPI, and PostgreSQL for secure audio handling and QA reviews.
+  \item Moved the production backend from SQLite to PostgreSQL, improving concurrent access, scalability, and maintainability.
+  \item Deployed enterprise applications on Ubuntu, configuring Nginx, Uvicorn, and PostgreSQL for production use.
+  \item Implemented role-based authentication, protected audio storage, automatic retention rules, and enterprise feedback features.
+  \item Resolved production issues, tuned backend performance, and delivered features with HR, QA, and infrastructure teams.
+  \item Gained hands-on exposure to MPLS, VPN, Layer 2--7 networking, routing, ISP connectivity, leased lines, redundancy, and Linux networking.
+\end{itemize}
+\vspace{2pt}
+
+\role{MossX}{June 2025 -- Present}{Frontend Developer}{Remote}
+\begin{itemize}
+  \item Organized reusable React components for 6--8 production features spanning dashboards, API pages, and responsive layouts; improved code reuse by 40\% and accelerated UI delivery.
+  \item Built Framer Motion animations that maintained 60 FPS in complex views and managed async dashboard data through Zustand global state.
+\end{itemize}
+\vspace{2pt}
+
+\role{Aarvasa}{Jan 2026 -- May 2026}{Frontend Developer Intern}{Remote}
+\begin{itemize}
+  \item Produced 20+ React and Tailwind CSS components from Figma: navigation, heroes, forms, cards, dashboards, and tables, matching design specifications across mobile, tablet, and desktop.
+  \item Integrated REST APIs and GSAP/Framer Motion animations with backend and design teams, releasing changes without compatibility breaks.
+\end{itemize}
+\vspace{2pt}
+
+\role{Team Sammard -- VIT Rocket Team}{May 2025 -- Oct 2025}{Software Team Member}{Vellore, India}
+\begin{itemize}
+  \item Developed a Ground Control Station (GCS) dashboard for ground and flight testing, using WebSockets to display live altitude, velocity, and multi-sensor telemetry.
+  \item Fed ESP32 avionics sensor data into the simulation pipeline to improve telemetry responsiveness and flight-test reliability.
+\end{itemize}
+
+%----------------------------------------------------------------- PROJECTS
+\section{Projects}
+
+\project{Agentic-Ledger: Autonomous Financial Engine}{PyTorch, FastAPI, Docker, Phinite OS}{https://github.com/Vaibhav8075/Agentic-Ledger}
+\begin{itemize}
+  \item Created a multi-agent workflow for real-time payment fraud interception and dynamic underwriting of small-business micro-loans.
+  \item Used 400,000 retail transactions to train a PyTorch LSTM for revenue forecasting, achieving 94\% accuracy to inform decisions on releasing frozen capital.
+  \item Packaged an asynchronous FastAPI backend and Streamlit dashboard in Docker containers for production deployment.
+\end{itemize}
+\vspace{2pt}
+
+\project{Physics-Augmented 1D-CNN Fault Diagnosis}{Python, PyTorch, ONNX, Signal Processing}{https://github.com/Vaibhav8075/-Physics-Augmented-1D-CNN}
+\begin{itemize}
+  \item Built a dual-stream 1D-CNN with a physics-based residual filter and attention for bearing-fault diagnosis, and compared it with 11 models (CNN, WDCNN, pre-trained ResNet-18, Random Forests).
+  \item Designed a leakage-free evaluation (load, fault-size and bearing-disjoint splits; Wilcoxon/Holm tests): network macro-F1 falls from over 99.8\% to 45--48\% on unseen defect sizes; test-time AdaBN raised strong-noise macro-F1 by 15--19 points.
+  \item Exported an INT8 ONNX model (132.5 KB, 0.30 ms/inference on CPU); IEEE manuscript in preparation.
+\end{itemize}
+\vspace{2pt}
+
+\project{AI Financial Audio Intelligence System}{FastAPI, React, Whisper, Celery, Redis}{https://github.com/Vaibhav8075/Financial-Technology}
+\begin{itemize}
+  \item Built a financial call analysis pipeline that transcribes audio with OpenAI Whisper and identifies risk signals through custom NLP logic.
+  \item Implemented a scalable async FastAPI service with Celery/Redis background processing and rate limiting, alongside a React dashboard showing risk signals in real time.
+\end{itemize}
+\vspace{2pt}
+
+\project{ML \& IoT Fire Detection System}{ESP32, Random Forest, Flask, Dash}{https://github.com/Vaibhav8075/IOT-ML-Project}
+\begin{itemize}
+  \item Developed a five-sensor fire detector with a Random Forest classifier, reducing false alarms by 25\%; sent ESP32 WiFi readings to Flask for live remote monitoring and automated alerts.
+\end{itemize}
+
+%----------------------------------------------------------------- EDUCATION
+\section{Education}
+
+\role{Vellore Institute of Technology (VIT)}{Aug 2024 -- May 2028}{B.Tech in Computer Science and Engineering \textbar{} CGPA: 8.19/10}{Vellore, India}
+\begin{itemize}
+  \item Class XII: 80\%
+  \item Coursework: DSA, Database Systems, IoT, Operating Systems, Microprocessors, Computer Architecture, Computer Networks
+  \item Activities: EXC Club (graded project obligations); VIT Rocket Team -- Software Division
+\end{itemize}
+
+%----------------------------------------------------------------- SKILLS
+\section{Technical Skills}
+
+\textbf{Languages}: Python, C++, JavaScript, TypeScript\\
+\textbf{Frontend}: React 18, Next.js, Tailwind CSS, Three.js, Framer Motion, GSAP, Zustand\\
+\textbf{Backend \& Systems}: FastAPI, Node.js, REST APIs, WebSockets, Redis, Celery, System Design\\
+\textbf{AI / ML}: PyTorch, Scikit-learn, OpenAI Whisper, NLP Pipelines, Model Validation\\
+\textbf{Networking \& Infra}: OSI Model, TCP/IP, DNS, HTTP/HTTPS, MPLS, VPN, Enterprise Networking, Linux Networking, Network Security\\
+\textbf{Tools}: Git, GitHub Actions, Linux, Figma, ESP32/IoT, Vercel
+
+\end{document}
