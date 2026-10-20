@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import * as k from "../../src/lib/iso/iso-kit.mjs";
 import * as G from "../../src/lib/iso/lathe.mjs";
 import { PROTOCOLS } from "../../src/components/case-study/figures/protocolBench.data.js";
+import { STEPS } from "./protocol-bench.steps.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const WIDTH = 640;
@@ -75,6 +76,8 @@ const L = (d, style) => k.lineSvg(d, style);
 const D = (points, style) => k.dotsSvg(points, style);
 const byDepth = (points) => [...points].sort((a, b) => k.depthOf([a[0], a[1], 0], P) - k.depthOf([b[0], b[1], 0], P));
 const onCircle = ([cx, cy], radius, angle) => [cx + Math.sin(angle) * radius, cy - Math.cos(angle) * radius];
+const zone = (name, markup) => `<g data-zone="${name}">${markup}</g>`;
+const arcOnTop = (centre, radius, from, to, z) => k.onTop(Array.from({ length: 9 }, (_, step) => onCircle(centre, radius, from + ((to - from) * step) / 8)), z, P);
 
 function screwsOn(plan, inset, z) {
   const points = k.corners(plan, inset);
@@ -101,7 +104,7 @@ function plate() {
 function tray() {
   const out = [S(k.slabOf(TRAY, 0, 3, P, 4, 0.6), { tone: "mid" })];
   out.push(L(k.planOutline(k.insetPlan(TRAY, 2.4), 3, P, 4), { tone: "faint" }));
-  for (const [x, y] of BEARINGS) {
+  BEARINGS.forEach(([x, y], index) => {
     out.push(L(k.ring(x, y, 10.4, 3, P, 40), { tone: "faint" }));
     out.push(S(k.cylinder(x, y, 9.4, 3, 3.6, P, 48, 0.4), { tone: "hi", crease: "lo" }));
     out.push(L(k.ring(x, y, 7.6, 6.6, P, 40), { tone: "lo" }));
@@ -109,7 +112,15 @@ function tray() {
     out.push(L(k.ring(x, y, 2.6, 6.6, P, 24), { tone: "mid" }));
     const balls = Array.from({ length: 9 }, (_, index) => onCircle([x, y], 6.1, (index / 9) * Math.PI * 2));
     out.push(D(balls.map(([bx, by]) => at([bx, by, 6.6])), { size: 0.9, tone: "mid" }));
-  }
+    // Healthy, inner-race, ball and outer-race fault, left to right
+    const fault = (radius) => `<path class="iso-line" data-tone="red" d="${arcOnTop([x, y], radius, deg(FACING - 26), deg(FACING + 26), 6.6)}" style="stroke-width:1.3"/>`;
+    if (index === 1) out.push(fault(4.6));
+    if (index === 3) out.push(fault(7.6));
+    if (index === 2) {
+      const [sx, sy] = at([...balls[4], 6.6]);
+      out.push(`<circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="1.25" style="fill:var(--anatomy-red)"/>`);
+    }
+  });
   return out.join("");
 }
 
@@ -126,6 +137,11 @@ function motor() {
   out.push(k.fadedSvg(G.ribsOf(AXIS, 14, 68, MOTOR_R, 40, P, { fade: [0.1, 0.55], seams: true }), { tone: "lo" }));
   out.push(D(G.dotsOf(AXIS, 76, 15, 6, P, { all: true }), { size: 0.5 }));
   out.push(L(G.circleOf(AXIS, 80, 6.4, P, 32), { tone: "faint" }));
+  return out.join("");
+}
+
+function sensors() {
+  const out = [];
   for (const x of SENSORS) {
     out.push(S(k.cylinder(x, YB, SENSOR_R, SENSOR_BASE, SENSOR_TOP - SENSOR_BASE, P, 24), { tone: "hi", crease: "lo" }));
     out.push(L(k.sideArc(x, YB, SENSOR_R, SENSOR_BASE + 2.2, P, 16), { tone: "faint" }));
@@ -171,7 +187,12 @@ function instrument() {
   out.push(`<g transform="${k.sideMatrix([INST.x + INST.w, front], INST_TOP, P, "right")}">`);
   out.push(L(Array.from({ length: 7 }, (_, index) => k.pathOf(k.ringOf({ x: 10 + index * 6, y: 4, w: 2.2, d: 8, r: 1 }, 3), true)).join(""), { tone: "lo" }));
   out.push("</g>");
-  // Protocol selector: four detents, the k-th marked with k dots
+  return out.join("");
+}
+
+// Protocol selector: four detents, the k-th marked with k dots
+function selector() {
+  const out = [];
   const [kx, ky] = KNOB;
   DETENTS.forEach((angle, index) => {
     out.push(L(k.lineOnTop(onCircle(KNOB, KNOB_R + 1.8, angle), onCircle(KNOB, KNOB_R + 4, angle), INST_TOP, P), { tone: "mid" }));
@@ -181,7 +202,12 @@ function instrument() {
   out.push(S(k.cylinder(kx, ky, KNOB_R + 1, INST_TOP, 1.2, P, 32), { tone: "lo" }));
   out.push(S(k.cylinder(kx, ky, KNOB_R, INST_TOP + 1.2, KNOB_TOP - INST_TOP - 1.2, P, 36), { tone: "mid" }));
   out.push(L(k.knurl(kx, ky, KNOB_R, INST_TOP + 1.2, KNOB_TOP, 40, P), { tone: "lo" }));
-  // Dial: macro-F1 from 0 to 100 over 270 degrees
+  return out.join("");
+}
+
+// Dial: macro-F1 from 0 to 100 over 270 degrees
+function dial() {
+  const out = [];
   const [dx, dy] = DIAL;
   out.push(S(k.cylinder(dx, dy, DIAL_R, INST_TOP, DIAL_H, P, 64, 0.8), { tone: "hi", crease: "lo" }));
   out.push(L(k.knurl(dx, dy, DIAL_R, DIAL_TOP - 3.4, DIAL_TOP, 84, P, 0.3), { tone: "lo" }));
@@ -239,18 +265,19 @@ const svg = k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
-    "A motor test bench on a plate: a motor with vibration sensors at its drive end and fan end, a coupling and a load unit, and a tray of spare bearings. Two cables run to a classifier with a four-position test-protocol selector and a dial that reads macro-F1. As the selector moves to stricter protocols, the needle falls from 99.9 to 35.1.",
+    "A motor test bench on a plate: a motor with vibration sensors at its drive end and fan end, a coupling and a load unit, and a tray of four bearings marked healthy, inner-race, ball and outer-race fault. Two cables run to a classifier with a four-position test-protocol selector and a dial that reads macro-F1. As the selector moves to stricter protocols, the needle falls from 99.9 to 35.1.",
   body: [
-    plate(),
-    motor(),
-    driveline(),
-    conditioner(),
-    sensorCables(),
-    tray(),
-    instrument(),
-    signalCable(),
-    `<path data-part="pointer" class="iso-line" data-tone="hi" data-free="start" d="${pointerAt(DETENTS[0])}" style="stroke-width:1"/>`,
-    `<path data-part="needle" class="iso-line" data-tone="lit" data-free="start" d="${needleAt(PROTOCOLS[0].f1)}" style="stroke-width:1.1"/>`,
+    zone("base", plate()),
+    zone("motor", motor()),
+    zone("sensors", sensors()),
+    zone("load", driveline()),
+    zone("conditioner", conditioner()),
+    zone("cables", sensorCables()),
+    zone("tray", tray()),
+    zone("instrument", instrument()),
+    zone("cables", signalCable()),
+    zone("selector", selector() + `<path data-part="pointer" class="iso-line" data-tone="hi" data-free="start" d="${pointerAt(DETENTS[0])}" style="stroke-width:1"/>`),
+    zone("dial", dial() + `<path data-part="needle" class="iso-line" data-tone="lit" data-free="start" d="${needleAt(PROTOCOLS[0].f1)}" style="stroke-width:1.1"/>`),
   ],
 });
 
@@ -262,21 +289,46 @@ writeFileSync(
 );
 console.log(`svg ${(svg.length / 1024).toFixed(1)} KB`);
 
-const previewAt = process.argv.indexOf("--preview");
-if (previewAt > 0) {
-  const live = readFileSync(join(ROOT, "src/components/case-study/figures/protocolBench.live.js"), "utf8").replace(/^import .*$/gm, "").replace(/^export /gm, "");
-  const data = `const PROTOCOLS = ${JSON.stringify(PROTOCOLS)};`;
-  const body = k.plateHtml({
+// Optional standalone pages, no server needed: --preview <file> (the card alone) or --explain <file> (card + guided walkthrough)
+const KEYS = [
+  { mark: "lit", label: "Needle: PAC-1DCNN's clean macro-F1" },
+  { mark: "raised", label: "Selector: four test protocols" },
+  { mark: "red", label: "Tray: healthy, inner-race, ball and outer-race bearings; red marks the damage" },
+];
+const kitSource = () => readFileSync(join(ROOT, "src/lib/iso/iso-kit.mjs"), "utf8").replace(/^export /gm, "");
+const liveSource = () => readFileSync(join(ROOT, "src/components/case-study/figures/protocolBench.live.js"), "utf8").replace(/^import .*$/gm, "").replace(/^export /gm, "");
+const card = (hint) =>
+  k.plateHtml({
     fig: "Fig 1",
     title: "Same model, stricter test",
-    hint: "Hover or use arrow keys",
+    hint,
     readout: PROTOCOLS[0].readout,
-    keys: [{ mark: "lit", label: "Needle: PAC-1DCNN clean macro-F1" }, { mark: "raised", label: "Selector: four test protocols" }],
-    caption: "Preview",
-    body: `<div class="iso-stage" tabindex="0">${svg}</div>`,
+    keys: KEYS,
+    body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Test protocol" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1">${svg}</div>`,
   });
-  const kit = readFileSync(join(ROOT, "src/lib/iso/iso-kit.mjs"), "utf8").replace(/^export /gm, "");
-  const script = `${kit}\n${data}\nconst geometry = ${JSON.stringify(GEOMETRY)};\n${live}\nmountProtocolBench(document.querySelector(".iso-figure"), { geometry, protocols: PROTOCOLS, lineOnTop });`;
-  writeFileSync(process.argv[previewAt + 1], k.pageHtml({ title: "Protocol bench", theme: "dark", body, script, width: 720 }));
-  console.log("preview", process.argv[previewAt + 1]);
+
+const GUIDE_CSS = readFileSync(join(ROOT, "scripts/figures/explainer.css"), "utf8");
+const GUIDE_JS = readFileSync(join(ROOT, "scripts/figures/explainer.js"), "utf8");
+
+function writePage(file, guide) {
+  const data = `const PROTOCOLS = ${JSON.stringify(PROTOCOLS)};\nconst geometry = ${JSON.stringify(GEOMETRY)};\n`;
+  if (!guide) {
+    const script = `${kitSource()}\n${data}${liveSource()}\nmountProtocolBench(document.querySelector(".iso-figure"), { geometry, protocols: PROTOCOLS, lineOnTop });`;
+    writeFileSync(file, k.pageHtml({ title: "Protocol bench", theme: "dark", body: card("Hover or use arrow keys"), script, width: 720 }));
+    return;
+  }
+  const guidePanel = `<aside class="ex-guide" aria-live="polite"><span class="ex-count"></span><h2 class="ex-title"></h2><p class="ex-text"></p><div class="ex-bar"><span></span></div><div class="ex-controls"><button type="button" data-back>Back</button><button type="button" data-play>Pause</button><button type="button" data-next>Next</button></div><div class="ex-dots"></div><p class="ex-note">Sources: the project README tables (regenerated from results/) and its case study.</p></aside>`;
+  const intro = `<header class="ex-head"><h1>How the PAC-1DCNN project works</h1><p>A guided walk round a drawn test bench. It plays by itself; use Back and Next, the dots, or the arrow keys to go at your own pace. Every number on the dial is a saved result from the project.</p></header>`;
+  const body = `<style>${GUIDE_CSS}</style><div class="ex">${intro}<div class="ex-grid">${card("Click it, then arrow keys move the selector")}${guidePanel}</div></div>`;
+  const script = `${kitSource()}\n${data}const STEPS = ${JSON.stringify(STEPS)};\n${liveSource()}\n${GUIDE_JS}`;
+  const page = k.pageHtml({ title: "PAC-1DCNN explained", theme: "dark", body, script, width: 1280 });
+  writeFileSync(file, page.replace('<main class="iso-page">', '<main class="iso-page" style="width:auto;margin:0">'));
+}
+
+for (const [flag, guide] of [["--preview", false], ["--explain", true]]) {
+  const index = process.argv.indexOf(flag);
+  if (index > 0) {
+    writePage(process.argv[index + 1], guide);
+    console.log(flag.slice(2), process.argv[index + 1]);
+  }
 }
