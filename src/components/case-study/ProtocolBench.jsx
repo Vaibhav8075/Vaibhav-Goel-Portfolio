@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { dotsSvg, iso, lineOnTop, lineSvg, pathOf, ring, screenRise, translateAlong, wireSvg } from "../../lib/iso/iso-kit.mjs";
 import "../../lib/iso/iso.css";
 import "./figures/protocolBench.tour.css";
@@ -24,11 +24,15 @@ function Swatch({ mark }) {
 // scripts/figures/protocol-bench.mjs; this component mounts the live motion and the guided tour on it.
 export default function ProtocolBench() {
   const figure = useRef(null);
+  const stage = useRef(null);
   const panel = useRef(null);
   const tour = useRef(null);
   const [touring, setTouring] = useState(false);
 
-  useEffect(() => {
+  // The drawing is inserted here rather than with dangerouslySetInnerHTML: a re-render (starting the tour)
+  // made React write it again, which left the live motion and the tour holding a detached copy
+  useLayoutEffect(() => {
+    stage.current.innerHTML = svg;
     const bench = mountProtocolBench(figure.current, { geometry, protocols: PROTOCOLS, lineOnTop });
     tour.current = mountTour({ figure: figure.current, panel: panel.current, geometry, running, steps: STEPS, bench, kit });
     return () => {
@@ -56,6 +60,7 @@ export default function ProtocolBench() {
           <span className="iso-plate-corner" data-corner="readout" data-readout="">{first.readout}</span>
         </div>
         <div
+          ref={stage}
           className="iso-stage"
           tabIndex={0}
           role="slider"
@@ -64,7 +69,6 @@ export default function ProtocolBench() {
           aria-valuemax={PROTOCOLS.length}
           aria-valuenow={1}
           aria-valuetext={`${first.name}, ${first.data}: macro-F1 ${first.f1}%`}
-          dangerouslySetInnerHTML={{ __html: svg }}
         />
       </div>
       <div ref={panel} className="pb-tour" hidden={!touring} aria-live="polite" style={{ marginTop: 12 }}>
