@@ -146,6 +146,7 @@ export const caseStudies = {
     },
     results: {
       title: "What the numbers say",
+      figure: "protocol-bench",
       stats: [
         { value: 12, label: "models compared under identical protocols" },
         { value: "0 / 28", label: "fault-size comparisons where PAC-1DCNN significantly beat a standard CNN" },

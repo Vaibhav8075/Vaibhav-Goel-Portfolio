@@ -1,3 +1,4 @@
+import { lazy, Suspense, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { projects } from "../data/content";
@@ -7,6 +8,11 @@ import Link from "../components/ui/Link";
 import ScrollFlow from "../components/case-study/ScrollFlow";
 import StatGrid from "../components/case-study/StatGrid";
 import BarChart from "../components/case-study/BarChart";
+
+// Interactive figures are split into their own chunks so other pages never download their artwork
+const FIGURES = {
+  "protocol-bench": lazy(() => import("../components/case-study/ProtocolBench")),
+};
 
 const studied = projects.filter((project) => caseStudies[project.id]);
 
@@ -36,6 +42,27 @@ function Section({ index, label, title, caption, wide = false, children }) {
         <div className={wide ? "" : "md:w-2/3 min-w-0"}>{children}</div>
       </div>
     </section>
+  );
+}
+
+const subscribeNever = () => () => {};
+
+// The pre-render and hydration show the placeholder; the figure's chunk loads only in the browser,
+// so the server never meets an unfinished lazy component (React error 419)
+function Figure({ name }) {
+  const Art = FIGURES[name];
+  const inBrowser = useSyncExternalStore(subscribeNever, () => true, () => false);
+  const placeholder = <div className="aspect-[4/3] md:aspect-[16/11] border border-white/[0.06]" aria-hidden="true" />;
+  return (
+    <Reveal>
+      {inBrowser ? (
+        <Suspense fallback={placeholder}>
+          <Art />
+        </Suspense>
+      ) : (
+        placeholder
+      )}
+    </Reveal>
   );
 }
 
@@ -131,6 +158,7 @@ export default function CaseStudy({ id }) {
       <Section index={nextIndex()} label="Results" title={study.results.title ?? "Results"} caption={study.results.caption} wide>
         <div className="flex flex-col gap-16">
           {study.results.stats && <StatGrid stats={study.results.stats} />}
+          {study.results.figure && <Figure name={study.results.figure} />}
           {study.results.charts?.map((chart) => (
             <Reveal key={chart.title}>
               <BarChart chart={chart} />
