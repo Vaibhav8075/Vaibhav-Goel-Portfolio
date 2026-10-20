@@ -1,6 +1,7 @@
 // Live behaviour of the protocol bench figure: the selector knob steps through the four protocols
-// and the dial needle follows the matching macro-F1 on a damped spring. Returns a cleanup function.
-export function mountProtocolBench(figure, { geometry, protocols, lineOnTop }) {
+// and the dial needle follows the matching macro-F1 on a damped spring. Returns a cleanup function,
+// which also carries choose(index) so a guide can set the protocol itself (tour: false, hover: false).
+export function mountProtocolBench(figure, { geometry, protocols, lineOnTop, tour = true, hover = true }) {
   const { P, dial, dialR, dialTop, scaleFrom, scaleSpan, knob, knobR, knobTop, detents } = geometry;
   const stage = figure.querySelector(".iso-stage");
   const svg = stage.querySelector("svg");
@@ -23,7 +24,7 @@ export function mountProtocolBench(figure, { geometry, protocols, lineOnTop }) {
   let frame = 0;
   let last = 0;
   let clock = 0;
-  let touring = !still.matches;
+  let touring = tour && !still.matches;
   let visible = false;
   let idleTimer = 0;
 
@@ -90,22 +91,24 @@ export function mountProtocolBench(figure, { geometry, protocols, lineOnTop }) {
       say();
     }
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      touring = !still.matches;
-      clock = 0;
-      run();
-    }, 4500);
+    if (tour) {
+      idleTimer = setTimeout(() => {
+        touring = !still.matches;
+        clock = 0;
+        run();
+      }, 4500);
+    }
     run();
   };
 
   const onMove = (event) => {
-    if (event.pointerType === "touch") return;
+    if (!hover || event.pointerType === "touch") return;
     const box = svg.getBoundingClientRect();
     const share = Math.min(0.999, Math.max(0, (event.clientX - box.left) / box.width));
     choose(Math.floor(share * protocols.length));
   };
   const onDown = (event) => {
-    if (event.pointerType === "touch") choose((index + 1) % protocols.length);
+    if (hover && event.pointerType === "touch") choose((index + 1) % protocols.length);
   };
   const onKey = (event) => {
     let next = null;
@@ -118,7 +121,7 @@ export function mountProtocolBench(figure, { geometry, protocols, lineOnTop }) {
     choose(next);
   };
   const onMotion = () => {
-    touring = !still.matches;
+    touring = tour && !still.matches;
     run();
   };
 
@@ -137,7 +140,7 @@ export function mountProtocolBench(figure, { geometry, protocols, lineOnTop }) {
   say();
   draw();
 
-  return () => {
+  const stop = () => {
     observer.disconnect();
     cancelAnimationFrame(frame);
     clearTimeout(idleTimer);
@@ -146,4 +149,6 @@ export function mountProtocolBench(figure, { geometry, protocols, lineOnTop }) {
     stage.removeEventListener("keydown", onKey);
     still.removeEventListener("change", onMotion);
   };
+  stop.choose = choose;
+  return stop;
 }
