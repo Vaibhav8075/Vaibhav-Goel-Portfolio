@@ -13,6 +13,12 @@ export const STEPS = [
     text: "The motor spins a shaft that runs in ball bearings. Through the coupling it drives the load unit, which brakes the shaft to set how hard the motor works. The CWRU dataset was recorded at four motor loads: 0, 1, 2 and 3 horsepower.",
   },
   {
+    title: "Inside the motor",
+    zones: ["motor", "sensors"],
+    open: "motor",
+    text: "With the top half lifted off you see a cut through the motor. The rotor (the inner block with its bars) turns inside the stator (the striped bands), and the shaft runs on a ball bearing at each end, each with a row of balls between two rings. The bright one is the drive-end bearing: the CWRU recordings this project uses are its drive-end fault data, so this is where the damage sits. The sensors on the casing feel the bearing's knocks through the metal.",
+  },
+  {
     title: "Four kinds of bearing",
     zones: ["tray"],
     text: "Every recording comes from one of four bearing conditions, and these are the classes the model must tell apart: healthy, inner-race fault, ball fault and outer-race fault (the tray, left to right; red marks the damage). Each time a ball rolls over damage it knocks, and the knocks repeat at a rate that depends on where the damage is.",
@@ -30,7 +36,13 @@ export const STEPS = [
   {
     title: "The classifier: PAC-1DCNN",
     zones: ["instrument", "selector", "dial"],
-    text: "The instrument stands for the model. A fixed filter (the signal minus its 11-sample moving average, a high-pass at about 660 Hz) feeds one convolution stream with a short kernel, while the raw signal feeds a second stream with a long kernel. The two are merged, attention weights the most useful features and time steps, and the output is a class, with a temperature fitted after training to calibrate the confidence.",
+    text: "The instrument stands for the model. It takes the windows from the signal box, decides which class each one belongs to, and its score over the test windows shows on the dial. Next, the lid comes off.",
+  },
+  {
+    title: "Inside the classifier",
+    zones: ["instrument", "selector", "dial"],
+    open: "lid",
+    text: "The board is the model, laid out in the order the signal travels, right to left. The input takes the 2 channels. The back path goes through the fixed filter (its 11 dots are the 11-sample moving average it subtracts, a high-pass at about 660 Hz) into stream 1, whose 5 fins stand for a kernel of 5. The front path skips the filter into stream 2, whose 15 fins stand for a kernel of 15. The fusion block merges both into 128 channels, the attention block weights the most useful features and time steps, and the head ends in 4 lamps, one per class. A temperature fitted after training calibrates how confident it is.",
   },
   {
     title: "What the dial reads",

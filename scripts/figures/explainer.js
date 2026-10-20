@@ -32,11 +32,12 @@ const FULL = art.viewBox.baseVal;
 const home = [FULL.x, FULL.y, FULL.width, FULL.height];
 let view = [...home];
 let glide = 0;
-function frameFor(names) {
+function frameFor(names, open) {
   if (!names.length) return home;
   const boxes = zones.filter((zone) => names.includes(zone.dataset.zone)).map((zone) => zone.getBBox());
   const x0 = Math.min(...boxes.map((box) => box.x));
-  const y0 = Math.min(...boxes.map((box) => box.y));
+  // Leave room above for a part that is about to lift open
+  const y0 = Math.min(...boxes.map((box) => box.y)) - (open ? screenRise(geometry.lifts[open], geometry.P) : 0);
   const x1 = Math.max(...boxes.map((box) => box.x + box.width));
   const y1 = Math.max(...boxes.map((box) => box.y + box.height));
   const aspect = home[2] / home[3];
@@ -62,6 +63,67 @@ function moveCamera(target) {
   glide = requestAnimationFrame(step);
 }
 
+// Opening a part: its groups ([data-lift]) rise straight up and the cables that end on it are redrawn,
+// so they stretch instead of coming loose. Only one part is open at a time; it opens once the camera has arrived.
+const lifted = {};
+art.querySelectorAll("[data-lift]").forEach((group) => (lifted[group.dataset.lift] ??= []).push(group));
+const cableGroups = [...art.querySelectorAll("[data-cable]")];
+const share = Object.fromEntries(Object.keys(lifted).map((name) => [name, 0]));
+const goal = { ...share };
+let openFrame = 0;
+let openTimer = 0;
+function cableMarkup({ from, to, rise, drop }) {
+  const c1 = [from[0], from[1], from[2] + rise];
+  const c2 = [to[0], to[1], to[2] + drop];
+  const points = Array.from({ length: 41 }, (_, step) => {
+    const t = step / 40;
+    const u = 1 - t;
+    return [0, 1, 2].map((axis) => u * u * u * from[axis] + 3 * u * u * t * c1[axis] + 3 * u * t * t * c2[axis] + t * t * t * to[axis]);
+  }).map((point) => iso(point, geometry.P));
+  return wireSvg(points[0], points[40], { via: points.slice(1, 40), tone: "lo", size: 1 }) + lineSvg(pathOf(points), { tone: "mid", flow: true });
+}
+function placeParts() {
+  for (const name of Object.keys(lifted)) {
+    const transform = translateAlong(geometry.P, [0, 0, geometry.lifts[name] * share[name]]);
+    lifted[name].forEach((group) => group.setAttribute("transform", transform));
+  }
+  for (const group of cableGroups) {
+    const spec = geometry.cables[Number(group.dataset.cable)];
+    const ends = [[...spec.from], [...spec.to]];
+    ends[spec.end][2] += geometry.lifts[spec.lift] * share[spec.lift];
+    group.innerHTML = cableMarkup({ ...spec, from: ends[0], to: ends[1] });
+  }
+}
+function animateParts() {
+  cancelAnimationFrame(openFrame);
+  let last = 0;
+  const step = (now) => {
+    const dt = last ? Math.min((now - last) / 1000, 1 / 30) : 1 / 60;
+    last = now;
+    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let moving = false;
+    for (const name of Object.keys(share)) {
+      share[name] = calm ? goal[name] : share[name] + (goal[name] - share[name]) * (1 - Math.exp(-dt / 0.3));
+      if (Math.abs(goal[name] - share[name]) < 0.002) share[name] = goal[name];
+      else moving = true;
+    }
+    placeParts();
+    if (moving) openFrame = requestAnimationFrame(step);
+  };
+  openFrame = requestAnimationFrame(step);
+}
+function openOnly(name) {
+  clearTimeout(openTimer);
+  for (const other of Object.keys(goal)) goal[other] = 0;
+  animateParts();
+  if (name) {
+    openTimer = setTimeout(() => {
+      goal[name] = 1;
+      animateParts();
+    }, 1000);
+  }
+}
+
 function show(index) {
   at = index;
   const step = STEPS[index];
@@ -72,7 +134,8 @@ function show(index) {
     art.removeAttribute("data-focus");
     zones.forEach((zone) => zone.removeAttribute("data-on"));
   }
-  moveCamera(frameFor(step.zones));
+  moveCamera(frameFor(step.zones, step.open));
+  openOnly(step.open);
   if (step.protocol !== undefined) bench.choose(step.protocol);
   count.textContent = `Step ${index + 1} of ${STEPS.length}`;
   title.textContent = step.title;

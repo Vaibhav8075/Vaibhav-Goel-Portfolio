@@ -40,7 +40,10 @@ export default defineConfig([
     // Inlined into the standalone explainer page after the kit and the figure data it reads
     files: ['scripts/figures/explainer.js'],
     languageOptions: {
-      globals: { ...globals.browser, mountProtocolBench: 'readonly', lineOnTop: 'readonly', geometry: 'readonly', PROTOCOLS: 'readonly', STEPS: 'readonly' },
+      globals: {
+        ...globals.browser,
+        ...Object.fromEntries(['mountProtocolBench', 'geometry', 'PROTOCOLS', 'STEPS', 'lineOnTop', 'iso', 'pathOf', 'lineSvg', 'wireSvg', 'translateAlong', 'screenRise'].map((name) => [name, 'readonly'])),
+      },
     },
   },
 ])
