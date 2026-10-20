@@ -55,7 +55,7 @@ export const projects = [
     id: "iot-fire-detection",
     title: "IoT FIRE DETECTION",
     tagline: "Multi-sensor fire detection with a digital twin.",
-    description: "Fuses five sensors on an ESP32-S3 and classifies each reading as normal, warning or fire with a Random Forest trained on 367,550 real sensor rows, streamed to a live Dash digital twin.",
+    description: "Fuses five sensors on an ESP32-S3 and labels each reading normal, warning or fire with safety rules and a Random Forest trained on 367,550 real sensor rows, streamed to a live Dash digital twin.",
     tech: ["ESP32", "Python", "Scikit-Learn", "Flask", "Dash"],
     metrics: ["94.93% test accuracy", "98% fire recall"],
     github: "https://github.com/Vaibhav8075/IOT-ML-Project",

@@ -12,6 +12,7 @@ import BarChart from "../components/case-study/BarChart";
 // Interactive figures are split into their own chunks so other pages never download their artwork
 const FIGURES = {
   "protocol-bench": lazy(() => import("../components/case-study/ProtocolBench")),
+  "fire-bench": lazy(() => import("../components/case-study/FireBench")),
 };
 
 const studied = projects.filter((project) => caseStudies[project.id]);
