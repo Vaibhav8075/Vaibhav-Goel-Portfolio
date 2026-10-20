@@ -1,0 +1,8 @@
+.ex{width:min(1240px,100% - 32px);margin:36px auto 64px}
+.ex-head h1{color:var(--anatomy-strong);font-size:22px;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
+.ex-head p{margin:0 0 22px;max-width:75ch}
+.ex-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;align-items:start}
+@media (max-width:980px){.ex-grid{grid-template-columns:1fr}}
+.ex-grid .iso-figure{margin:0}
+.ex-grid .pb-tour{position:sticky;top:20px}
+.ex-grid .pb-text{min-height:13em}
