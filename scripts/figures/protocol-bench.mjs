@@ -76,7 +76,7 @@ const L = (d, style) => k.lineSvg(d, style);
 const D = (points, style) => k.dotsSvg(points, style);
 const byDepth = (points) => [...points].sort((a, b) => k.depthOf([a[0], a[1], 0], P) - k.depthOf([b[0], b[1], 0], P));
 const onCircle = ([cx, cy], radius, angle) => [cx + Math.sin(angle) * radius, cy - Math.cos(angle) * radius];
-const zone = (name, markup) => `<g data-zone="${name}">${markup}</g>`;
+const zone = (name, markup, lift) => `<g data-zone="${name}"${lift ? ` data-lift="${lift}"` : ""}>${markup}</g>`;
 const arcOnTop = (centre, radius, from, to, z) => k.onTop(Array.from({ length: 9 }, (_, step) => onCircle(centre, radius, from + ((to - from) * step) / 8)), z, P);
 
 function screwsOn(plan, inset, z) {
@@ -124,7 +124,59 @@ function tray() {
   return out.join("");
 }
 
-function motor() {
+// The motor is two half shells split at shaft height, so the explainer can lift the top half off and show
+// the section underneath: shaft, fan, rotor, stator and the bearing at each end
+const HALF = G.frameOf([MOTOR_X, YB, ZC], [1, 0, 0], [0, 1, 0], [0, 0, 1]);
+const MOTOR_SEGMENTS = [[0, 12, 18], [12, 70, MOTOR_R], [70, 76, 19], [76, 80, 10]];
+const halfDisc = (radius, upper, count = 40) =>
+  Array.from({ length: count + 1 }, (_, index) => {
+    const angle = (upper ? 0 : Math.PI) + (index / count) * Math.PI;
+    return [radius * Math.cos(angle), radius * Math.sin(angle)];
+  });
+const onShell = (s, radius, angle) => at(G.pointOf(HALF, s, radius, angle));
+const shellRibs = (s0, s1, radius, count, from) =>
+  Array.from({ length: count }, (_, index) => {
+    const angle = from + ((index + 0.5) / count) * Math.PI;
+    return { d: k.pathOf([onShell(s0, radius, angle), onShell(s1, radius, angle)]), alpha: G.fadeOf(G.facingOf(HALF, angle, P), [0.1, 0.55]) };
+  });
+const faceArc = (s, radius, from, count = 20) => k.pathOf(Array.from({ length: count + 1 }, (_, index) => onShell(s, radius, from + (index / count) * Math.PI)));
+
+function motorHalf(upper) {
+  const from = upper ? 0 : Math.PI;
+  const out = MOTOR_SEGMENTS.map(([s0, s1, radius]) => S(G.prismOf(HALF, halfDisc(radius, upper), s0, s1, P), { tone: "mid" }));
+  out.push(k.fadedSvg(shellRibs(14, 68, MOTOR_R, 20, from), { tone: "lo" }));
+  out.push(L(G.arcOf(HALF, 14, MOTOR_R, P, { from, to: from + Math.PI }) + G.arcOf(HALF, 68, MOTOR_R, P, { from, to: from + Math.PI }), { tone: "lo" }));
+  out.push(D([30, 90, 150].map((angle) => onShell(76, 15, from + deg(angle))), { size: 0.5 }));
+  out.push(L(faceArc(80, 6.4, from), { tone: "faint" }));
+  return out.join("");
+}
+
+// Lines on the cut face of the lower half (z = ZC), in shaft coordinates: s along the axis, y across it
+function section() {
+  const X = (s) => MOTOR_X + s;
+  const rect = (s0, s1, y0, y1) => k.onTop([[X(s0), YB + y0], [X(s1), YB + y0], [X(s1), YB + y1], [X(s0), YB + y1]], ZC, P, true);
+  const line = (s0, y0, s1, y1) => k.onTop([[X(s0), YB + y0], [X(s1), YB + y1]], ZC, P);
+  const both = (draw) => draw(1) + draw(-1);
+  const out = [];
+  // Housing wall and the end shields that seat the bearings
+  out.push(L(both((side) => line(12, side * 19.6, 68, side * 19.6) + line(12, side * 10.6, 12, side * 19.6) + line(68, side * 10.6, 68, side * 19.6)), { tone: "lo" }));
+  // Stator with its laminations, rotor with its bars
+  out.push(L(both((side) => rect(22, 60, side * 12.6, side * 19.6)), { tone: "mid" }));
+  out.push(L(both((side) => Array.from({ length: 12 }, (_, index) => line(24.9 + index * 3, side * 12.6, 24.9 + index * 3, side * 19.6)).join("")), { tone: "faint" }));
+  out.push(L(rect(24, 58, -11.6, 11.6), { tone: "mid" }));
+  out.push(L(both((side) => line(24, side * 5, 58, side * 5) + line(24, side * 8.6, 58, side * 8.6)), { tone: "faint" }));
+  // Shaft and cooling fan
+  out.push(L(rect(3, 9, -13, 13), { tone: "faint" }));
+  out.push(L(rect(2, 80, -3, 3), { tone: "mid" }));
+  // Bearings: fan end, then the drive end, which carries the faults in the CWRU recordings
+  for (const [s0, tone] of [[12, "mid"], [63, "hi"]]) {
+    out.push(L(both((side) => rect(s0, s0 + 5, side * 7.2, side * 10.6) + rect(s0, s0 + 5, side * 3, side * 4.8)), { tone }));
+    out.push(L(both((side) => k.ring(X(s0 + 2.5), YB + side * 6, 1.25, ZC, P, 16)), { tone }));
+  }
+  return out.join("");
+}
+
+function motorBase(insides) {
   const out = [];
   const bed = { x: MOTOR_X - 4, y: YB - 20, w: 86, d: 40, r: 3 };
   out.push(S(k.slabOf(bed, 0, 6, P, 4, 0.6), { tone: "mid" }));
@@ -132,11 +184,8 @@ function motor() {
   for (const s of [14, 62]) {
     out.push(S(k.slabOf({ x: MOTOR_X + s - 6, y: YB - 9, w: 12, d: 18, r: 1.5 }, 6, ZC - MOTOR_R - 6, P, 3, 0.4), { tone: "mid" }));
   }
-  const body = G.solidOf([[0, 18], [12, 18], [12, MOTOR_R], [70, MOTOR_R], [70, 19], [76, 19], [76, 10], [80, 10]], AXIS, P);
-  out.push(S(body, { tone: "mid" }));
-  out.push(k.fadedSvg(G.ribsOf(AXIS, 14, 68, MOTOR_R, 40, P, { fade: [0.1, 0.55], seams: true }), { tone: "lo" }));
-  out.push(D(G.dotsOf(AXIS, 76, 15, 6, P, { all: true }), { size: 0.5 }));
-  out.push(L(G.circleOf(AXIS, 80, 6.4, P, 32), { tone: "faint" }));
+  out.push(motorHalf(false));
+  if (insides) out.push(section());
   return out.join("");
 }
 
@@ -169,23 +218,107 @@ function driveline() {
   return out.join("");
 }
 
-function instrument() {
+// The classifier is an open case under a lid. Inside, a board lays PAC-1DCNN out in the order the signal
+// travels, right to left: input (2 channels), the fixed 11-tap filter, stream 1 (kernel 5, five fins) and,
+// bypassing the filter, stream 2 (kernel 15, fifteen fins), then fusion, attention and a head with one lamp per class
+const CASE_TOP = 11;
+const FLOOR = 5.5;
+const OPENING = k.insetPlan(INST, 3);
+const BOARD_Z = FLOOR + 0.8;
+const MODULES = {
+  input: { x: 110, y: 14, w: 8, d: 10, r: 1, h: 3 },
+  filter: { x: 92, y: 3, w: 12, d: 10, r: 1, h: 3.4 },
+  stream1: { x: 74, y: 3, w: 13, d: 10, r: 1, h: 2.6 },
+  stream2: { x: 73, y: 24, w: 30, d: 10, r: 1, h: 2.6 },
+  fusion: { x: 63, y: 4, w: 7, d: 30, r: 1, h: 3.4 },
+  attention: { x: 54, y: 10, w: 6, d: 18, r: 1, h: 2.8 },
+  head: { x: 45, y: 7, w: 6, d: 24, r: 1, h: 2.4 },
+};
+const TRACES = [
+  [[110, 17], [107, 17], [107, 8], [104, 8]],
+  [[110, 21], [107, 21], [107, 29], [103, 29]],
+  [[92, 8], [87, 8]],
+  [[74, 8], [70, 8]],
+  [[73, 29], [70, 29]],
+  [[63, 19], [60, 19]],
+  [[54, 19], [51, 19]],
+];
+
+function boardModule(name) {
+  const plan = MODULES[name];
+  const top = BOARD_Z + plan.h;
+  const out = [S(k.slabOf(plan, BOARD_Z, plan.h, P, 2, 0.3), { tone: "mid" })];
+  const fins = (count, x0, gap, y, depth) => {
+    for (let index = 0; index < count; index++) out.push(S(k.slabOf({ x: x0 + index * gap, y, w: 0.8, d: depth, r: 0.2 }, top, 1.4, P, 1), { tone: "hi", crease: "lo" }));
+  };
+  if (name === "input") out.push(D([at([112.5, 19, top]), at([115.5, 19, top])], { size: 0.7, tone: "hi" }));
+  if (name === "filter") out.push(D(Array.from({ length: 11 }, (_, index) => at([93 + index, plan.y + plan.d / 2, top])), { size: 0.38, tone: "hi" }));
+  if (name === "stream1") fins(5, 75.6, 2.4, plan.y + 1, plan.d - 2);
+  if (name === "stream2") fins(15, 74.6, 1.9, plan.y + 1, plan.d - 2);
+  if (name === "fusion") out.push(L(k.planOutline(k.insetPlan(plan, 1.4), top, P, 2), { tone: "faint" }));
+  if (name === "attention") {
+    out.push(S(k.cylinder(57, 19, 2.2, top, 0.8, P, 24), { tone: "hi", crease: "lo" }));
+    out.push(L(k.ring(57, 19, 1.2, top + 0.8, P, 16), { tone: "mid" }));
+  }
+  if (name === "head") {
+    for (const y of [10, 16, 22, 28]) {
+      out.push(S(k.cylinder(48, y, 1.3, top, 0.9, P, 16), { tone: "hi", crease: "lo" }));
+    }
+  }
+  return out.join("");
+}
+
+function board() {
+  const out = [S(k.slabOf(k.insetPlan(OPENING, 1), FLOOR, BOARD_Z - FLOOR, P, 3), { tone: "lo", crease: "none" })];
+  for (const trace of TRACES) {
+    const d = k.onTop(trace, BOARD_Z, P);
+    out.push(L(d, { tone: "lo" }), L(d, { tone: "mid", flow: true }));
+  }
+  const order = Object.keys(MODULES).sort((a, b) => {
+    const centre = (plan) => [plan.x + plan.w / 2, plan.y + plan.d / 2, 0];
+    return k.depthOf(centre(MODULES[a]), P) - k.depthOf(centre(MODULES[b]), P);
+  });
+  for (const name of order) out.push(boardModule(name));
+  return out.join("");
+}
+
+function instrumentCase(insides) {
   const out = [`<path class="iso-halo" d="${k.haloOf(k.insetPlan(INST, 4), 0, INST_Z, P)}" style="filter:blur(5px)"/>`];
   for (const [x, y] of byDepth(k.corners(INST, 7))) out.push(S(k.cylinder(x, y, 3.4, 0, INST_Z, P, 20), { tone: "lo" }));
-  out.push(S(k.slabOf(INST, INST_Z, INST_TOP - INST_Z, P, 6, 1.2), { tone: "mid", inner: L(k.sideSeam(INST, INST_Z + 4, P, 6), { tone: "faint" }) }));
+  out.push(S(k.slabOf(INST, INST_Z, CASE_TOP - INST_Z, P, 6, 0.6), { tone: "mid" }));
+  const front = INST.y + INST.d;
+  out.push(`<g transform="${k.sideMatrix([INST.x + INST.w, front], CASE_TOP, P, "right")}">`);
+  out.push(L(Array.from({ length: 7 }, (_, index) => k.pathOf(k.ringOf({ x: 10 + index * 6, y: 1.8, w: 2.2, d: 4.6, r: 1 }, 3), true)).join(""), { tone: "lo" }));
+  out.push("</g>");
+  if (!insides) return out.join("");
+  // The cavity, seen through the opening: floor, the two far walls and the board
+  const rim =(z) => k.ringOf(OPENING, 3).map(([x, y]) => at([x, y, z]));
+  const { x: x0, y: y0 } = OPENING;
+  const x1 = OPENING.x + OPENING.w;
+  const y1 = OPENING.y + OPENING.d;
+  const quad = (points, shade) => `<path class="iso-shade" data-shade="${shade}" d="${k.pathOf(points.map(at), true)}"/>`;
+  out.push(`<clipPath id="pb-cavity"><path d="${k.pathOf(rim(CASE_TOP), true)}"/></clipPath><g clip-path="url(#pb-cavity)">`);
+  out.push(`<path class="iso-shade" data-shade="0" d="${k.pathOf(rim(FLOOR), true)}"/>`);
+  out.push(quad([[x0, y0, CASE_TOP], [x1, y0, CASE_TOP], [x1, y0, FLOOR], [x0, y0, FLOOR]], 1));
+  out.push(quad([[x0, y0, CASE_TOP], [x0, y1, CASE_TOP], [x0, y1, FLOOR], [x0, y0, FLOOR]], 2));
+  out.push(L(k.segment([x0, y0, FLOOR], [x0, y0, CASE_TOP], P), { tone: "lo" }));
+  out.push(board());
+  out.push("</g>");
+  out.push(L(k.planOutline(OPENING, CASE_TOP, P, 3), { tone: "lo" }));
+  return out.join("");
+}
+
+function instrumentLid() {
+  const out = [S(k.slabOf(INST, CASE_TOP, INST_TOP - CASE_TOP, P, 6, 1.2), { tone: "mid" })];
   out.push(L(k.planOutline(k.insetPlan(INST, 3.4), INST_TOP, P, 6), { tone: "faint" }));
   out.push(screwsOn(INST, 6.5, INST_TOP));
   out.push(socket(PORT, INST_TOP));
-  // Label plate on the front face and vent slots on the side face, drawn in each face's plane
-  const front = INST.y + INST.d;
-  const label = { x: 12, y: 4, w: 34, d: 8, r: 1.2 };
-  out.push(`<g transform="${k.sideMatrix([INST.x, front], INST_TOP, P, "left")}">`);
+  // Label plate on the front face, drawn in the face's plane
+  const label = { x: 12, y: 1.6, w: 34, d: 7, r: 1.2 };
+  out.push(`<g transform="${k.sideMatrix([INST.x, INST.y + INST.d], INST_TOP, P, "left")}">`);
   out.push(L(k.pathOf(k.ringOf(label, 3), true), { tone: "lo" }));
-  out.push(L(`M${label.x + 4} 6.6H${label.x + 26}`, { tone: "lo", free: true }) + L(`M${label.x + 4} 9.2H${label.x + 18}`, { tone: "faint", free: true }));
-  out.push(D([[label.x + 2, 8], [label.x + label.w - 2, 8]], { size: 0.45 }));
-  out.push("</g>");
-  out.push(`<g transform="${k.sideMatrix([INST.x + INST.w, front], INST_TOP, P, "right")}">`);
-  out.push(L(Array.from({ length: 7 }, (_, index) => k.pathOf(k.ringOf({ x: 10 + index * 6, y: 4, w: 2.2, d: 8, r: 1 }, 3), true)).join(""), { tone: "lo" }));
+  out.push(L(`M${label.x + 4} 4.2H${label.x + 26}`, { tone: "lo", free: true }) + L(`M${label.x + 4} 6.6H${label.x + 18}`, { tone: "faint", free: true }));
+  out.push(D([[label.x + 2, 5.1], [label.x + label.w - 2, 5.1]], { size: 0.45 }));
   out.push("</g>");
   return out.join("");
 }
@@ -251,9 +384,14 @@ function cable(from, to, rise, drop) {
   return k.wireSvg(points[0], points[40], { via: points.slice(1, 40), tone: "lo", size: 1 }) + L(k.pathOf(points), { tone: "mid", flow: true });
 }
 
-const sensorCables = () =>
-  SENSORS.map((x, index) => cable([x, YB, PLUG_TOP], [...INPUTS[index], SOCKET_TOP], 30 + index * 6, 50 + index * 6)).join("");
-const signalCable = () => cable([...OUTPUT, SOCKET_TOP], [...PORT, PORT_TOP], 7, 12);
+// How far the explainer lifts the motor's top half and the classifier's lid. `end` is the cable end
+// that rides on the lifted part (0 = from, 1 = to), so the cable can be redrawn as it stretches.
+const LIFTS = { motor: 30, lid: 52 };
+const CABLES = [
+  ...SENSORS.map((x, index) => ({ from: [x, YB, PLUG_TOP], to: [...INPUTS[index], SOCKET_TOP], rise: 30 + index * 6, drop: 50 + index * 6, lift: "motor", end: 0 })),
+  { from: [...OUTPUT, SOCKET_TOP], to: [...PORT, PORT_TOP], rise: 7, drop: 12, lift: "lid", end: 1 },
+];
+const cableGroup = (index) => `<g data-zone="cables" data-cable="${index}">${cable(CABLES[index].from, CABLES[index].to, CABLES[index].rise, CABLES[index].drop)}</g>`;
 
 export const needleAt = (value) => {
   const angle = SCALE_FROM + (value / 100) * SCALE_SPAN;
@@ -261,27 +399,32 @@ export const needleAt = (value) => {
 };
 export const pointerAt = (angle) => k.lineOnTop(onCircle(KNOB, -2.2, angle), onCircle(KNOB, KNOB_R - 0.3, angle), KNOB_TOP, P);
 
-const svg = k.figureSvg({
+// The site ships the closed bench; the explainer also draws the insides it lifts the covers off
+const makeSvg = (insides) => k.figureSvg({
   width: WIDTH,
   height: HEIGHT,
   label:
     "A motor test bench on a plate: a motor with vibration sensors at its drive end and fan end, a coupling and a load unit, and a tray of four bearings marked healthy, inner-race, ball and outer-race fault. Two cables run to a classifier with a four-position test-protocol selector and a dial that reads macro-F1. As the selector moves to stricter protocols, the needle falls from 99.9 to 35.1.",
   body: [
     zone("base", plate()),
-    zone("motor", motor()),
-    zone("sensors", sensors()),
+    zone("motor", motorBase(insides)),
+    zone("motor", motorHalf(true), "motor"),
+    zone("sensors", sensors(), "motor"),
     zone("load", driveline()),
     zone("conditioner", conditioner()),
-    zone("cables", sensorCables()),
+    cableGroup(0),
+    cableGroup(1),
     zone("tray", tray()),
-    zone("instrument", instrument()),
-    zone("cables", signalCable()),
-    zone("selector", selector() + `<path data-part="pointer" class="iso-line" data-tone="hi" data-free="start" d="${pointerAt(DETENTS[0])}" style="stroke-width:1"/>`),
-    zone("dial", dial() + `<path data-part="needle" class="iso-line" data-tone="lit" data-free="start" d="${needleAt(PROTOCOLS[0].f1)}" style="stroke-width:1.1"/>`),
+    zone("instrument", instrumentCase(insides)),
+    zone("instrument", instrumentLid(), "lid"),
+    cableGroup(2),
+    zone("selector", selector() + `<path data-part="pointer" class="iso-line" data-tone="hi" data-free="start" d="${pointerAt(DETENTS[0])}" style="stroke-width:1"/>`, "lid"),
+    zone("dial", dial() + `<path data-part="needle" class="iso-line" data-tone="lit" data-free="start" d="${needleAt(PROTOCOLS[0].f1)}" style="stroke-width:1.1"/>`, "lid"),
   ],
 });
+const svg = makeSvg(false);
 
-const GEOMETRY = { P, dial: DIAL, dialR: DIAL_R, dialTop: DIAL_TOP, scaleFrom: SCALE_FROM, scaleSpan: SCALE_SPAN, knob: KNOB, knobR: KNOB_R, knobTop: KNOB_TOP, detents: DETENTS };
+const GEOMETRY = { P, dial: DIAL, dialR: DIAL_R, dialTop: DIAL_TOP, scaleFrom: SCALE_FROM, scaleSpan: SCALE_SPAN, knob: KNOB, knobR: KNOB_R, knobTop: KNOB_TOP, detents: DETENTS, lifts: LIFTS, cables: CABLES };
 
 writeFileSync(
   join(ROOT, "src/components/case-study/figures/protocolBench.generated.js"),
@@ -297,14 +440,14 @@ const KEYS = [
 ];
 const kitSource = () => readFileSync(join(ROOT, "src/lib/iso/iso-kit.mjs"), "utf8").replace(/^export /gm, "");
 const liveSource = () => readFileSync(join(ROOT, "src/components/case-study/figures/protocolBench.live.js"), "utf8").replace(/^import .*$/gm, "").replace(/^export /gm, "");
-const card = (hint) =>
+const card = (hint, art) =>
   k.plateHtml({
     fig: "Fig 1",
     title: "Same model, stricter test",
     hint,
     readout: PROTOCOLS[0].readout,
     keys: KEYS,
-    body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Test protocol" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1">${svg}</div>`,
+    body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Test protocol" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1">${art}</div>`,
   });
 
 const GUIDE_CSS = readFileSync(join(ROOT, "scripts/figures/explainer.css"), "utf8");
@@ -314,12 +457,12 @@ function writePage(file, guide) {
   const data = `const PROTOCOLS = ${JSON.stringify(PROTOCOLS)};\nconst geometry = ${JSON.stringify(GEOMETRY)};\n`;
   if (!guide) {
     const script = `${kitSource()}\n${data}${liveSource()}\nmountProtocolBench(document.querySelector(".iso-figure"), { geometry, protocols: PROTOCOLS, lineOnTop });`;
-    writeFileSync(file, k.pageHtml({ title: "Protocol bench", theme: "dark", body: card("Hover or use arrow keys"), script, width: 720 }));
+    writeFileSync(file, k.pageHtml({ title: "Protocol bench", theme: "dark", body: card("Hover or use arrow keys", svg), script, width: 720 }));
     return;
   }
   const guidePanel = `<aside class="ex-guide" aria-live="polite"><span class="ex-count"></span><h2 class="ex-title"></h2><p class="ex-text"></p><div class="ex-bar"><span></span></div><div class="ex-controls"><button type="button" data-back>Back</button><button type="button" data-play>Pause</button><button type="button" data-next>Next</button></div><div class="ex-dots"></div><p class="ex-note">Sources: the project README tables (regenerated from results/) and its case study.</p></aside>`;
   const intro = `<header class="ex-head"><h1>How the PAC-1DCNN project works</h1><p>A guided walk round a drawn test bench. It plays by itself; use Back and Next, the dots, or the arrow keys to go at your own pace. Every number on the dial is a saved result from the project.</p></header>`;
-  const body = `<style>${GUIDE_CSS}</style><div class="ex">${intro}<div class="ex-grid">${card("Click it, then arrow keys move the selector")}${guidePanel}</div></div>`;
+  const body = `<style>${GUIDE_CSS}</style><div class="ex">${intro}<div class="ex-grid">${card("Click it, then arrow keys move the selector", makeSvg(true))}${guidePanel}</div></div>`;
   const script = `${kitSource()}\n${data}const STEPS = ${JSON.stringify(STEPS)};\n${liveSource()}\n${GUIDE_JS}`;
   const page = k.pageHtml({ title: "PAC-1DCNN explained", theme: "dark", body, script, width: 1280 });
   writeFileSync(file, page.replace('<main class="iso-page">', '<main class="iso-page" style="width:auto;margin:0">'));
