@@ -151,6 +151,9 @@ function motorHalf(upper) {
   return out.join("");
 }
 
+// What turns inside the motor, in shaft coordinates (s along the axis from the fan end)
+const RUN = { rotor: [24, 58], rotorR: 11.4, fan: 7, fanR: 12.6, feBearing: 14.5, deBearing: 65.5, ballOrbit: 6, ballR: 1.25 };
+
 // Lines on the cut face of the lower half (z = ZC), in shaft coordinates: s along the axis, y across it
 function section() {
   const X = (s) => MOTOR_X + s;
@@ -163,16 +166,21 @@ function section() {
   // Stator with its laminations, rotor with its bars
   out.push(L(both((side) => rect(22, 60, side * 12.6, side * 19.6)), { tone: "mid" }));
   out.push(L(both((side) => Array.from({ length: 12 }, (_, index) => line(24.9 + index * 3, side * 12.6, 24.9 + index * 3, side * 19.6)).join("")), { tone: "faint" }));
-  out.push(L(rect(24, 58, -11.6, 11.6), { tone: "mid" }));
-  out.push(L(both((side) => line(24, side * 5, 58, side * 5) + line(24, side * 8.6, 58, side * 8.6)), { tone: "faint" }));
-  // Shaft and cooling fan
-  out.push(L(rect(3, 9, -13, 13), { tone: "faint" }));
-  out.push(L(rect(2, 80, -3, 3), { tone: "mid" }));
-  // Bearings: fan end, then the drive end, which carries the faults in the CWRU recordings
-  for (const [s0, tone] of [[12, "mid"], [63, "hi"]]) {
+  // Bearing rings in section: fan end, then the drive end, which carries the faults in the CWRU recordings.
+  // The damaged spot (red) sits where the balls cross the cut, so each pass is a knock you can see.
+  for (const [s0, tone] of [[RUN.feBearing - 2.5, "mid"], [RUN.deBearing - 2.5, "hi"]]) {
     out.push(L(both((side) => rect(s0, s0 + 5, side * 7.2, side * 10.6) + rect(s0, s0 + 5, side * 3, side * 4.8)), { tone }));
-    out.push(L(both((side) => k.ring(X(s0 + 2.5), YB + side * 6, 1.25, ZC, P, 16)), { tone }));
   }
+  out.push(`<path class="iso-line" data-tone="red" d="${line(RUN.deBearing - 1, 7.2, RUN.deBearing + 1, 7.2)}" style="stroke-width:1.3"/>`);
+  // The parts that turn stand whole in the open housing: shaft, fan and rotor. Their bars, blades and the
+  // bearing balls are slots the explainer redraws every frame as the motor runs.
+  out.push(`<g data-spin="balls-fe"></g>`);
+  out.push(S(G.prismOf(HALF, halfDisc(3, true, 16), 2, 80, P), { tone: "mid" }));
+  out.push(S(G.prismOf(HALF, halfDisc(RUN.fanR, true, 32), RUN.fan - 1, RUN.fan, P), { tone: "mid" }));
+  out.push(L(faceArc(RUN.fan, 3.4, 0), { tone: "lo" }));
+  out.push(`<g data-spin="fan"></g>`);
+  out.push(S(G.prismOf(HALF, halfDisc(RUN.rotorR, true, 40), RUN.rotor[0], RUN.rotor[1], P), { tone: "mid" }));
+  out.push(`<g data-spin="rotor"></g><g data-spin="balls-de"></g><g data-spin="knock"></g>`);
   return out.join("");
 }
 
@@ -205,7 +213,7 @@ function driveline() {
   out.push(S(G.disc(92, 97.6, 8, AXIS, P), { tone: "mid" }));
   out.push(S(G.disc(97.6, 98.8, 6.6, AXIS, P), { tone: "lo" }));
   out.push(S(G.disc(98.8, 104.4, 8, AXIS, P), { tone: "mid" }));
-  out.push(D(G.dotsOf(AXIS, 104.4, 5.4, 4, P, { all: true }), { size: 0.45 }));
+  out.push(`<g data-spin="coupling">${D(G.dotsOf(AXIS, 104.4, 5.4, 4, P, { all: true }), { size: 0.45 })}</g>`);
   out.push(S(G.disc(104.4, 112, 3, AXIS, P), { tone: "mid" }));
   const stand = { x: MOTOR_X + 116, y: YB - 13, w: 36, d: 26, r: 2 };
   out.push(S(k.slabOf(stand, 0, ZC - LOAD_R, P, 4, 0.6), { tone: "mid" }));
@@ -425,6 +433,8 @@ const makeSvg = (insides) => k.figureSvg({
 const svg = makeSvg(false);
 
 const GEOMETRY = { P, dial: DIAL, dialR: DIAL_R, dialTop: DIAL_TOP, scaleFrom: SCALE_FROM, scaleSpan: SCALE_SPAN, knob: KNOB, knobR: KNOB_R, knobTop: KNOB_TOP, detents: DETENTS, lifts: LIFTS, cables: CABLES };
+// Only the explainer animates the running motor
+const RUNNING = { ...RUN, x0: MOTOR_X, yb: YB, zc: ZC, view: G.viewOf(P), scale: G.scaleOf(P), axis: AXIS, coupling: [104.4, 5.4] };
 
 writeFileSync(
   join(ROOT, "src/components/case-study/figures/protocolBench.generated.js"),
@@ -463,7 +473,7 @@ function writePage(file, guide) {
   const guidePanel = `<aside class="ex-guide" aria-live="polite"><span class="ex-count"></span><h2 class="ex-title"></h2><p class="ex-text"></p><div class="ex-bar"><span></span></div><div class="ex-controls"><button type="button" data-back>Back</button><button type="button" data-play>Pause</button><button type="button" data-next>Next</button></div><div class="ex-dots"></div><p class="ex-note">Sources: the project README tables (regenerated from results/) and its case study.</p></aside>`;
   const intro = `<header class="ex-head"><h1>How the PAC-1DCNN project works</h1><p>A guided walk round a drawn test bench. It plays by itself; use Back and Next, the dots, or the arrow keys to go at your own pace. Every number on the dial is a saved result from the project.</p></header>`;
   const body = `<style>${GUIDE_CSS}</style><div class="ex">${intro}<div class="ex-grid">${card("Click it, then arrow keys move the selector", makeSvg(true))}${guidePanel}</div></div>`;
-  const script = `${kitSource()}\n${data}const STEPS = ${JSON.stringify(STEPS)};\n${liveSource()}\n${GUIDE_JS}`;
+  const script = `${kitSource()}\n${data}const STEPS = ${JSON.stringify(STEPS)};\nconst RUNNING = ${JSON.stringify(RUNNING)};\n${liveSource()}\n${GUIDE_JS}`;
   const page = k.pageHtml({ title: "PAC-1DCNN explained", theme: "dark", body, script, width: 1280 });
   writeFileSync(file, page.replace('<main class="iso-page">', '<main class="iso-page" style="width:auto;margin:0">'));
 }
