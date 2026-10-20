@@ -49,6 +49,7 @@ export default function ProtocolBench() {
           <span className="iso-key"><Swatch mark="lit" />Needle: PAC-1DCNN&apos;s clean macro-F1</span>
           <span className="iso-key"><Swatch mark="raised" />Selector: four test protocols, each stricter than the last</span>
           <span className="iso-key"><Swatch mark="dashed" />Cables: drive-end and fan-end vibration channels</span>
+          <span className="iso-key"><Swatch mark="red" />Tray: healthy, inner-race, ball and outer-race bearings; red marks the damage</span>
         </span>
         <span className="iso-caption">
           Every needle position is a saved result. Holding out one motor load still tests on bearings the model has
