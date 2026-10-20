@@ -42,7 +42,7 @@ export default defineConfig([
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...Object.fromEntries(['mountProtocolBench', 'geometry', 'PROTOCOLS', 'STEPS', 'lineOnTop', 'iso', 'pathOf', 'lineSvg', 'wireSvg', 'translateAlong', 'screenRise'].map((name) => [name, 'readonly'])),
+        ...Object.fromEntries(['mountProtocolBench', 'geometry', 'PROTOCOLS', 'STEPS', 'RUNNING', 'lineOnTop', 'iso', 'pathOf', 'lineSvg', 'wireSvg', 'dotsSvg', 'ring', 'translateAlong', 'screenRise'].map((name) => [name, 'readonly'])),
       },
     },
   },

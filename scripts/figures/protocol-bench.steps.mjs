@@ -10,13 +10,13 @@ export const STEPS = [
   {
     title: "The motor and the load",
     zones: ["motor", "load"],
-    text: "The motor spins a shaft that runs in ball bearings. Through the coupling it drives the load unit, which brakes the shaft to set how hard the motor works. The CWRU dataset was recorded at four motor loads: 0, 1, 2 and 3 horsepower.",
+    text: "The motor is running (watch the bolts on the coupling turn). It spins a shaft that runs in ball bearings, and through the coupling it drives the load unit, which brakes the shaft to set how hard the motor works. The CWRU dataset was recorded at four motor loads: 0, 1, 2 and 3 horsepower.",
   },
   {
     title: "Inside the motor",
     zones: ["motor", "sensors"],
     open: "motor",
-    text: "With the top half lifted off you see a cut through the motor. The rotor (the inner block with its bars) turns inside the stator (the striped bands), and the shaft runs on a ball bearing at each end, each with a row of balls between two rings. The bright one is the drive-end bearing: the CWRU recordings this project uses are its drive-end fault data, so this is where the damage sits. The sensors on the casing feel the bearing's knocks through the metal.",
+    text: "With the top half lifted off you can watch it run, slowed right down. The rotor spins inside the stator (the striped bands), the fan turns on the far end, and at each end of the shaft a ring of balls rolls round between two races. The bright bearing is the drive end: the CWRU recordings this project uses are its drive-end fault data. Each time a ball rolls over the damaged spot (red) it knocks, and the red ring is that knock spreading out. The knocks repeat at a rate set by the bearing's geometry and the shaft speed, and the sensors on the casing pick them up.",
   },
   {
     title: "Four kinds of bearing",
