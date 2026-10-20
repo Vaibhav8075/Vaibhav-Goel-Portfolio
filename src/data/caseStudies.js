@@ -434,13 +434,14 @@ export const caseStudies = {
           { title: "Five sensors, one picture", text: "CO, temperature, humidity, flame, motion and light flicker, read together." },
           { title: "ESP32-S3 at the edge", text: "Waits out the MQ-7's 90-second warm-up, then posts a JSON reading every 2 seconds over Wi-Fi." },
           { title: "Flask receives", text: "Each reading is logged to CSV alongside its prediction." },
-          { title: "ML plus safety rules", text: "The Random Forest labels it normal, warning or fire; rule-based overrides can escalate on their own." },
+          { title: "Safety rules, then the forest", text: "Four rules run first and can confirm a fire, keep cooking smoke at normal or flag smouldering as a warning; otherwise the Random Forest's fire / no-fire vote decides." },
           { title: "Digital twin", text: "A Dash dashboard redraws telemetry, gauges and history every 2 seconds." },
           { title: "Alerts, next", text: "A buzzer, relay-driven fan or pump and SIM800L SMS alerts are designed in but not yet automated." },
         ],
       },
     },
     results: {
+      figure: "fire-bench",
       stats: [
         { value: 94.93, decimals: 2, suffix: "%", label: "test accuracy" },
         { value: 98, suffix: "%", label: "fire recall" },

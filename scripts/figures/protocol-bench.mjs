@@ -1,13 +1,14 @@
 // Builds the "same model, stricter test" figure for the PAC-1DCNN case study: a motor test bench
 // wired to a classifier whose macro-F1 dial falls as the evaluation protocol gets stricter.
 // Drawn with the Anatomy isometric kit (src/lib/iso, MIT). Run: node scripts/figures/protocol-bench.mjs [--preview out.html]
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as k from "../../src/lib/iso/iso-kit.mjs";
 import * as G from "../../src/lib/iso/lathe.mjs";
 import { PROTOCOLS } from "../../src/components/case-study/figures/protocolBench.data.js";
 import { STEPS } from "../../src/components/case-study/figures/protocolBench.steps.js";
+import { inline, kitSource, writeExplainer } from "./explainer.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const WIDTH = 640;
@@ -449,48 +450,38 @@ const KEYS = [
   { mark: "raised", label: "Selector: four test protocols" },
   { mark: "red", label: "Tray: healthy, inner-race, ball and outer-race bearings; red marks the damage" },
 ];
-const kitSource = () => readFileSync(join(ROOT, "src/lib/iso/iso-kit.mjs"), "utf8").replace(/^export /gm, "");
-const liveSource = () => readFileSync(join(ROOT, "src/components/case-study/figures/protocolBench.live.js"), "utf8").replace(/^import .*$/gm, "").replace(/^export /gm, "");
-const card = (hint, art) =>
+const card = (hint) =>
   k.plateHtml({
     fig: "Fig 1",
     title: "Same model, stricter test",
     hint,
     readout: PROTOCOLS[0].readout,
     keys: KEYS,
-    body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Test protocol" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1">${art}</div>`,
+    body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Test protocol" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1">${svg}</div>`,
   });
+const data = `const PROTOCOLS = ${JSON.stringify(PROTOCOLS)};\nconst geometry = ${JSON.stringify(GEOMETRY)};\nconst RUNNING = ${JSON.stringify(RUNNING)};\nconst STEPS = ${JSON.stringify(STEPS)};`;
 
-const PAGE_CSS = readFileSync(join(ROOT, "scripts/figures/explainer.css"), "utf8");
-const TOUR_CSS = readFileSync(join(ROOT, "src/components/case-study/figures/protocolBench.tour.css"), "utf8");
-const tourSource = () => readFileSync(join(ROOT, "src/components/case-study/figures/protocolBench.tour.js"), "utf8").replace(/^export /gm, "");
-const BOOT = `
-const figure = document.querySelector(".iso-figure");
-const bench = mountProtocolBench(figure, { geometry, protocols: PROTOCOLS, lineOnTop, tour: false, hover: false });
-const kit = { iso, pathOf, wireSvg, lineSvg, dotsSvg, ring, translateAlong, screenRise };
-mountTour({ figure, panel: document.querySelector(".pb-tour"), geometry, running: RUNNING, steps: STEPS, bench, kit, keys: document }).start(0);
-`;
-
-function writePage(file, guide) {
-  const data = `const PROTOCOLS = ${JSON.stringify(PROTOCOLS)};\nconst geometry = ${JSON.stringify(GEOMETRY)};\n`;
-  if (!guide) {
-    const script = `${kitSource()}\n${data}${liveSource()}\nmountProtocolBench(document.querySelector(".iso-figure"), { geometry, protocols: PROTOCOLS, lineOnTop });`;
-    writeFileSync(file, k.pageHtml({ title: "Protocol bench", theme: "dark", body: card("Hover or use arrow keys", svg), script, width: 720 }));
-    return;
-  }
-  const guidePanel = `<aside class="pb-tour" aria-live="polite"><span class="pb-count"></span><h2 class="pb-title"></h2><p class="pb-text"></p><div class="pb-bar"><span></span></div><div class="pb-controls"><button type="button" data-back>Back</button><button type="button" data-play>Pause</button><button type="button" data-next>Next</button></div><div class="pb-dots"></div><p class="pb-note">Sources: the project README tables (regenerated from results/) and its case study.</p></aside>`;
-  const intro = `<header class="ex-head"><h1>How the PAC-1DCNN project works</h1><p>A guided walk round a drawn test bench. It plays by itself; use Back and Next, the dots, or the arrow keys to go at your own pace. Every number on the dial is a saved result from the project.</p></header>`;
-  const figure = card("Click it, then arrow keys move the selector", svg).replace('<figure class="iso-figure">', '<figure class="iso-figure pb-figure">');
-  const body = `<style>${TOUR_CSS}${PAGE_CSS}</style><div class="ex">${intro}<div class="ex-grid">${figure}${guidePanel}</div></div>`;
-  const script = `${kitSource()}\n${data}const STEPS = ${JSON.stringify(STEPS)};\nconst RUNNING = ${JSON.stringify(RUNNING)};\n${liveSource()}\n${tourSource()}\n${BOOT}`;
-  const page = k.pageHtml({ title: "PAC-1DCNN explained", theme: "dark", body, script, width: 1280 });
-  writeFileSync(file, page.replace('<main class="iso-page">', '<main class="iso-page" style="width:auto;margin:0">'));
+const previewAt = process.argv.indexOf("--preview");
+if (previewAt > 0) {
+  const script = [kitSource(), data, inline("protocolBench.live.js"), `mountProtocolBench(document.querySelector(".iso-figure"), { geometry, protocols: PROTOCOLS, lineOnTop });`].join("\n");
+  writeFileSync(process.argv[previewAt + 1], k.pageHtml({ title: "Protocol bench", theme: "dark", body: card("Hover or use arrow keys"), script, width: 720 }));
+  console.log("preview", process.argv[previewAt + 1]);
 }
-
-for (const [flag, guide] of [["--preview", false], ["--explain", true]]) {
-  const index = process.argv.indexOf(flag);
-  if (index > 0) {
-    writePage(process.argv[index + 1], guide);
-    console.log(flag.slice(2), process.argv[index + 1]);
-  }
+const explainAt = process.argv.indexOf("--explain");
+if (explainAt > 0) {
+  writeExplainer({
+    file: process.argv[explainAt + 1],
+    title: "PAC-1DCNN explained",
+    heading: "How the PAC-1DCNN project works",
+    intro: "A guided walk round a drawn test bench. It plays by itself; use Back and Next, the dots, or the arrow keys to go at your own pace. Every number on the dial is a saved result from the project.",
+    card: card("Click it, then arrow keys move the selector"),
+    note: "Sources: the project README tables (regenerated from results/) and its case study.",
+    data,
+    modules: ["protocolBench.live.js", "tour.js", "protocolBench.tour.js"],
+    boot: `const figure = document.querySelector(".iso-figure");
+const bench = mountProtocolBench(figure, { geometry, protocols: PROTOCOLS, lineOnTop, tour: false, hover: false });
+const hooks = protocolBenchHooks({ figure, geometry, running: RUNNING, bench, kit });
+mountTour({ figure, panel: document.querySelector(".tour-panel"), geometry, steps: STEPS, kit, keys: document, hooks }).start(0);`,
+  });
+  console.log("explain", process.argv[explainAt + 1]);
 }

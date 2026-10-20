@@ -4,5 +4,5 @@
 .ex-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;align-items:start}
 @media (max-width:980px){.ex-grid{grid-template-columns:1fr}}
 .ex-grid .iso-figure{margin:0}
-.ex-grid .pb-tour{position:sticky;top:20px}
-.ex-grid .pb-text{min-height:13em}
+.ex-grid .tour-panel{position:sticky;top:20px}
+.ex-grid .tour-text{min-height:13em}
