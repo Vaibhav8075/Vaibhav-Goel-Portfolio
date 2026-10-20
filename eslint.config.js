@@ -36,14 +36,4 @@ export default defineConfig([
     files: ['scripts/**/*.js'],
     languageOptions: { globals: globals.node },
   },
-  {
-    // Inlined into the standalone explainer page after the kit and the figure data it reads
-    files: ['scripts/figures/explainer.js'],
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...Object.fromEntries(['mountProtocolBench', 'geometry', 'PROTOCOLS', 'STEPS', 'RUNNING', 'lineOnTop', 'iso', 'pathOf', 'lineSvg', 'wireSvg', 'dotsSvg', 'ring', 'translateAlong', 'screenRise'].map((name) => [name, 'readonly'])),
-      },
-    },
-  },
 ])
