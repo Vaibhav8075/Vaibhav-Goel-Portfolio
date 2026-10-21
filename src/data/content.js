@@ -11,9 +11,9 @@ export const projects = [
     id: "agentic-ledger",
     title: "AGENTIC LEDGER",
     tagline: "Autonomous multi-agent financial engine.",
-    description: "Four Phinite OS agents for Paytm merchants: they catch fake-payment spoofs in under 200 ms and use a PyTorch LSTM revenue forecast to underwrite instant micro-loans for supplier bills.",
+    description: "Four agents for Paytm merchants: four gateway checks catch fake payment claims, and an EMI-safe plan pays supplier bills, using a PyTorch LSTM's conservative forecast of tonight's sales to size a short advance.",
     tech: ["PyTorch", "FastAPI", "Python", "Docker", "Phinite OS"],
-    metrics: ["94% revenue-forecast accuracy", "<200 ms spoof check"],
+    metrics: ["4 checks per payment claim", "16.9% forecast error vs 20.2% baseline"],
     github: "https://github.com/Vaibhav8075/Agentic-Ledger",
     type: "AI/SYSTEMS",
     domains: ["ai", "backend"]
