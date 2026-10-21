@@ -2,8 +2,9 @@
 // ([data-zone]), glides the camera in, and may lift one part open ([data-lift]) while the cables that end on
 // it stretch. Figure-specific behaviour comes in through hooks: start, stop, step(step, index) and
 // frame(dt, opened), which runs every animation frame while the tour is active.
+// The panel's Back / Play / Next buttons are optional: a scroll-driven tour calls show(index) itself.
 // Kit functions arrive in `kit`, so the same code runs in React and in a standalone explainer page.
-export function mountTour({ figure, panel, geometry, steps, kit, keys = panel, hooks = {} }) {
+export function mountTour({ figure, panel, geometry, steps, kit, keys = panel, hooks = {}, onDot }) {
   const { iso, pathOf, wireSvg, lineSvg, translateAlong, screenRise } = kit;
   const art = figure.querySelector(".iso-svg");
   const zones = [...art.querySelectorAll("[data-zone]")];
@@ -20,7 +21,7 @@ export function mountTour({ figure, panel, geometry, steps, kit, keys = panel, h
     const dot = document.createElement("button");
     dot.type = "button";
     dot.setAttribute("aria-label", `Step ${index + 1}: ${step.title}`);
-    dot.addEventListener("click", () => show(index));
+    dot.addEventListener("click", () => (onDot ? onDot(index) : show(index)));
     find(".tour-dots").append(dot);
     return dot;
   });
@@ -166,17 +167,19 @@ export function mountTour({ figure, panel, geometry, steps, kit, keys = panel, h
     count.textContent = `Step ${index + 1} of ${steps.length}`;
     title.textContent = step.title;
     text.textContent = step.text;
-    back.disabled = index === 0;
-    next.textContent = index === steps.length - 1 ? "Start again" : "Next";
+    if (back) back.disabled = index === 0;
+    if (next) next.textContent = index === steps.length - 1 ? "Start again" : "Next";
     dots.forEach((dot, other) => (other === index ? dot.setAttribute("aria-current", "step") : dot.removeAttribute("aria-current")));
     restart();
   }
   function restart() {
     clearTimeout(timer);
-    bar.style.transition = "none";
-    bar.style.width = "0";
-    play.textContent = playing ? "Pause" : "Play";
-    if (!playing || !active) return;
+    if (bar) {
+      bar.style.transition = "none";
+      bar.style.width = "0";
+    }
+    if (play) play.textContent = playing ? "Pause" : "Play";
+    if (!playing || !active || !bar) return;
     const ms = dwell(steps[at]);
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
@@ -209,9 +212,9 @@ export function mountTour({ figure, panel, geometry, steps, kit, keys = panel, h
       onPlay();
     }
   };
-  back.addEventListener("click", onBack);
-  next.addEventListener("click", forward);
-  play.addEventListener("click", onPlay);
+  back?.addEventListener("click", onBack);
+  next?.addEventListener("click", forward);
+  play?.addEventListener("click", onPlay);
   keys.addEventListener("keydown", onKey);
 
   function start(index = 0, autoplay = !reduced()) {
@@ -239,11 +242,21 @@ export function mountTour({ figure, panel, geometry, steps, kit, keys = panel, h
     cancelAnimationFrame(glide);
     cancelAnimationFrame(openFrame);
     clearTimeout(openTimer);
-    back.removeEventListener("click", onBack);
-    next.removeEventListener("click", forward);
-    play.removeEventListener("click", onPlay);
+    back?.removeEventListener("click", onBack);
+    next?.removeEventListener("click", forward);
+    play?.removeEventListener("click", onPlay);
     keys.removeEventListener("keydown", onKey);
     dots.forEach((dot) => dot.remove());
   }
-  return { start, stop, destroy };
+  // Pause the figure's animation while it is off screen, without leaving the current step
+  function setRunning(on) {
+    cancelAnimationFrame(loopFrame);
+    loopFrame = 0;
+    if (on && active && !reduced()) {
+      loopLast = 0;
+      loopFrame = requestAnimationFrame(loop);
+    }
+  }
+  const current = () => at;
+  return { start, stop, destroy, show, setRunning, current };
 }
