@@ -1,4 +1,8 @@
 .tour-figure .iso-plate{overflow:hidden}
+.tour-scrolly{margin:0}
+.tour-scrolly .iso-plate{padding:44px 20px}
+.tour-scrolly .iso-svg{max-height:calc(100vh - 15rem);width:auto;max-width:100%}
+.tour-panel .tour-text{transition:opacity .3s}
 .iso-svg [data-zone]{transition:opacity .5s var(--anatomy-ease)}
 .iso-svg[data-focus] [data-zone]:not([data-on]){opacity:.26}
 .tour-panel{background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-lo);padding:22px;display:grid;gap:14px;color:var(--anatomy-text)}
