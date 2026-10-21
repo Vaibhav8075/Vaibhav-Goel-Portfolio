@@ -559,6 +559,7 @@ export const caseStudies = {
     },
     results: {
       title: "Results on Cityscapes",
+      figure: "seg-bench",
       caption: "500 held-out images (the official val set), never used for training or model selection, scored at full 1024×2048 resolution.",
       stats: [
         { value: 0.833, decimals: 3, label: "test mIoU, SegFormer-B2" },
