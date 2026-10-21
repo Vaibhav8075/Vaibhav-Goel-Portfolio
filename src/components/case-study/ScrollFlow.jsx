@@ -127,10 +127,16 @@ export default function ScrollFlow({ flow }) {
 
   const containerRef = useRef(null);
   const [activeStep, setActiveStep] = useState(0);
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
+  const { scrollY } = useScroll();
   const steps = flow.steps.length;
 
-  useMotionValueEvent(scrollYProgress, "change", (progress) => {
+  // Progress is read from where the container really is on screen at each scroll. useScroll's target
+  // offsets went stale on these pages: the diagram unpinned on step 4 of 6 and drew the rest off screen.
+  useMotionValueEvent(scrollY, "change", () => {
+    const el = containerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const progress = Math.min(1, Math.max(0, -rect.top / (rect.height - window.innerHeight)));
     setActiveStep(Math.min(steps - 1, Math.floor(progress * steps)));
   });
 
