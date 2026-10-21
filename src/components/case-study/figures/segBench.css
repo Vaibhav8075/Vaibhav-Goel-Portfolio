@@ -1,0 +1,10 @@
+.sb-liquid .iso-fill,.sb-liquid .iso-top,.sb-liquid .iso-shade,.sb-swatch .iso-fill,.sb-swatch .iso-top,.sb-swatch .iso-shade,.sb-map .iso-fill,.sb-map .iso-top,.sb-map .iso-shade{fill:var(--class)}
+.sb-liquid .iso-shade{opacity:.78}
+.sb-liquid{opacity:.92}
+.sb-channel[data-channel="red"] .iso-fill,.sb-channel[data-channel="red"] .iso-top,.sb-channel[data-channel="red"] .iso-shade{fill:var(--anatomy-red)}
+.sb-channel[data-channel="green"] .iso-fill,.sb-channel[data-channel="green"] .iso-top,.sb-channel[data-channel="green"] .iso-shade{fill:var(--anatomy-green)}
+.sb-channel[data-channel="blue"] .iso-fill,.sb-channel[data-channel="blue"] .iso-top,.sb-channel[data-channel="blue"] .iso-shade{fill:var(--anatomy-blue)}
+.sb-bead{stroke:none}
+.sb-display{fill:var(--anatomy-hi);font-family:var(--anatomy-mono);letter-spacing:.04em}
+.iso-svg [data-cart]{transition:opacity .4s}
+.iso-svg [data-cart]:not([data-on]){opacity:.6}
