@@ -15,6 +15,7 @@ const FIGURES = {
   "fire-bench": lazy(() => import("../components/case-study/FireBench")),
   "ledger-bench": lazy(() => import("../components/case-study/LedgerBench")),
   "call-bench": lazy(() => import("../components/case-study/CallBench")),
+  "audit-bench": lazy(() => import("../components/case-study/AuditBench")),
 };
 
 const studied = projects.filter((project) => caseStudies[project.id]);

@@ -301,6 +301,7 @@ export const caseStudies = {
       },
     },
     results: {
+      figure: "audit-bench",
       stats: [
         { value: 3, label: "roles with separate permissions" },
         { value: 2, label: "AI models per call: Whisper large-v3 and Llama 3.3 70B" },
