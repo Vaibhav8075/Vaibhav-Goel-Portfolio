@@ -15,7 +15,7 @@ export const kitSource = () => read(join(ROOT, "src/lib/iso/iso-kit.mjs")).repla
 export const TOUR_PANEL = (note) =>
   `<aside class="tour-panel" aria-live="polite"><span class="tour-count"></span><h2 class="tour-title"></h2><p class="tour-text"></p><div class="tour-bar"><span></span></div><div class="tour-controls"><button type="button" data-back>Back</button><button type="button" data-play>Pause</button><button type="button" data-next>Next</button></div><div class="tour-dots"></div><p class="tour-note">${note}</p></aside>`;
 
-export const KIT_NAMES = "{ iso, pathOf, wireSvg, lineSvg, dotsSvg, ring, translateAlong, screenRise, lineOnTop, onTop }";
+export const KIT_NAMES = "{ iso, pathOf, wireSvg, lineSvg, dotsSvg, ring, translateAlong, screenRise, lineOnTop, onTop, segment }";
 
 export function writeExplainer({ file, title, heading, intro, card, note, data, modules, boot }) {
   const css = read(join(FIGURES, "tour.css")) + read(join(ROOT, "scripts/figures/explainer.css"));

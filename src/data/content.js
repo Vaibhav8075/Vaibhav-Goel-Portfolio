@@ -44,9 +44,9 @@ export const projects = [
     id: "banking-call-intelligence",
     title: "BANKING CALL INTELLIGENCE",
     tagline: "Hybrid rules + AI analysis of financial calls.",
-    description: "Transcribes banking calls with Whisper, runs a deterministic rule engine for intent, risk and PII masking, and layers an AI verifier on top that falls back to the rules whenever its confidence is low.",
+    description: "Transcribes banking calls with Whisper, runs a deterministic keyword rule engine for intent, priority and risk, masks account and card numbers, and has an AI verifier review each decision, with the rules standing whenever the AI fails.",
     tech: ["FastAPI", "Whisper", "React", "Python"],
-    metrics: ["Rule-based fallback for every decision", "PII masking, JWT auth, rate limiting"],
+    metrics: ["Rule-based fallback for every decision", "Masked account numbers, API-key auth, rate limits"],
     github: "https://github.com/Vaibhav8075/Financial-Technology",
     type: "BACKEND/AI",
     domains: ["ai", "backend"]
