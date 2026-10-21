@@ -8,11 +8,11 @@ import { boxFor, edgePath } from "../../lib/diagram";
 const NODES = [
   { id: "soundbox", label: "SOUNDBOX", sub: "MQTT telemetry", info: "Every payment the merchant's Soundbox announces arrives as an MQTT telemetry ping." },
   { id: "whatsapp", label: "WHATSAPP", sub: "vendor bills", info: "Distributors send unstructured bills over WhatsApp, and a webhook forwards them into the system." },
-  { id: "supervisor", label: "SUPERVISOR", sub: "event router", info: "The Master Supervisor agent sends security events to Spoof Guard and financial events to the Supplier Ledger." },
-  { id: "spoof", label: "SPOOF GUARD", sub: "hash check <200ms", info: "Verifies the gateway hash in under 200ms. A missing hash raises a fraud alert; a real payment delayed by 4G congestion gets a \"payment safe, audio delayed\" notice." },
-  { id: "ledger", label: "SUPPLIER LEDGER", sub: "PII mask · parse", info: "Parses the bill, masks PII such as bank account numbers with Phinite guardrails, and extracts the amount owed." },
-  { id: "liquidity", label: "LIQUIDITY ENGINE", sub: "PyTorch LSTM", info: "A PyTorch LSTM trained on ~400k rows of retail data forecasts the evening's revenue from transaction velocity, and auto-approves a micro-loan when it covers the bill." },
-  { id: "backend", label: "FASTAPI", sub: "bank rails", info: "Simulated bank calls with idempotency, 504-timeout handling and double-debit protection." },
+  { id: "supervisor", label: "SUPERVISOR", sub: "event router", info: "One entry point for payment claims, supplier bills and settlement taps: it routes each to the right worker and records every outcome." },
+  { id: "spoof", label: "SPOOF GUARD", sub: "4 checks · PUBACK", info: "A claim is genuine only if the payment is on the gateway, went to this Soundbox's merchant, is recent and matches the customer's screen. Genuine but unacknowledged over MQTT gets a \"payment received, audio delayed\" notice." },
+  { id: "ledger", label: "SUPPLIER LEDGER", sub: "PII mask · parse", info: "Masks card, Aadhaar, phone, bank account, PAN, IFSC and UPI numbers, then extracts the total, vendor, invoice number, deadline and quantities." },
+  { id: "liquidity", label: "LIQUIDITY ENGINE", sub: "EMI-safe plan", info: "Pays from the balance above tomorrow's EMI, or adds a short advance only if it fits both a pre-approved limit and the conservative floor of a PyTorch LSTM forecast of tonight's sales; an independent checker re-verifies every plan." },
+  { id: "backend", label: "FASTAPI", sub: "signed · idempotent", info: "A sandbox for the gateway and bank: HMAC-signed requests, one idempotency key per payout and a status check after a timeout, so a retry never pays twice." },
 ];
 // Left-to-right on wide screens; stacked top-to-bottom on phones so labels stay legible
 const LAYOUTS = {
@@ -44,13 +44,13 @@ const EDGES = [
 const SCENARIOS = {
   bill: {
     label: "Vendor bill",
-    summary: "A supplier's WhatsApp bill is parsed and masked, the LSTM forecasts tonight's revenue, and the payment is auto-approved through the bank rails.",
+    summary: "A supplier's WhatsApp bill is masked and parsed, the Liquidity Engine builds a plan that never touches the EMI reserve, and the settlement is signed and paid exactly once.",
     nodes: ["whatsapp", "supervisor", "ledger", "liquidity", "backend"],
     edges: ["whatsapp-supervisor", "supervisor-ledger", "ledger-liquidity", "liquidity-backend"],
   },
   payment: {
     label: "Payment ping",
-    summary: "A Soundbox ping is routed to Spoof Guard, which confirms the payment is genuine in under 200ms.",
+    summary: "A payment claim is routed to Spoof Guard, whose four gateway checks decide between a fraud alert, verified, and \"payment received, audio delayed\".",
     nodes: ["soundbox", "supervisor", "spoof"],
     edges: ["soundbox-supervisor", "supervisor-spoof"],
   },
@@ -126,7 +126,7 @@ export default function AgentLedgerDiagram() {
         viewBox={`0 0 ${layout.width} ${layout.height}`}
         className="w-full h-auto"
         role="group"
-        aria-label="Agentic Ledger architecture: Soundbox and WhatsApp events flow through a Supervisor agent to Spoof Guard, or through the Supplier Ledger and Liquidity Engine to the FastAPI bank rails"
+        aria-label="Agentic Ledger architecture: Soundbox and WhatsApp events flow through a Supervisor agent to Spoof Guard, or through the Supplier Ledger and Liquidity Engine to the FastAPI sandbox for signed, idempotent settlement"
         onMouseLeave={() => setActiveId(null)}
       >
         {/* Phinite OS hosts the agents */}
